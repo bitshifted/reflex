@@ -12,19 +12,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>co.bitshfited.libs</groupId>
-    <artifactId>http-jfx</artifactId>
+    <groupId>co.bitshfited</groupId>
+    <artifactId>reflex</artifactId>
     <version>${revision}</version>
 
-    <name>HTTP JFX</name>
-    <description>HTTP JFX - Library for working with HTTP in JavaFX</description>
-    <url>https://github.com/bitshifted/http-jfx</url>
+    <name>Reflex</name>
+    <description>Simple and flexible Java REST client</description>
+    <url>https://github.com/bitshifted/reflex</url>
 
 
     <scm>
-        <connection>scm:git:git@github.com:bitshifted/http-jfx.git</connection>
-        <developerConnection>scm:git:git@github.com:bitshifted/http-jfx.git</developerConnection>
-        <url>https://github.com/bitshifted/http-jfx</url>
+        <connection>scm:git:git@github.com:bitshifted/reflex.git</connection>
+        <developerConnection>scm:git:git@github.com:bitshifted/reflex.git</developerConnection>
+        <url>https://github.com/bitshifted/reflex</url>
         <tag>HEAD</tag>
     </scm>
 
