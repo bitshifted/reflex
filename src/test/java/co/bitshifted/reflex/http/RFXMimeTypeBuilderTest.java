@@ -13,11 +13,11 @@ package co.bitshifted.reflex.http;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MimeTypeBuilderTest {
+public class RFXMimeTypeBuilderTest {
 
     @Test
     public void completeBuilderSuccessTest() {
-        var type = MimeTypeBuilder.newBuilder().withType("application")
+        var type = RFXMimeTypeBuilder.newBuilder().withType("application")
                 .withSubtype("json")
                 .withTree("vnd")
                 .withSuffix("ld")

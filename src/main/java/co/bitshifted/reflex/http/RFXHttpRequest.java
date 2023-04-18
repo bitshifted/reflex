@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public record RFXHttpRequest<T>(HttpMethod method, URI uri, Set<RFXHttpStatus> successStatus,
+public record RFXHttpRequest<T>(RFXHttpMethod method, URI uri, Set<RFXHttpStatus> successStatus,
                                 Optional<T> body, Optional<RFXHttpHeaders> headers) {
     public RFXHttpRequest{
         Objects.nonNull(method);

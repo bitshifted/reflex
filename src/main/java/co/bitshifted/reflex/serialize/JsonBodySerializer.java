@@ -10,15 +10,15 @@
 
 package co.bitshifted.reflex.serialize;
 
-import co.bitshifted.reflex.http.MimeType;
-import co.bitshifted.reflex.http.MimeTypes;
+import co.bitshifted.reflex.http.RFXMimeType;
+import co.bitshifted.reflex.http.RFXMimeTypes;
 
 import java.util.Set;
 
 public interface JsonBodySerializer extends BodySerializer {
 
     @Override
-    default Set<MimeType> supportedMimeTypes() {
-        return Set.of(MimeTypes.APPLICATION_JSON);
+    default Set<RFXMimeType> supportedMimeTypes() {
+        return Set.of(RFXMimeTypes.APPLICATION_JSON);
     }
 }

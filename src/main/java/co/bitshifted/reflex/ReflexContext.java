@@ -10,7 +10,7 @@
 
 package co.bitshifted.reflex;
 
-import co.bitshifted.reflex.http.MimeType;
+import co.bitshifted.reflex.http.RFXMimeType;
 import co.bitshifted.reflex.impl.JdkReflexClient;
 import co.bitshifted.reflex.serialize.BodySerializer;
 
@@ -32,7 +32,7 @@ public class ReflexContext {
         return defaultClient;
     }
 
-    public void registerBodySerializer(MimeType mimeType, BodySerializer serializer) {
+    public void registerBodySerializer(RFXMimeType mimeType, BodySerializer serializer) {
         this.bodySerializers.put(mimeType.value(), serializer);
     }
 

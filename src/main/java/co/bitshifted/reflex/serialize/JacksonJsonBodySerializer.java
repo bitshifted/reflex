@@ -10,15 +10,17 @@
 
 package co.bitshifted.reflex.serialize;
 
+import java.io.InputStream;
+
 public class JacksonJsonBodySerializer implements JsonBodySerializer {
 
     @Override
-    public <T> String objectToString(T object) {
+    public <T> InputStream objectToStream(T object) {
         return null;
     }
 
     @Override
-    public <T> T stringToObject(String input, Class<T> type) {
+    public <T> T streamToObject(InputStream input, Class<T> type) {
         return null;
     }
 }

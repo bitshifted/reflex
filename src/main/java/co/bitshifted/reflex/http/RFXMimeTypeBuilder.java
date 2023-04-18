@@ -10,7 +10,7 @@
 
 package co.bitshifted.reflex.http;
 
-public class MimeTypeBuilder {
+public class RFXMimeTypeBuilder {
 
     private String type;
     private String subtype;
@@ -18,35 +18,35 @@ public class MimeTypeBuilder {
     private String suffix;
     private String parameter;
 
-    public MimeTypeBuilder withType(String type) {
+    public RFXMimeTypeBuilder withType(String type) {
         this.type = type;
         return this;
     }
 
-    public MimeTypeBuilder withSubtype(String subtype) {
+    public RFXMimeTypeBuilder withSubtype(String subtype) {
         this.subtype = subtype;
         return this;
     }
 
-    public MimeTypeBuilder withTree(String tree) {
+    public RFXMimeTypeBuilder withTree(String tree) {
         this.tree = tree;
         return this;
     }
 
-    public MimeTypeBuilder withSuffix(String suffix) {
+    public RFXMimeTypeBuilder withSuffix(String suffix) {
         this.suffix = suffix;
         return this;
     }
 
-    public MimeTypeBuilder withParameter(String parameter) {
+    public RFXMimeTypeBuilder withParameter(String parameter) {
         this.parameter = parameter;
         return this;
     }
 
-    public MimeType build() {
-        return new MimeType(type, subtype, tree, suffix, parameter);
+    public RFXMimeType build() {
+        return new RFXMimeType(type, subtype, tree, suffix, parameter);
     }
-    public static MimeTypeBuilder newBuilder() {
-        return new MimeTypeBuilder();
+    public static RFXMimeTypeBuilder newBuilder() {
+        return new RFXMimeTypeBuilder();
     }
 }
