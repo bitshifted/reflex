@@ -12,6 +12,7 @@ package co.bitshifted.reflex.impl;
 
 import co.bitshifted.reflex.exception.HttpStatusException;
 import co.bitshifted.reflex.http.*;
+import co.bitshifted.reflex.impl.jdk11.JdkReflexClient;
 import co.bitshifted.reflex.serialize.PlainTextBodySerializer;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,8 @@ public class JdkHttpClientImplTest {
     void basicGetRequestSuccess() throws Exception {
         stubFor(get("/test/endpoint").willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
-        var response = client().sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Set.of(RFXHttpStatus.OK), null, null));
+        var client = new JdkReflexClient();
+        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Set.of(RFXHttpStatus.OK), null, null));
         assertNotNull(response);
         assertNotNull(response.body());
         var responseBody = response.bodyToValue(String.class);
@@ -42,7 +44,8 @@ public class JdkHttpClientImplTest {
     void basicPostRequestSuccess() throws Exception {
         stubFor(post("/test/post").willReturn(noContent()));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
-        var response = client().sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Set.of(RFXHttpStatus.NO_CONTENT), null, null));
+        var client = new JdkReflexClient();
+        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Set.of(RFXHttpStatus.NO_CONTENT), null, null));
         assertNotNull(response);
         assertEquals(RFXHttpStatus.NO_CONTENT, response.status());
     }
