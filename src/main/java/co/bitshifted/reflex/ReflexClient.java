@@ -11,10 +11,11 @@
 package co.bitshifted.reflex;
 
 import co.bitshifted.reflex.exception.HttpClientException;
+import co.bitshifted.reflex.exception.HttpStatusException;
 import co.bitshifted.reflex.http.RFXHttpResponse;
 import co.bitshifted.reflex.http.RFXHttpRequest;
 
 public interface ReflexClient {
 
-    <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException;
+    <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException, HttpStatusException;
 }

@@ -10,7 +10,7 @@
 
 package co.bitshifted.reflex.http;
 
-public enum HttpMethod {
+public enum RFXHttpMethod {
     GET,
     PUT,
     POST,

@@ -11,6 +11,7 @@
 package co.bitshifted.reflex.impl;
 
 import co.bitshifted.reflex.exception.HttpClientException;
+import co.bitshifted.reflex.exception.HttpStatusException;
 import co.bitshifted.reflex.http.RFXHttpHeaders;
 import co.bitshifted.reflex.http.RFXHttpResponse;
 import co.bitshifted.reflex.http.RFXHttpStatus;
@@ -33,13 +34,20 @@ public class JdkReflexClient implements ReflexClient {
 
 
     @Override
-    public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException {
+    public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException, HttpStatusException {
         var publisher = getRequestBodyPublisher(request);
         var jdkHttpRequest = HttpRequest.newBuilder(request.uri()).method(request.method().name(), publisher).build();
         try {
-            var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofString());
+            var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofInputStream());
+            request.successStatus().stream().filter(st -> st.code() == response.statusCode()).findFirst().orElseThrow(() -> new HttpStatusException("Unexpected status code: " + response.statusCode()));
             var contentType = response.headers().firstValue(RFXHttpHeaders.CONTENT_TYPE);
-            var bodySerializer = context().getSerializerFor(contentType.get());
+            Optional<BodySerializer> bodySerializer;
+            if(contentType.isPresent()) {
+                bodySerializer = context().getSerializerFor(contentType.get());
+            } else {
+                bodySerializer = Optional.empty();
+            }
+
             return new RFXHttpResponse(RFXHttpStatus.findByCode(response.statusCode()), Optional.of(response.body()), bodySerializer, Optional.of(new RFXHttpHeaders()));
         } catch (IOException | InterruptedException ex) {
             throw  new HttpClientException(ex);
@@ -52,7 +60,7 @@ public class JdkReflexClient implements ReflexClient {
         if (request.body() != null) {
             var contentType = request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Body content type not specified"));
             var bodySerializer = context().getSerializerFor(contentType.get(0)).orElseThrow(() -> new HttpClientException("No body serializer found for content type " + contentType.get(0)));
-            publisher = HttpRequest.BodyPublishers.ofString(bodySerializer.objectToString(request.body()));
+            publisher = HttpRequest.BodyPublishers.ofInputStream(() -> bodySerializer.objectToStream(request.body()));
         }
         return publisher;
     }

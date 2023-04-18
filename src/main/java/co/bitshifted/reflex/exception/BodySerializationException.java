@@ -10,9 +10,13 @@
 
 package co.bitshifted.reflex.exception;
 
-public class HttpStatusException extends Exception {
+public class BodySerializationException extends RuntimeException {
 
-    public HttpStatusException(String message) {
+    public BodySerializationException(Throwable cause) {
+        super(cause);
+    }
+
+    public BodySerializationException(String message) {
         super(message);
     }
 }

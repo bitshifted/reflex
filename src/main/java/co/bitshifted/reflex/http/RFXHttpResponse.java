@@ -10,14 +10,19 @@
 
 package co.bitshifted.reflex.http;
 
+import co.bitshifted.reflex.exception.BodySerializationException;
 import co.bitshifted.reflex.serialize.BodySerializer;
 
+import java.io.InputStream;
 import java.util.Optional;
 
-public record RFXHttpResponse(RFXHttpStatus status, Optional<String> body, Optional<BodySerializer> bodySerializer, Optional<RFXHttpHeaders> headers) {
+public record RFXHttpResponse(RFXHttpStatus status, Optional<InputStream> body, Optional<BodySerializer> bodySerializer, Optional<RFXHttpHeaders> headers) {
 
     public <T> T bodyToValue(Class<T> dataType) {
-        return bodySerializer.get().stringToObject(body.get(), dataType);
+        if(body.isEmpty()) {
+            throw new BodySerializationException("Response body not present");
+        }
+        return bodySerializer.get().streamToObject(body.get(), dataType);
     }
 
 

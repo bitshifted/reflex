@@ -10,9 +10,14 @@
 
 package co.bitshifted.reflex.serialize;
 
+import co.bitshifted.reflex.exception.BodySerializationException;
 import co.bitshifted.reflex.http.RFXMimeType;
 import co.bitshifted.reflex.http.RFXMimeTypes;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 public class PlainTextBodySerializer  implements BodySerializer{
@@ -22,12 +27,21 @@ public class PlainTextBodySerializer  implements BodySerializer{
     }
 
     @Override
-    public <T> String objectToString(T object) {
-        return object.toString();
+    public <T> InputStream objectToStream(T object) {
+       var text = object.toString();
+       return new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
-    public <T> T stringToObject(String input, Class<T> type) {
-        throw new UnsupportedOperationException("Plain text can not be converted to object");
+    public <T> T streamToObject(InputStream input, Class<T> type) {
+        if(type == String.class) {
+            try {
+                return type.getConstructor(byte[].class).newInstance(input.readAllBytes());
+            } catch(Exception ex) {
+                throw new BodySerializationException(ex);
+            }
+
+        }
+        throw new UnsupportedOperationException("Only String type is supported");
     }
 }
