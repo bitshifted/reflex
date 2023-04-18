@@ -1,5 +1,5 @@
 module co.bitshifted.libs.httpjfx {
-    requires java.net.http;
+    requires static java.net.http;
     requires com.fasterxml.jackson.databind;
 
     exports co.bitshifted.reflex;

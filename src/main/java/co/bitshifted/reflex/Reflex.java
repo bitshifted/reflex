@@ -29,6 +29,6 @@ public class Reflex {
     }
 
     public static ReflexClient client() {
-        return INSTANCE.context.getDefaultClient();
+        return INSTANCE.context.defaultClient();
     }
 }

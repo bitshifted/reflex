@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
+ *  * Copyright (c) 2023-2023  Bitshift D.O.O (http://bitshifted.co)
  *  *
  *  * This Source Code Form is subject to the terms of the Mozilla Public
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,9 @@
  *
  */
 
-package co.bitshifted.reflex.impl;
+package co.bitshifted.reflex.impl.jdk11;
 
+import co.bitshifted.reflex.ReflexClientConfiguration;
 import co.bitshifted.reflex.exception.HttpClientException;
 import co.bitshifted.reflex.exception.HttpStatusException;
 import co.bitshifted.reflex.http.RFXHttpHeaders;
@@ -29,8 +30,20 @@ import static co.bitshifted.reflex.Reflex.*;
 
 public class JdkReflexClient implements ReflexClient {
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient;
     private BodySerializer dataSerializer;
+
+    public JdkReflexClient() {
+        this.httpClient =  HttpClient.newHttpClient();
+    }
+
+    public JdkReflexClient(ReflexClientConfiguration config) {
+        var jdk11Config = Jdk11ConfigConverter.fromConfig(config);
+        this.httpClient = HttpClient.newBuilder()
+                .connectTimeout(jdk11Config.connectTimeout())
+                .followRedirects(jdk11Config.redirectPolicy())
+                .build();
+    }
 
 
     @Override
