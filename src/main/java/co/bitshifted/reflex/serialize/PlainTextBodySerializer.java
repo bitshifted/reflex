@@ -15,10 +15,19 @@ import co.bitshifted.reflex.http.RFXMimeTypes;
 
 import java.util.Set;
 
-public interface JsonBodySerializer extends BodySerializer {
+public class PlainTextBodySerializer  implements BodySerializer{
+    @Override
+    public Set<RFXMimeType> supportedMimeTypes() {
+        return Set.of(RFXMimeTypes.TEXT_PLAIN);
+    }
 
     @Override
-    default Set<RFXMimeType> supportedMimeTypes() {
-        return Set.of(RFXMimeTypes.APPLICATION_JSON);
+    public <T> String objectToString(T object) {
+        return object.toString();
+    }
+
+    @Override
+    public <T> T stringToObject(String input, Class<T> type) {
+        throw new UnsupportedOperationException("Plain text can not be converted to object");
     }
 }

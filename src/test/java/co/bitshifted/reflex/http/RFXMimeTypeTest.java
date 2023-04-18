@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MimeTypeTest {
+public class RFXMimeTypeTest {
 
     @Test
     void completeMimeTypeTestReturnsCorrectValue() {
-        var mime = new MimeType("image", "sub-type", "vnd", "extra", "charset=UTF-8");
+        var mime = new RFXMimeType("image", "sub-type", "vnd", "extra", "charset=UTF-8");
         var result = mime.value();
         var expected = "image/vnd.sub-type+extra;charset=UTF-8";
         assertEquals(expected, result);
@@ -26,6 +26,6 @@ public class MimeTypeTest {
 
     @Test
     void missingMimeTypePartsReturnError() {
-        var th = assertThrows(NullPointerException.class, () -> {new MimeType(null, "subtype", null, null, null);});
+        var th = assertThrows(NullPointerException.class, () -> {new RFXMimeType(null, "subtype", null, null, null);});
     }
 }

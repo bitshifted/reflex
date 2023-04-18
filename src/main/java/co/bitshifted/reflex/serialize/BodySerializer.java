@@ -10,13 +10,13 @@
 
 package co.bitshifted.reflex.serialize;
 
-import co.bitshifted.reflex.http.MimeType;
+import co.bitshifted.reflex.http.RFXMimeType;
 
 import java.util.Set;
 
 public interface BodySerializer {
 
-    Set<MimeType> supportedMimeTypes();
+    Set<RFXMimeType> supportedMimeTypes();
     <T> String objectToString(T object);
     <T> T stringToObject(String input, Class<T> type);
 }

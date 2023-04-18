@@ -12,14 +12,14 @@ package co.bitshifted.reflex.http;
 
 import java.util.Objects;
 
-public record MimeType(String type, String subtype, String tree, String suffix, String param) {
+public record RFXMimeType(String type, String subtype, String tree, String suffix, String param) {
 
-    public MimeType {
+    public RFXMimeType {
         Objects.requireNonNull(type);
         Objects.requireNonNull(subtype);
     }
 
-    public MimeType(String type, String subtype) {
+    public RFXMimeType(String type, String subtype) {
         this(type, subtype, null, null, null);
     }
 
