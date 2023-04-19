@@ -15,7 +15,11 @@ import java.util.*;
 public class RFXHttpHeaders {
 
     public static final String ACCEPT = "Accept";
+    public static final String ACCEPT_LANGUAGE = "Accept-Language";
     public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_LENGTH = "Content-Length";
+
+    public static final String LOCATION = "Location";
 
     private final Map<String, List<String>> headersMap;
 
@@ -38,5 +42,9 @@ public class RFXHttpHeaders {
             return Optional.of(headersMap.get(name));
         }
         return Optional.empty();
+    }
+
+    public Map<String, List<String>> getAllHeaders() {
+        return headersMap;
     }
 }

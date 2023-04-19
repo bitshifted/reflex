@@ -52,7 +52,9 @@ public class JdkReflexClient implements ReflexClient {
         var jdkHttpRequest = HttpRequest.newBuilder(request.uri()).method(request.method().name(), publisher).build();
         try {
             var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofInputStream());
-            request.successStatus().stream().filter(st -> st.code() == response.statusCode()).findFirst().orElseThrow(() -> new HttpStatusException("Unexpected status code: " + response.statusCode()));
+            if(response.statusCode() >= RFXHttpStatus.BAD_REQUEST.code()) {
+                throw new HttpStatusException("HTTP error status code: " + response.statusCode());
+            }
             var contentType = response.headers().firstValue(RFXHttpHeaders.CONTENT_TYPE);
             Optional<BodySerializer> bodySerializer;
             if(contentType.isPresent()) {
@@ -70,12 +72,21 @@ public class JdkReflexClient implements ReflexClient {
 
     private <T> HttpRequest.BodyPublisher getRequestBodyPublisher(RFXHttpRequest<T> request) throws HttpClientException {
         var publisher = HttpRequest.BodyPublishers.noBody();
-        if (request.body() != null) {
-            var contentType = request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Body content type not specified"));
+        if (request.body() != null && request.body().isPresent()) {
+            var contentType = request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Request content type not specified"));
             var bodySerializer = context().getSerializerFor(contentType.get(0)).orElseThrow(() -> new HttpClientException("No body serializer found for content type " + contentType.get(0)));
             publisher = HttpRequest.BodyPublishers.ofInputStream(() -> bodySerializer.objectToStream(request.body()));
         }
         return publisher;
     }
+
+//    private <T> HttpResponse.BodyHandler<T> getResponseBodyHandler(RFXHttpResponse response) throws HttpClientException {
+//        var handler
+//        if(response.body() != null && response.body().isPresent()) {
+//            var contentType = response.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Response content type not specified"));
+//            var bodySerializer = context().getSerializerFor(contentType.get(0)).orElseThrow(() -> new HttpClientException("No body serializer found for content type " + contentType.get(0)));
+//            handler = HttpResponse.BodyHandlers.ofInputStream();
+//        }
+//    }
 
 }
