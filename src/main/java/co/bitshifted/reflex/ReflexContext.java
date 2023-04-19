@@ -11,6 +11,7 @@
 package co.bitshifted.reflex;
 
 import co.bitshifted.reflex.http.RFXMimeType;
+import co.bitshifted.reflex.impl.BodySerializerLoader;
 import co.bitshifted.reflex.impl.HttpClientLoader;
 import co.bitshifted.reflex.impl.jdk11.JdkReflexClient;
 import co.bitshifted.reflex.serialize.BodySerializer;
@@ -23,15 +24,19 @@ public class ReflexContext {
 
     private ReflexClient defaultClient;
     private final Map<String, BodySerializer> bodySerializers;
+    private boolean serializersLoaded = false;
 
     ReflexContext() {
         this.bodySerializers = new HashMap<>();
-        this.defaultClient = new JdkReflexClient();
     }
 
     public ReflexClient defaultClient() {
         if(defaultClient == null) {
             defaultClient =HttpClientLoader.loadDefaultClient().get();
+        }
+        if(!serializersLoaded) {
+            BodySerializerLoader.loadBodySerializers().stream().forEach(ser ->
+                ser.supportedMimeTypes().stream().forEach(s -> bodySerializers.put(s.value(), ser)));
         }
         return defaultClient;
     }

@@ -10,9 +10,13 @@
 
 package co.bitshifted.reflex.serialize;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.InputStream;
 
 public class JacksonJsonBodySerializer implements JsonBodySerializer {
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public <T> InputStream objectToStream(T object) {
