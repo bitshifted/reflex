@@ -18,13 +18,13 @@ import java.util.Set;
 public record RFXHttpRequest<T>(RFXHttpMethod method, URI uri, Set<RFXHttpStatus> successStatus,
                                 Optional<T> body, Optional<RFXHttpHeaders> headers) {
     public RFXHttpRequest{
-        Objects.nonNull(method);
-        Objects.nonNull(uri);
-        Objects.nonNull(successStatus);
+        Objects.requireNonNull(method);
+        Objects.requireNonNull(uri);
+        Objects.requireNonNull(successStatus);
         if (successStatus.isEmpty()) {
             throw new IllegalArgumentException("At least one success status is required");
         }
-        Objects.nonNull(body);
-        Objects.nonNull(headers);
+        Objects.requireNonNull(body);
+        Objects.requireNonNull(headers);
     }
 }

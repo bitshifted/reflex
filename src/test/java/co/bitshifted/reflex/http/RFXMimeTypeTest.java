@@ -25,6 +25,13 @@ public class RFXMimeTypeTest {
     }
 
     @Test
+    void partialMimeTypeValueReturnsCorrectValue() {
+        var mime = new RFXMimeType("image", "png", null, "", " ");
+        var result = mime.value();
+        assertEquals("image/png", result);
+    }
+
+    @Test
     void missingMimeTypePartsReturnError() {
         var th = assertThrows(NullPointerException.class, () -> {new RFXMimeType(null, "subtype", null, null, null);});
     }
