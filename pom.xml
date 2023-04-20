@@ -57,13 +57,11 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
-                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.openjfx</groupId>
@@ -102,10 +100,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
