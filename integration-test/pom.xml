@@ -14,9 +14,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>co.bitshfited</groupId>
+    <parent>
+        <groupId>co.bitshfited</groupId>
+        <artifactId>reflex</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
     <artifactId>reflex-integration-test</artifactId>
-    <version>${revision}</version>
 
     <properties>
         <revision>0.0.0-SNAPSHOT</revision>
@@ -28,10 +32,36 @@
     <dependencies>
         <dependency>
             <groupId>co.bitshfited</groupId>
-            <artifactId>reflex</artifactId>
-            <version>${revision}</version>
+            <artifactId>reflex-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>reflex-integration-test</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

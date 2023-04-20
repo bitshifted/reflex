@@ -1,7 +1,6 @@
 {
   "mappings": [
     {
-      "id": "get-plain-text",
       "request": {
         "method": "GET",
         "url": "/v1/text"

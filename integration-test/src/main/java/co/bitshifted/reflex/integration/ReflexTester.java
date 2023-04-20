@@ -12,18 +12,24 @@ package co.bitshifted.reflex.integration;
 
 import co.bitshifted.reflex.Reflex;
 import co.bitshifted.reflex.http.RFXHttpMethod;
-import co.bitshifted.reflex.http.RFXHttpRequest;
-import co.bitshifted.reflex.http.RFXHttpStatus;
+import co.bitshifted.reflex.http.RFXHttpRequestBuilder;
 
 import java.net.URI;
-import java.util.Optional;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class ReflexTester {
 
     public static void main(String... args) throws Exception {
-        var request = new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/v1/text"), Set.of(RFXHttpStatus.OK), Optional.empty(), Optional.empty());
-        var response = Reflex.client().sendHttpRequest(request);
-        System.out.println("Response: " + response.bodyToValue(String.class));
+       var testResults = new ArrayList<TestResult>();
+       var jdk11PlainTextTester = new Jdk11ClientPlainTextTester();
+       testResults.addAll(jdk11PlainTextTester.runTests());
+
+       testResults.forEach(tr -> System.out.println(tr.displayResult()));
+
+       int finalTestResult = testResults.stream()
+               .filter(tr -> tr.result() == Constants.TEST_FAIL).findFirst()
+               .orElse(new TestResult("all", Constants.TEST_SUCCESS))
+               .result();
+      System.exit(finalTestResult);
     }
 }

@@ -34,7 +34,7 @@ public class JdkHttpClientImplTest {
         stubFor(get("/test/endpoint").willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
         var client = new JdkReflexClient();
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Set.of(RFXHttpStatus.OK), Optional.empty(), Optional.empty()));
+        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Optional.empty(), Optional.empty()));
         assertNotNull(response);
         assertNotNull(response.body());
         var responseBody = response.bodyToValue(String.class);
@@ -49,7 +49,7 @@ public class JdkHttpClientImplTest {
         var headers = new RFXHttpHeaders();
         headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
         var client = new JdkReflexClient();
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Set.of(RFXHttpStatus.OK), Optional.of("content"), Optional.of(headers)));
+        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Optional.of("content"), Optional.of(headers)));
         assertNotNull(response);
         assertEquals(RFXHttpStatus.OK, response.status());
         assertEquals("response body", response.bodyToValue(String.class));
@@ -59,6 +59,6 @@ public class JdkHttpClientImplTest {
     void invalidResponseStatusShouldThrowException() throws Exception{
         stubFor(get("/test/wrong-status").willReturn(badRequest()));
         assertThrows(HttpStatusException.class, () ->
-                client().sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/wrong-status"), Set.of(RFXHttpStatus.OK), Optional.empty(), Optional.empty())));
+                client().sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/wrong-status"),Optional.empty(), Optional.empty())));
     }
 }

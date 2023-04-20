@@ -37,7 +37,7 @@ public class HttpUrlConnectionClientTest {
         headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.value());
         headers.setHeader(RFXHttpHeaders.ACCEPT_LANGUAGE, "rn-US");
         var response = client.sendHttpRequest(
-                new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Set.of(RFXHttpStatus.OK), Optional.empty(), Optional.of(headers)));
+                new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Optional.empty(), Optional.of(headers)));
         assertNotNull(response);
         assertNotNull(response.body());
         var responseBody = response.bodyToValue(String.class);
@@ -51,8 +51,7 @@ public class HttpUrlConnectionClientTest {
         var client = new HttpUrlConnectionClient();
         var headers = new RFXHttpHeaders();
         headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"),
-                Set.of(RFXHttpStatus.NO_CONTENT), Optional.of("body"), Optional.of(headers)));
+        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Optional.of("body"), Optional.of(headers)));
         assertNotNull(response);
         assertEquals(RFXHttpStatus.NO_CONTENT, response.status());
     }
@@ -62,6 +61,6 @@ public class HttpUrlConnectionClientTest {
         stubFor(get("/test/failure").willReturn(notFound()));
         var client = new HttpUrlConnectionClient();
         assertThrows(HttpStatusException.class, () ->
-                client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/failure"), Set.of(RFXHttpStatus.OK), Optional.empty(), Optional.empty())));
+                client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/failure"), Optional.empty(), Optional.empty())));
     }
 }

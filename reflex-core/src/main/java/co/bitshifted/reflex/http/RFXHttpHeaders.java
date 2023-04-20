@@ -47,4 +47,8 @@ public class RFXHttpHeaders {
     public Map<String, List<String>> getAllHeaders() {
         return headersMap;
     }
+
+    public boolean isEmpty() {
+        return headersMap.isEmpty();
+    }
 }
