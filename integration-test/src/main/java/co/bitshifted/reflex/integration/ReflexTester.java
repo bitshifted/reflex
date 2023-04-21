@@ -10,19 +10,25 @@
 
 package co.bitshifted.reflex.integration;
 
-import co.bitshifted.reflex.Reflex;
-import co.bitshifted.reflex.http.RFXHttpMethod;
-import co.bitshifted.reflex.http.RFXHttpRequestBuilder;
+import co.bitshifted.reflex.integration.tests.TestCasePackage;
+import co.bitshifted.reflex.integration.tests.TestSuite;
 
-import java.net.URI;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ReflexTester {
 
     public static void main(String... args) throws Exception {
-       var testResults = new ArrayList<TestResult>();
-       var jdk11PlainTextTester = new Jdk11ClientPlainTextTester();
-       testResults.addAll(jdk11PlainTextTester.runTests());
+        if (args.length == 0) {
+            System.out.println("At least one test suite name is required");
+            System.exit(Constants.TEST_FAIL);
+        }
+        var testResults = new ArrayList<TestResult>();
+        var testCases = Stream.of(args).map(arg -> TestSuite.valueOf(arg)).collect(Collectors.toList());
+        for(TestSuite ts : testCases) {
+            testResults.addAll(ts.getTestCasePackage().runTests());
+        }
 
        testResults.forEach(tr -> System.out.println(tr.displayResult()));
 

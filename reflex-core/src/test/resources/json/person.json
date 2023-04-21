@@ -1,0 +1,9 @@
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "address": {
+    "streetAddress": "main street 1",
+    "zipCode": "12345",
+    "city": "New York"
+  }
+}

@@ -17,29 +17,31 @@ WIREMOCK_PORT=9000
 FAILURE_EXIT_CODE=20
 TEST_JAR_NAME=reflex-integration-test.jar
 ROOT_DIR=${PWD}
+WIREMOCK_DIR=/tmp/wiremock-server
 
+
+echo "Installing and starting WireMock..."
+mkdir -p WIREMOCK_DIR
+rm -rvf $WIREMOCK_DIR/wiremock &&  cp -rv wiremock $WIREMOCK_DIR
+curl -C - $WIREMOCK_DOWNLOAD_URL --output $WIREMOCK_DIR/wiremock.jar
+cd $WIREMOCK_DIR
+java -jar wiremock.jar --root-dir wiremock --port $WIREMOCK_PORT &
+WIREMOCK_SERVER_PID=$!
+echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
+
+cd $ROOT_DIR
 echo "Building integration tests"
-mvn clean install
+mvn clean install -P jackson-serializer
 MAVEN_BUILD_RESULT=$?
 if [ $MAVEN_BUILD_RESULT -ne 0 ]; then
   echo "Maven build failed"
   exit $FAILURE_EXIT_CODE
 fi
 
-echo "Installing and starting WireMock..."
-mkdir -p $TARGET_DIR
-cp -rv wiremock target
-curl -C - $WIREMOCK_DOWNLOAD_URL --output /tmp/wiremock.jar && cp /tmp/wiremock.jar $TARGET_DIR
-cd $ROOT_DIR/$TARGET_DIR
-java -jar wiremock.jar --root-dir wiremock --port $WIREMOCK_PORT &
-WIREMOCK_SERVER_PID=$!
-echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
-
 echo "Running integration tests..."
-sleep 5
 cd $ROOT_DIR/$TARGET_DIR
 echo "Working directory: ${PWD}"
-java -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester
+java -ea -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester JDK11_PLAIN_TEXT JDK11_JSON_JACKSON
 TEST_RESULT=$?
 kill $WIREMOCK_SERVER_PID
 if [ $TEST_RESULT -ne 0 ];then
