@@ -12,6 +12,7 @@ package co.bitshifted.reflex.integration.model;
 
 public class Person {
 
+    private Integer id;
     private String name;
     private int age;
     private Address address;
@@ -38,5 +39,13 @@ public class Person {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }

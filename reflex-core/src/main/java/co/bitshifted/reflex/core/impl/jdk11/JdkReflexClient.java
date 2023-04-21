@@ -84,7 +84,7 @@ public class JdkReflexClient implements ReflexClient {
         if (request.body() != null && request.body().isPresent()) {
             var contentType = request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Request content type not specified"));
             var bodySerializer = context().getSerializerFor(contentType.get(0)).orElseThrow(() -> new HttpClientException("No body serializer found for content type " + contentType.get(0)));
-            publisher = HttpRequest.BodyPublishers.ofInputStream(() -> bodySerializer.objectToStream(request.body()));
+            publisher = HttpRequest.BodyPublishers.ofInputStream(() -> bodySerializer.objectToStream(request.body().get()));
         }
         return publisher;
     }

@@ -56,6 +56,7 @@ public class ReflexContext {
     }
 
     public Optional<BodySerializer> getSerializerFor(String mimeType) {
+        LOGGER.debug("Looking up serializers for MIME type: {}", mimeType);
         return Optional.ofNullable(bodySerializers.get(mimeType));
     }
 }

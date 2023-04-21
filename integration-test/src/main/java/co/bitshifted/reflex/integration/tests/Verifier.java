@@ -21,4 +21,11 @@ public class Verifier {
         }
         return result;
     }
+
+    public static boolean verify(String message, boolean check) {
+        if(!check) {
+            System.err.println("Verification error: " + message);
+        }
+        return check;
+    }
 }
