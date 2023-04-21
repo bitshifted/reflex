@@ -1,0 +1,44 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/v1/persons/1"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "json/get-person-simple.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1/persons",
+        "bodyPatterns": [
+          {
+            "equalToJson": {
+              "id": null,
+              "name": "Jane Doe",
+              "age": 25,
+              "address": {
+                "streetAddress": "main street 21",
+                "zipCode" : "SD123",
+                "city": "London"
+              }
+            }
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "json/post-person-simple-response.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}

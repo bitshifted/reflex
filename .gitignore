@@ -24,3 +24,5 @@ hs_err_pid*
 .idea/
 target/
 *.iml
+.flattened-pom.xml
+dependency-reduced-pom.xml
