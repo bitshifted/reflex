@@ -10,15 +10,16 @@
 
 package co.bitshifted.reflex.core.impl.jdk11;
 
-import co.bitshifted.reflex.core.ReflexClientConfiguration;
+import co.bitshifted.reflex.core.ReflexClient;
+import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.exception.HttpClientException;
 import co.bitshifted.reflex.core.exception.HttpStatusException;
 import co.bitshifted.reflex.core.http.RFXHttpHeaders;
+import co.bitshifted.reflex.core.http.RFXHttpRequest;
 import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
+import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-import co.bitshifted.reflex.core.ReflexClient;
-import co.bitshifted.reflex.core.http.RFXHttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
 
-import static co.bitshifted.reflex.core.Reflex.*;
+import static co.bitshifted.reflex.core.Reflex.context;
 
 public class JdkReflexClient implements ReflexClient {
 
@@ -53,7 +54,7 @@ public class JdkReflexClient implements ReflexClient {
     @Override
     public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException, HttpStatusException {
         var publisher = getRequestBodyPublisher(request);
-        var jdkHttpRequest = HttpRequest.newBuilder(request.uri()).method(request.method().name(), publisher).build();
+        var jdkHttpRequest = HttpRequest.newBuilder(Helper.calculateUri(request)).method(request.method().name(), publisher).build();
         try {
             var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofInputStream());
             if(response.statusCode() >= RFXHttpStatus.BAD_REQUEST.code()) {

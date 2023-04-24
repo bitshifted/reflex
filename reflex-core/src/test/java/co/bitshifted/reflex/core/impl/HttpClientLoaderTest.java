@@ -10,8 +10,8 @@
 
 package co.bitshifted.reflex.core.impl;
 
-import co.bitshifted.reflex.core.RFXRedirectPolicy;
-import co.bitshifted.reflex.core.ReflexClientConfiguration;
+import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
+import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.impl.jdk11.JdkReflexClient;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ public class HttpClientLoaderTest {
 
     @Test
     void loadDefaultClientWithConfigSuccess() {
-        var config =new  ReflexClientConfiguration(Duration.of(5, ChronoUnit.SECONDS), RFXRedirectPolicy.NORMAL);
+        var config =new  ReflexClientConfiguration();
         var result = HttpClientLoader.loadDefaultClient(config);
         assertTrue(result.isPresent());
         var client = result.get();

@@ -10,6 +10,8 @@
 
 package co.bitshifted.reflex.core;
 
+import co.bitshifted.reflex.core.config.ReflexContext;
+
 public class Reflex {
 
     private static final Reflex INSTANCE;

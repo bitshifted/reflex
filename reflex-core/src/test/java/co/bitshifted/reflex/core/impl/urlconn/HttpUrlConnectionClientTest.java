@@ -20,10 +20,11 @@ import java.net.URI;
 import java.util.Optional;
 
 import static co.bitshifted.reflex.core.Reflex.context;
+import static co.bitshifted.reflex.core.http.RFXHttpMethod.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@WireMockTest(httpPort = 9000)
+@WireMockTest(httpPort = 9020)
 public class HttpUrlConnectionClientTest {
 
     @Test
@@ -34,8 +35,8 @@ public class HttpUrlConnectionClientTest {
         var headers = new RFXHttpHeaders();
         headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.value());
         headers.setHeader(RFXHttpHeaders.ACCEPT_LANGUAGE, "rn-US");
-        var response = client.sendHttpRequest(
-                new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Optional.empty(), Optional.of(headers)));
+        var request = RFXHttpRequestBuilder.newBuilder().method(GET).requestUri(new URI("http://localhost:9020/test/endpoint")).build();
+        var response = client.sendHttpRequest(request);
         assertNotNull(response);
         assertNotNull(response.body());
         var responseBody = response.bodyToValue(String.class);
@@ -47,9 +48,12 @@ public class HttpUrlConnectionClientTest {
         stubFor(post("/test/post").willReturn(noContent()));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
         var client = new HttpUrlConnectionClient();
-        var headers = new RFXHttpHeaders();
-        headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Optional.of("body"), Optional.of(headers)));
+//        var headers = new RFXHttpHeaders();
+//        headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
+        var request = RFXHttpRequestBuilder.newBuilder("body").method(POST)
+                .requestUri(new URI("http://localhost:9020/test/post"))
+                .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value()).build();
+        var response = client.sendHttpRequest(request);
         assertNotNull(response);
         assertEquals(RFXHttpStatus.NO_CONTENT, response.status());
     }
@@ -58,7 +62,7 @@ public class HttpUrlConnectionClientTest {
     void getRequestFailsWhenErrorStatusFromServer() throws Exception {
         stubFor(get("/test/failure").willReturn(notFound()));
         var client = new HttpUrlConnectionClient();
-        assertThrows(HttpStatusException.class, () ->
-                client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/failure"), Optional.empty(), Optional.empty())));
+        var request = RFXHttpRequestBuilder.newBuilder().method(GET).requestUri(new URI("http://localhost:9020/test/failure")).build();
+        assertThrows(HttpStatusException.class, () -> client.sendHttpRequest(request));
     }
 }

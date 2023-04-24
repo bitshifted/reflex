@@ -8,7 +8,7 @@
  *
  */
 
-package co.bitshifted.reflex.core;
+package co.bitshifted.reflex.core.config;
 
 public enum RFXRedirectPolicy {
     NEVER,

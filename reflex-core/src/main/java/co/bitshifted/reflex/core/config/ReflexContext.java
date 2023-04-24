@@ -8,8 +8,9 @@
  *
  */
 
-package co.bitshifted.reflex.core;
+package co.bitshifted.reflex.core.config;
 
+import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.impl.BodySerializerLoader;
 import co.bitshifted.reflex.core.impl.HttpClientLoader;
@@ -26,11 +27,13 @@ public class ReflexContext {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflexContext.class);
 
     private ReflexClient defaultClient;
+    private final ReflexClientConfiguration defaultClientDonfiguration;
     private final Map<String, BodySerializer> bodySerializers;
     private boolean serializersLoaded = false;
 
-    ReflexContext() {
+    public ReflexContext() {
         this.bodySerializers = new HashMap<>();
+        this.defaultClientDonfiguration = new ReflexClientConfiguration();
     }
 
     public ReflexClient defaultClient() {
@@ -45,9 +48,9 @@ public class ReflexContext {
         return defaultClient;
     }
 
-    public void configureDefaultClient(ReflexClientConfiguration config) {
-        synchronized (defaultClient) {
-            defaultClient =HttpClientLoader.loadDefaultClient(config).get();
+    public ReflexClientConfiguration configuration() {
+        synchronized (this) {
+            return defaultClientDonfiguration;
         }
     }
 
