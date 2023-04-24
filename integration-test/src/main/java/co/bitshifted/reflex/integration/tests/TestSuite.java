@@ -11,8 +11,8 @@
 package co.bitshifted.reflex.integration.tests;
 
 public enum TestSuite {
-    JDK11_PLAIN_TEXT (Jdk11ClientPlainTextTestCase.class.getName()),
-    JDK11_JSON_JACKSON(Jdk11jacksonJsonTestCase.class.getName());
+    JDK11_PLAIN_TEXT (PlainTextTestCase.class.getName()),
+    JDK11_JSON_JACKSON(jacksonJsonTestCase.class.getName());
 
     private String className;
 

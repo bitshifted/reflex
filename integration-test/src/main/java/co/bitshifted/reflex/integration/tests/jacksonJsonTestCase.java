@@ -16,21 +16,21 @@ import co.bitshifted.reflex.integration.Constants;
 import co.bitshifted.reflex.integration.TestResult;
 import co.bitshifted.reflex.integration.model.Address;
 import co.bitshifted.reflex.integration.model.Person;
-import co.bitshifted.reflex.integration.tests.TestCasePackage;
 
-import java.lang.runtime.ObjectMethods;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import static co.bitshifted.reflex.integration.tests.Verifier.*;
 
-public class Jdk11jacksonJsonTestCase implements TestCasePackage {
+public class jacksonJsonTestCase implements TestCasePackage {
 
     private static final String JSON_GET_WITH_RESPONSE_BODY = "jdk11_jackson_get_json_with_response_body";
     private static final String JSON_POST_WITH_RESPONSE_BODY = "jdk11_post_json_with_response_body";
 
 
+    public jacksonJsonTestCase() {
+        Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    }
 
     @Override
     public List<TestResult> runTests() {
@@ -41,18 +41,19 @@ public class Jdk11jacksonJsonTestCase implements TestCasePackage {
     }
 
     private TestResult getRequestReturnsResponseWithJsonBody() {
-        var testResult = Constants.TEST_FAIL;
+        var testResult = Constants.TEST_RESULT_FAIL;
         try {
             var request = RFXHttpRequestBuilder.newBuilder()
                     .method(RFXHttpMethod.GET)
-                    .requestUri(new URI("http://localhost:9000/v1/persons/1")).build();
+                    .path("/v1/persons/1")
+                    .build();
             var response = Reflex.client().sendHttpRequest(request);
             if(response.status() == RFXHttpStatus.OK) {
                 var person = response.bodyToValue(Person.class);
                 boolean result = verifyAll(person != null, "John Smith".equals(person.getName()), person.getAge() == 20
                     ,person.getAddress() != null,  "main street 21".equals(person.getAddress().getStreetAddress()));
                 if(result) {
-                    testResult = Constants.TEST_SUCCESS;
+                    testResult = Constants.TEST_RESULT_SUCCESS;
                 }
 
             }
@@ -64,7 +65,7 @@ public class Jdk11jacksonJsonTestCase implements TestCasePackage {
     }
 
     private TestResult postRequestWithBodyReturnsResponseWithJsonBody() {
-        var testResult = Constants.TEST_FAIL;
+        var testResult = Constants.TEST_RESULT_FAIL;
         var personIn = new Person();
         personIn.setName("Jane Doe");
         personIn.setAge(25);
@@ -76,7 +77,7 @@ public class Jdk11jacksonJsonTestCase implements TestCasePackage {
         try {
             var request = RFXHttpRequestBuilder.newBuilder(personIn)
                     .method(RFXHttpMethod.POST)
-                    .requestUri(new URI("http://localhost:9000/v1/persons"))
+                    .path("/v1/persons")
                     .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.value())
                     .build();
             var response = Reflex.client().sendHttpRequest(request);
@@ -91,7 +92,7 @@ public class Jdk11jacksonJsonTestCase implements TestCasePackage {
                         verify("Invalid street address", "main street 21".equals(personResponse.getAddress().getStreetAddress())),
                         verify("Invalid city name", "London".equals(personResponse.getAddress().getCity())));
                 if(result) {
-                    testResult = Constants.TEST_SUCCESS;
+                    testResult = Constants.TEST_RESULT_SUCCESS;
                 }
 
             }

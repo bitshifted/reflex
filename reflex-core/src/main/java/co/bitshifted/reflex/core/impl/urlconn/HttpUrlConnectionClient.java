@@ -12,12 +12,14 @@ package co.bitshifted.reflex.core.impl.urlconn;
 
 import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.ReflexClient;
+import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.exception.HttpClientException;
 import co.bitshifted.reflex.core.exception.HttpStatusException;
 import co.bitshifted.reflex.core.http.RFXHttpHeaders;
 import co.bitshifted.reflex.core.http.RFXHttpRequest;
 import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
+import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
 
 import java.io.IOException;
@@ -28,12 +30,25 @@ import java.util.List;
 import java.util.Optional;
 
 public class HttpUrlConnectionClient implements ReflexClient  {
+
+    private HttpUrlConnectionClientConfig config;
+    public HttpUrlConnectionClient() {
+        var defaultConfig = Reflex.context().configuration();
+        this.config = HttpUrlConnectionConfigConverter.fromConfig(defaultConfig);
+    }
+
+    public HttpUrlConnectionClient(ReflexClientConfiguration configuration) {
+        this.config = HttpUrlConnectionConfigConverter.fromConfig(configuration);
+    }
     @Override
     public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException, HttpStatusException {
         try {
-            var url = request.uri().toURL();
+            var url = Helper.calculateUri(request).toURL();
             var urlConn = (HttpURLConnection)url.openConnection();
             urlConn.setRequestMethod(request.method().name());
+            urlConn.setConnectTimeout((int)config.connectTimeout());
+            urlConn.setReadTimeout((int)config.readTimeout());
+            urlConn.setInstanceFollowRedirects(config.redirect());
             if(request.headers().isPresent()) {
                 var allHeaders = request.headers().get().getAllHeaders();
                 allHeaders.keySet().stream().forEach(headerName -> {
@@ -85,4 +100,5 @@ public class HttpUrlConnectionClient implements ReflexClient  {
         }
         return Optional.empty();
     }
+
 }

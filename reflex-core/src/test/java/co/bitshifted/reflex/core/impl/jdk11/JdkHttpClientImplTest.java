@@ -22,10 +22,11 @@ import java.util.Optional;
 
 import static co.bitshifted.reflex.core.Reflex.client;
 import static co.bitshifted.reflex.core.Reflex.context;
+import static co.bitshifted.reflex.core.http.RFXHttpMethod.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@WireMockTest(httpPort = 9000)
+@WireMockTest(httpPort = 9010)
 public class JdkHttpClientImplTest {
 
     @Test
@@ -33,7 +34,8 @@ public class JdkHttpClientImplTest {
         stubFor(get("/test/endpoint").willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
         var client = new JdkReflexClient();
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/endpoint"), Optional.empty(), Optional.empty()));
+        var request = RFXHttpRequestBuilder.newBuilder().method(GET).requestUri(new URI("http://localhost:9010/test/endpoint")).build();
+        var response = client.sendHttpRequest(request);
         assertNotNull(response);
         assertNotNull(response.body());
         var responseBody = response.bodyToValue(String.class);
@@ -48,7 +50,8 @@ public class JdkHttpClientImplTest {
         var headers = new RFXHttpHeaders();
         headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
         var client = new JdkReflexClient();
-        var response = client.sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.POST, new URI("http://localhost:9000/test/post"), Optional.of("content"), Optional.of(headers)));
+        var request = RFXHttpRequestBuilder.newBuilder("content").method(POST).requestUri(new URI("http://localhost:9010/test/post")).build();
+        var response = client.sendHttpRequest(request);
         assertNotNull(response);
         assertEquals(RFXHttpStatus.OK, response.status());
         assertEquals("response body", response.bodyToValue(String.class));
@@ -57,7 +60,7 @@ public class JdkHttpClientImplTest {
     @Test
     void invalidResponseStatusShouldThrowException() throws Exception{
         stubFor(get("/test/wrong-status").willReturn(badRequest()));
-        assertThrows(HttpStatusException.class, () ->
-                client().sendHttpRequest(new RFXHttpRequest<>(RFXHttpMethod.GET, new URI("http://localhost:9000/test/wrong-status"),Optional.empty(), Optional.empty())));
+        var request = RFXHttpRequestBuilder.newBuilder().method(GET).requestUri(new URI("http://localhost:9010/test/wrong-status")).build();
+        assertThrows(HttpStatusException.class, () -> client().sendHttpRequest(request));
     }
 }

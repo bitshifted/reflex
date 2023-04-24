@@ -21,6 +21,8 @@ public final class RFXHttpRequestBuilder<T> {
     private T body;
     private RFXHttpHeaders headers;
 
+    private String path;
+
     private RFXHttpRequestBuilder() {
         this.headers = new RFXHttpHeaders();
     }
@@ -50,12 +52,17 @@ public final class RFXHttpRequestBuilder<T> {
         return this;
     }
 
+    public RFXHttpRequestBuilder<T> path(String value) {
+        this.path = value;
+        return this;
+    }
+
     public RFXHttpRequest<T> build() {
-        if(method == null || requestUri == null) {
+        if(method == null || (requestUri == null && path == null)) {
             throw new IllegalArgumentException("Method and URI are required");
         }
         var bodyOpt = (body != null) ? Optional.of(body) : Optional.empty();
         var optHeaders = (headers.isEmpty()) ? Optional.empty() : Optional.of(headers);
-        return new RFXHttpRequest(method, requestUri, bodyOpt, optHeaders);
+        return new RFXHttpRequest(method, Optional.ofNullable(requestUri), bodyOpt, optHeaders, Optional.ofNullable(path));
     }
 }

@@ -11,7 +11,7 @@
 package co.bitshifted.reflex.core.impl;
 
 import co.bitshifted.reflex.core.ReflexClient;
-import co.bitshifted.reflex.core.ReflexClientConfiguration;
+import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.impl.jdk11.JdkReflexClient;
 
 import java.util.Optional;

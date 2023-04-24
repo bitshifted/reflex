@@ -10,8 +10,8 @@
 
 package co.bitshifted.reflex.core.impl.jdk11;
 
-import co.bitshifted.reflex.core.RFXRedirectPolicy;
-import co.bitshifted.reflex.core.ReflexClientConfiguration;
+import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
+import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 
 import java.net.http.HttpClient;
 
