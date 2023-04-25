@@ -12,6 +12,7 @@ package co.bitshifted.reflex.core.config;
 
 import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.http.RFXMimeType;
+import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.impl.BodySerializerLoader;
 import co.bitshifted.reflex.core.impl.HttpClientLoader;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
@@ -27,13 +28,13 @@ public class ReflexContext {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflexContext.class);
 
     private ReflexClient defaultClient;
-    private final ReflexClientConfiguration defaultClientDonfiguration;
+    private final ReflexClientConfiguration defaultClientConfiguration;
     private final Map<String, BodySerializer> bodySerializers;
     private boolean serializersLoaded = false;
 
     public ReflexContext() {
         this.bodySerializers = new HashMap<>();
-        this.defaultClientDonfiguration = new ReflexClientConfiguration();
+        this.defaultClientConfiguration = new ReflexClientConfiguration();
     }
 
     public ReflexClient defaultClient() {
@@ -42,7 +43,7 @@ public class ReflexContext {
         }
         if(!serializersLoaded) {
             BodySerializerLoader.loadBodySerializers().stream().forEach(ser ->
-                ser.supportedMimeTypes().stream().forEach(s -> bodySerializers.put(s.value(), ser)));
+                ser.supportedMimeTypes().stream().forEach(s -> bodySerializers.put(s.toMimeTypeString(), ser)));
             LOGGER.debug("Loaded serializers: {}", bodySerializers);
         }
         return defaultClient;
@@ -50,16 +51,31 @@ public class ReflexContext {
 
     public ReflexClientConfiguration configuration() {
         synchronized (this) {
-            return defaultClientDonfiguration;
+            return defaultClientConfiguration;
         }
     }
 
     public void registerBodySerializer(RFXMimeType mimeType, BodySerializer serializer) {
-        this.bodySerializers.put(mimeType.value(), serializer);
+        this.bodySerializers.put(mimeType.toMimeTypeString(), serializer);
     }
 
     public Optional<BodySerializer> getSerializerFor(String mimeType) {
         LOGGER.debug("Looking up serializers for MIME type: {}", mimeType);
-        return Optional.ofNullable(bodySerializers.get(mimeType));
+        var match = bodySerializers.get(mimeType);
+        if (match == null) {
+            var candidate = bodySerializers.keySet().stream().filter(type -> {
+                var wanted = RFXMimeTypes.fromString(mimeType);
+                var current = RFXMimeTypes.fromString(type);
+                if(wanted.type().equals(current.type()) && wanted.subtype().equals(current.subtype())) {
+                    return true;
+                }
+                return false;
+            }).findFirst();
+            if(candidate.isPresent()) {
+                match = bodySerializers.get(candidate.get());
+                bodySerializers.put(mimeType, match);
+            }
+        }
+        return Optional.ofNullable(match);
     }
 }

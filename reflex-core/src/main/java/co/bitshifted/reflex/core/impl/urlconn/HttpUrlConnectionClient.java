@@ -68,9 +68,13 @@ public class HttpUrlConnectionClient implements ReflexClient  {
             if(statusCode >= RFXHttpStatus.BAD_REQUEST.code()) {
                 throw new HttpStatusException("HTTP error status: " + statusCode);
             }
+            Optional<BodySerializer> bodySerializer = Optional.empty();
+            if(urlConn.getContentType() != null && !urlConn.getContentType().isEmpty()) {
+                bodySerializer = getBodySerializer(urlConn.getContentType());
+            }
             return new RFXHttpResponse(RFXHttpStatus.findByCode(statusCode),
                     getResponseBody(urlConn),
-                    getBodySerializer(urlConn.getContentType()), Optional.empty());
+                    bodySerializer, Optional.empty());
         } catch (MalformedURLException ex) {
             throw new HttpClientException("Malformed URL: " + request.uri().toString());
         } catch(IOException ex) {

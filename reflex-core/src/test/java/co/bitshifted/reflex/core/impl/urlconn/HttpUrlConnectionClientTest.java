@@ -17,7 +17,6 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.Optional;
 
 import static co.bitshifted.reflex.core.Reflex.context;
 import static co.bitshifted.reflex.core.http.RFXHttpMethod.*;
@@ -33,7 +32,7 @@ public class HttpUrlConnectionClientTest {
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
         var client = new HttpUrlConnectionClient();
         var headers = new RFXHttpHeaders();
-        headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.value());
+        headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString());
         headers.setHeader(RFXHttpHeaders.ACCEPT_LANGUAGE, "rn-US");
         var request = RFXHttpRequestBuilder.newBuilder().method(GET).requestUri(new URI("http://localhost:9020/test/endpoint")).build();
         var response = client.sendHttpRequest(request);
@@ -52,7 +51,7 @@ public class HttpUrlConnectionClientTest {
 //        headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
         var request = RFXHttpRequestBuilder.newBuilder("body").method(POST)
                 .requestUri(new URI("http://localhost:9020/test/post"))
-                .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value()).build();
+                .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString()).build();
         var response = client.sendHttpRequest(request);
         assertNotNull(response);
         assertEquals(RFXHttpStatus.NO_CONTENT, response.status());

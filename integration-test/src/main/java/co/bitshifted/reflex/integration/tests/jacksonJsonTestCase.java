@@ -78,7 +78,7 @@ public class jacksonJsonTestCase implements TestCasePackage {
             var request = RFXHttpRequestBuilder.newBuilder(personIn)
                     .method(RFXHttpMethod.POST)
                     .path("/v1/persons")
-                    .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.value())
+                    .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
                     .build();
             var response = Reflex.client().sendHttpRequest(request);
             if(response.status() == RFXHttpStatus.OK) {
