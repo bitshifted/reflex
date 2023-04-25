@@ -10,6 +10,7 @@
 
 package co.bitshifted.reflex.core.serialize;
 
+import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import com.google.gson.FieldNamingPolicy;
@@ -51,6 +52,11 @@ public class GsonBodySerializer implements BodySerializer{
 
     @Override
     public <T> T streamToObject(InputStream input, Class<T> type) {
-        return gson.fromJson(new InputStreamReader(input), type);
+        try {
+            return gson.fromJson(new InputStreamReader(input), type);
+        } catch(Exception ex) {
+            throw  new BodySerializationException(ex);
+        }
+
     }
 }

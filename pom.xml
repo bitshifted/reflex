@@ -59,6 +59,9 @@
         <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
         <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
+        <!-- Sonar -->
+        <sonar.organization>bitshift</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
