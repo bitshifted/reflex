@@ -1,6 +1,7 @@
 module co.bitshifted.libs.httpjfx {
     requires static java.net.http;
     requires static com.fasterxml.jackson.databind;
+    requires static com.google.gson;
     requires org.slf4j;
 
     exports co.bitshifted.reflex.core.http;
