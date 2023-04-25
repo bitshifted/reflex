@@ -23,7 +23,7 @@ public record RFXMimeType(String type, String subtype, String tree, String suffi
         this(type, subtype, null, null, null);
     }
 
-    public String value() {
+    public String toMimeTypeString() {
         var sb = new StringBuilder(type);
         sb.append("/");
         if (tree != null && !tree.isBlank() && !tree.isEmpty()) {

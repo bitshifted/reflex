@@ -24,6 +24,6 @@ public class RFXMimeTypeBuilderTest {
                 .withParameter("param=value")
                 .build();
         var expect = "application/vnd.json+ld;param=value";
-        Assertions.assertEquals(expect, type.value());
+        Assertions.assertEquals(expect, type.toMimeTypeString());
     }
 }

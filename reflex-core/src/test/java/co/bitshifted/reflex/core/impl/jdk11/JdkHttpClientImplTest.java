@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.Optional;
 
 import static co.bitshifted.reflex.core.Reflex.client;
 import static co.bitshifted.reflex.core.Reflex.context;
@@ -45,10 +44,10 @@ public class JdkHttpClientImplTest {
     @Test
     @Disabled
     void basicPostRequestWhenResponseStatusOKSuccess() throws Exception {
-        stubFor(post("/test/post").willReturn(ok("response body").withHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value())));
+        stubFor(post("/test/post").willReturn(ok("response body").withHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString())));
         context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
         var headers = new RFXHttpHeaders();
-        headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.value());
+        headers.setHeader(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString());
         var client = new JdkReflexClient();
         var request = RFXHttpRequestBuilder.newBuilder("content").method(POST).requestUri(new URI("http://localhost:9010/test/post")).build();
         var response = client.sendHttpRequest(request);

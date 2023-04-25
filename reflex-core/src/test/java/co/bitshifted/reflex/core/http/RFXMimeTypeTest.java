@@ -19,7 +19,7 @@ public class RFXMimeTypeTest {
     @Test
     void completeMimeTypeTestReturnsCorrectValue() {
         var mime = new RFXMimeType("image", "sub-type", "vnd", "extra", "charset=UTF-8");
-        var result = mime.value();
+        var result = mime.toMimeTypeString();
         var expected = "image/vnd.sub-type+extra;charset=UTF-8";
         assertEquals(expected, result);
     }
@@ -27,7 +27,7 @@ public class RFXMimeTypeTest {
     @Test
     void partialMimeTypeValueReturnsCorrectValue() {
         var mime = new RFXMimeType("image", "png", null, "", " ");
-        var result = mime.value();
+        var result = mime.toMimeTypeString();
         assertEquals("image/png", result);
     }
 
