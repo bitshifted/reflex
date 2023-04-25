@@ -11,14 +11,33 @@
 package co.bitshifted.reflex.core.serialize;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.function.Consumer;
 
 public class JacksonJsonBodySerializer implements JsonBodySerializer {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
+
+    public JacksonJsonBodySerializer() {
+        this.mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Ignore null values when writing json.
+        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    }
+
+    public JacksonJsonBodySerializer(Consumer<ObjectMapper> customizer) {
+        this.mapper = new ObjectMapper();
+        customizer.accept(this.mapper);
+    }
 
     @Override
     public <T> InputStream objectToStream(T object) {

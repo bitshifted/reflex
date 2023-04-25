@@ -14,6 +14,8 @@ import co.bitshifted.reflex.core.http.RFXMimeType;
 
 import java.io.InputStream;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface BodySerializer {
 

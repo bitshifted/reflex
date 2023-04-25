@@ -20,7 +20,6 @@
         "bodyPatterns": [
           {
             "equalToJson": {
-              "id": null,
               "name": "Jane Doe",
               "age": 25,
               "address": {

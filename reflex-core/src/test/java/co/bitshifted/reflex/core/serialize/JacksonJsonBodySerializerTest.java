@@ -12,6 +12,8 @@ package co.bitshifted.reflex.core.serialize;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.model.Person;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -53,5 +55,14 @@ public class JacksonJsonBodySerializerTest {
         person.setLastName("Doe");
         var result = serializer.objectToStream(person);
         assertNotNull(result);
+    }
+
+    @Test
+    void customSerializerSuccess() {
+        var serializer = new JacksonJsonBodySerializer((mapper) -> {
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        });
+        var in = getClass().getResourceAsStream(PERSON_JSON);
+        assertThrows(BodySerializationException.class, () -> serializer.streamToObject(in, Person.class));
     }
 }
