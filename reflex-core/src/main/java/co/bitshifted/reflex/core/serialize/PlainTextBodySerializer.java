@@ -18,8 +18,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class PlainTextBodySerializer  implements BodySerializer{
+public class PlainTextBodySerializer<Void>  implements BodySerializer{
     @Override
     public Set<RFXMimeType> supportedMimeTypes() {
         return Set.of(RFXMimeTypes.TEXT_PLAIN);
