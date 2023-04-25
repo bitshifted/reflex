@@ -15,9 +15,13 @@ import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,11 +45,12 @@ public class GsonBodySerializer implements BodySerializer{
 
     @Override
     public <T> InputStream objectToStream(T object) {
-        return null;
+        var json = gson.toJson(object);
+        return new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public <T> T streamToObject(InputStream input, Class<T> type) {
-        return null;
+        return gson.fromJson(new InputStreamReader(input), type);
     }
 }
