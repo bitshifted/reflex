@@ -19,4 +19,4 @@ jobs:
           mvn clean install
       - name: Integration tests
         run: |
-          cd integration-test && ./run-tests.sh
+          cd integration-test && ./run-test.sh
