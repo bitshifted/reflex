@@ -10,35 +10,37 @@
 
 package co.bitshifted.reflex.core.http;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class RFXMimeTypesTest {
 
-    @Test
-    void mimeTypeFromStringTest() {
-        var result = RFXMimeTypes.fromString("image/jpeg");
-        assertEquals("image", result.type());
-        assertEquals("jpeg", result.subtype());
+  @Test
+  void mimeTypeFromStringTest() {
+    var result = RFXMimeTypes.fromString("image/jpeg");
+    assertEquals("image", result.type());
+    assertEquals("jpeg", result.subtype());
 
-        result = RFXMimeTypes.fromString("application/atom+xml");
-        assertEquals("application", result.type());
-        assertEquals("atom", result.subtype());
-        assertEquals("xml", result.suffix());
+    result = RFXMimeTypes.fromString("application/atom+xml");
+    assertEquals("application", result.type());
+    assertEquals("atom", result.subtype());
+    assertEquals("xml", result.suffix());
 
-        result = RFXMimeTypes.fromString("application/EDI-X12");
-        assertEquals("application", result.type());
-        assertEquals("EDI-X12", result.subtype());
+    result = RFXMimeTypes.fromString("application/EDI-X12");
+    assertEquals("application", result.type());
+    assertEquals("EDI-X12", result.subtype());
 
-        result = RFXMimeTypes.fromString("application/vnd.openxmlformats-officedocument.presentationml.presentation");
-        assertEquals("application", result.type());
-        assertEquals("vnd", result.tree());
-        assertEquals("openxmlformats-officedocument.presentationml.presentation", result.subtype());
+    result =
+        RFXMimeTypes.fromString(
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+    assertEquals("application", result.type());
+    assertEquals("vnd", result.tree());
+    assertEquals("openxmlformats-officedocument.presentationml.presentation", result.subtype());
 
-        result = RFXMimeTypes.fromString("application/json; indent=4");
-        assertEquals("application", result.type());
-        assertEquals("json", result.subtype());
-        assertEquals("indent=4", result.param());
-    }
+    result = RFXMimeTypes.fromString("application/json; indent=4");
+    assertEquals("application", result.type());
+    assertEquals("json", result.subtype());
+    assertEquals("indent=4", result.param());
+  }
 }

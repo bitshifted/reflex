@@ -12,18 +12,19 @@ package co.bitshifted.reflex.core.http;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-
 import java.io.InputStream;
 import java.util.Optional;
 
-public record RFXHttpResponse(RFXHttpStatus status, Optional<InputStream> body, Optional<BodySerializer> bodySerializer, Optional<RFXHttpHeaders> headers) {
+public record RFXHttpResponse(
+    RFXHttpStatus status,
+    Optional<InputStream> body,
+    Optional<BodySerializer> bodySerializer,
+    Optional<RFXHttpHeaders> headers) {
 
-    public <T> T bodyToValue(Class<T> dataType) {
-        if(body.isEmpty()) {
-            throw new BodySerializationException("Response body not present");
-        }
-        return bodySerializer.get().streamToObject(body.get(), dataType);
+  public <T> T bodyToValue(Class<T> dataType) {
+    if (body.isEmpty()) {
+      throw new BodySerializationException("Response body not present");
     }
-
-
+    return bodySerializer.get().streamToObject(body.get(), dataType);
+  }
 }

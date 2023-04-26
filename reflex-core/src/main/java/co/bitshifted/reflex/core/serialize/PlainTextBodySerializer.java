@@ -13,36 +13,32 @@ package co.bitshifted.reflex.core.serialize;
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-public class PlainTextBodySerializer<Void>  implements BodySerializer{
-    @Override
-    public Set<RFXMimeType> supportedMimeTypes() {
-        return Set.of(RFXMimeTypes.TEXT_PLAIN);
+public class PlainTextBodySerializer<Void> implements BodySerializer {
+  @Override
+  public Set<RFXMimeType> supportedMimeTypes() {
+    return Set.of(RFXMimeTypes.TEXT_PLAIN);
+  }
+
+  @Override
+  public <T> InputStream objectToStream(T object) {
+    var text = object.toString();
+    return new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
+  }
+
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type) {
+    if (type == String.class) {
+      try {
+        return type.getConstructor(byte[].class).newInstance(input.readAllBytes());
+      } catch (Exception ex) {
+        throw new BodySerializationException(ex);
+      }
     }
-
-    @Override
-    public <T> InputStream objectToStream(T object) {
-       var text = object.toString();
-       return new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public <T> T streamToObject(InputStream input, Class<T> type) {
-        if(type == String.class) {
-            try {
-                return type.getConstructor(byte[].class).newInstance(input.readAllBytes());
-            } catch(Exception ex) {
-                throw new BodySerializationException(ex);
-            }
-
-        }
-        throw new UnsupportedOperationException("Only String type is supported");
-    }
+    throw new UnsupportedOperationException("Only String type is supported");
+  }
 }

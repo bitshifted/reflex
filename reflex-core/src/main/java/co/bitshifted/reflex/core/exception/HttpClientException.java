@@ -12,11 +12,11 @@ package co.bitshifted.reflex.core.exception;
 
 public class HttpClientException extends Exception {
 
-    public HttpClientException(String message){
-        super(message);
-    }
+  public HttpClientException(String message) {
+    super(message);
+  }
 
-    public HttpClientException(Throwable th) {
-        super(th);
-    }
+  public HttpClientException(Throwable th) {
+    super(th);
+  }
 }

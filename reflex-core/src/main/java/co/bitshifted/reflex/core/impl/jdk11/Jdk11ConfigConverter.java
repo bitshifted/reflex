@@ -12,24 +12,22 @@ package co.bitshifted.reflex.core.impl.jdk11;
 
 import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
-
 import java.net.http.HttpClient;
 
 public class Jdk11ConfigConverter {
 
-    private Jdk11ConfigConverter() {
+  private Jdk11ConfigConverter() {}
 
-    }
+  public static Jdk11ClientConfig fromConfig(ReflexClientConfiguration config) {
+    return new Jdk11ClientConfig(
+        config.connectTimeout(), getRedirectPolicy(config.redirectPolicy()));
+  }
 
-    public static Jdk11ClientConfig fromConfig(ReflexClientConfiguration config) {
-        return new Jdk11ClientConfig(config.connectTimeout(), getRedirectPolicy(config.redirectPolicy()));
-    }
-
-    private static HttpClient.Redirect getRedirectPolicy(RFXRedirectPolicy input) {
-        return switch (input) {
-            case NEVER -> HttpClient.Redirect.NEVER;
-            case ALWAYS -> HttpClient.Redirect.ALWAYS;
-            case NORMAL -> HttpClient.Redirect.NORMAL;
-        };
-    }
+  private static HttpClient.Redirect getRedirectPolicy(RFXRedirectPolicy input) {
+    return switch (input) {
+      case NEVER -> HttpClient.Redirect.NEVER;
+      case ALWAYS -> HttpClient.Redirect.ALWAYS;
+      case NORMAL -> HttpClient.Redirect.NORMAL;
+    };
+  }
 }

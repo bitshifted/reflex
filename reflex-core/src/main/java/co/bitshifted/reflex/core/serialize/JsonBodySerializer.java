@@ -12,13 +12,12 @@ package co.bitshifted.reflex.core.serialize;
 
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
-
 import java.util.Set;
 
 public interface JsonBodySerializer extends BodySerializer {
 
-    @Override
-    default Set<RFXMimeType> supportedMimeTypes() {
-        return Set.of(RFXMimeTypes.APPLICATION_JSON);
-    }
+  @Override
+  default Set<RFXMimeType> supportedMimeTypes() {
+    return Set.of(RFXMimeTypes.APPLICATION_JSON);
+  }
 }

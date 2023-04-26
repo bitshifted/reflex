@@ -10,6 +10,9 @@
 
 package co.bitshifted.reflex.integration.tests.json;
 
+import static co.bitshifted.reflex.integration.tests.Verifier.verify;
+import static co.bitshifted.reflex.integration.tests.Verifier.verifyAll;
+
 import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.http.*;
 import co.bitshifted.reflex.integration.Constants;
@@ -20,79 +23,83 @@ import co.bitshifted.reflex.integration.tests.TestCasePackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static co.bitshifted.reflex.integration.tests.Verifier.verify;
-import static co.bitshifted.reflex.integration.tests.Verifier.verifyAll;
-
 public abstract class BaseJsonTestCase implements TestCasePackage {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseJsonTestCase.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaseJsonTestCase.class);
 
-    public BaseJsonTestCase() {
-        Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
-    }
+  private static final String MAIN_STREET = "main street 21";
 
+  public BaseJsonTestCase() {
+    Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
+  }
 
-    protected TestResult getRequestReturnsResponseWithJsonBody(String testName) {
-        var testResult = Constants.TEST_RESULT_FAIL;
-        try {
-            var request = RFXHttpRequestBuilder.newBuilder()
-                    .method(RFXHttpMethod.GET)
-                    .path("/v1/persons/1")
-                    .build();
-            var response = Reflex.client().sendHttpRequest(request);
-            if(response.status() == RFXHttpStatus.OK) {
-                var person = response.bodyToValue(Person.class);
-                boolean result = verifyAll(person != null, "John Smith".equals(person.getName()), person.getAge() == 20
-                        ,person.getAddress() != null,  "main street 21".equals(person.getAddress().getStreetAddress()));
-                if(result) {
-                    testResult = Constants.TEST_RESULT_SUCCESS;
-                }
-
-            }
-        } catch(Exception ex) {
-            LOGGER.error("Failed to execute request", ex);
+  protected TestResult getRequestReturnsResponseWithJsonBody(String testName) {
+    var testResult = Constants.TEST_RESULT_FAIL;
+    try {
+      var request =
+          RFXHttpRequestBuilder.newBuilder()
+              .method(RFXHttpMethod.GET)
+              .path("/v1/persons/1")
+              .build();
+      var response = Reflex.client().sendHttpRequest(request);
+      if (response.status() == RFXHttpStatus.OK) {
+        var person = response.bodyToValue(Person.class);
+        boolean result =
+            verifyAll(
+                person != null,
+                "John Smith".equals(person.getName()),
+                person.getAge() == 20,
+                person.getAddress() != null,
+                MAIN_STREET.equals(person.getAddress().getStreetAddress()));
+        if (result) {
+          testResult = Constants.TEST_RESULT_SUCCESS;
         }
-        return new TestResult(testName, testResult);
+      }
+    } catch (Exception ex) {
+      LOGGER.error("Failed to execute request", ex);
     }
+    return new TestResult(testName, testResult);
+  }
 
-    protected TestResult postRequestWithBodyReturnsResponseWithJsonBody(String testName) {
-        var testResult = Constants.TEST_RESULT_FAIL;
-        var personIn = new Person();
-        personIn.setName("Jane Doe");
-        personIn.setAge(25);
-        var address = new Address();
-        address.setStreetAddress("main street 21");
-        address.setZipCode("SD123");
-        address.setCity("London");
-        personIn.setAddress(address);
-        try {
-            var request = RFXHttpRequestBuilder.newBuilder(personIn)
-                    .method(RFXHttpMethod.POST)
-                    .path("/v1/persons")
-                    .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
-                    .build();
-            var response = Reflex.client().sendHttpRequest(request);
-            if(response.status() == RFXHttpStatus.OK) {
-                var personResponse = response.bodyToValue(Person.class);
-                boolean result = verifyAll(
-                        verify("Person response is null", personResponse != null),
-                        verify("Invalid person ID", personResponse.getId() == 100) ,
-                        verify("Invalid person name", "Jane Doe".equals(personResponse.getName())),
-                        verify("Invalid person age",personResponse.getAge() == 25),
-                        verify("Address is null",personResponse.getAddress() != null),
-                        verify("Invalid street address", "main street 21".equals(personResponse.getAddress().getStreetAddress())),
-                        verify("Invalid city name", "London".equals(personResponse.getAddress().getCity())));
-                if(result) {
-                    testResult = Constants.TEST_RESULT_SUCCESS;
-                }
-
-            }
-        } catch(Exception ex) {
-            LOGGER.error("Failed to execute request", ex);
+  protected TestResult postRequestWithBodyReturnsResponseWithJsonBody(String testName) {
+    var testResult = Constants.TEST_RESULT_FAIL;
+    var personIn = new Person();
+    personIn.setName("Jane Doe");
+    personIn.setAge(25);
+    var address = new Address();
+    address.setStreetAddress(MAIN_STREET);
+    address.setZipCode("SD123");
+    address.setCity("London");
+    personIn.setAddress(address);
+    try {
+      var request =
+          RFXHttpRequestBuilder.newBuilder(personIn)
+              .method(RFXHttpMethod.POST)
+              .path("/v1/persons")
+              .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
+              .build();
+      var response = Reflex.client().sendHttpRequest(request);
+      if (response.status() == RFXHttpStatus.OK) {
+        var personResponse = response.bodyToValue(Person.class);
+        boolean result =
+            verifyAll(
+                verify("Person response is null", personResponse != null),
+                verify("Invalid person ID", personResponse.getId() == 100),
+                verify("Invalid person name", "Jane Doe".equals(personResponse.getName())),
+                verify("Invalid person age", personResponse.getAge() == 25),
+                verify("Address is null", personResponse.getAddress() != null),
+                verify(
+                    "Invalid street address",
+                    MAIN_STREET.equals(personResponse.getAddress().getStreetAddress())),
+                verify(
+                    "Invalid city name", "London".equals(personResponse.getAddress().getCity())));
+        if (result) {
+          testResult = Constants.TEST_RESULT_SUCCESS;
         }
-        return new TestResult(testName, testResult);
+      }
+    } catch (Exception ex) {
+      LOGGER.error("Failed to execute request", ex);
     }
+    return new TestResult(testName, testResult);
+  }
 }

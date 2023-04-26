@@ -12,14 +12,14 @@ package co.bitshifted.reflex.core.impl.urlconn;
 
 import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
-import co.bitshifted.reflex.core.impl.jdk11.Jdk11ClientConfig;
-
-import java.time.temporal.ChronoUnit;
 
 public class HttpUrlConnectionConfigConverter {
 
-    public static HttpUrlConnectionClientConfig fromConfig(ReflexClientConfiguration config) {
-        boolean doRedirect = config.redirectPolicy() != RFXRedirectPolicy.NEVER;
-        return new HttpUrlConnectionClientConfig(config.connectTimeout().getSeconds() * 1000, config.readTimeout().getSeconds() * 1000,  doRedirect);
-    }
+  public static HttpUrlConnectionClientConfig fromConfig(ReflexClientConfiguration config) {
+    boolean doRedirect = config.redirectPolicy() != RFXRedirectPolicy.NEVER;
+    return new HttpUrlConnectionClientConfig(
+        config.connectTimeout().getSeconds() * 1000,
+        config.readTimeout().getSeconds() * 1000,
+        doRedirect);
+  }
 }

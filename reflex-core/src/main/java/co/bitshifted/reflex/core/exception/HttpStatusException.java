@@ -12,7 +12,7 @@ package co.bitshifted.reflex.core.exception;
 
 public class HttpStatusException extends Exception {
 
-    public HttpStatusException(String message) {
-        super(message);
-    }
+  public HttpStatusException(String message) {
+    super(message);
+  }
 }

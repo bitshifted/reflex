@@ -14,63 +14,60 @@ import co.bitshifted.reflex.core.serialize.BodySerializer;
 import co.bitshifted.reflex.core.serialize.GsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BodySerializerLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BodySerializerLoader.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BodySerializerLoader.class);
 
-    public static enum SupportedBodySerializers {
-        JACKSON_JSON_SERIALIZER("com.fasterxml.jackson.databind.ObjectMapper"),
-        GSON_JSON_SERIALIZER("com.google.gson.Gson");
+  public static enum SupportedBodySerializers {
+    JACKSON_JSON_SERIALIZER("com.fasterxml.jackson.databind.ObjectMapper"),
+    GSON_JSON_SERIALIZER("com.google.gson.Gson");
 
-        private String className;
+    private String className;
 
-        SupportedBodySerializers(String className) {
-            this.className = className;
-        }
-
-        public String getClassName() {
-            return className;
-        }
+    SupportedBodySerializers(String className) {
+      this.className = className;
     }
 
-    private BodySerializerLoader() {
-
+    public String getClassName() {
+      return className;
     }
+  }
 
-    public static List<BodySerializer> loadBodySerializers() {
-        var list = new ArrayList<BodySerializer>();
-        list.add(new PlainTextBodySerializer());
-        for(SupportedBodySerializers ser : SupportedBodySerializers.values()) {
-            switch (ser) {
-                case JACKSON_JSON_SERIALIZER -> {
-                    if(isAvailable(ser)) {
-                        list.add(new JacksonJsonBodySerializer());
-                    }
-                }
-                case GSON_JSON_SERIALIZER -> {
-                    if(isAvailable(ser)) {
-                        list.add(new GsonBodySerializer());
-                    }
-                }
-            }
+  private BodySerializerLoader() {}
+
+  public static List<BodySerializer> loadBodySerializers() {
+    var list = new ArrayList<BodySerializer>();
+    list.add(new PlainTextBodySerializer());
+    for (SupportedBodySerializers ser : SupportedBodySerializers.values()) {
+      switch (ser) {
+        case JACKSON_JSON_SERIALIZER -> {
+          if (isAvailable(ser)) {
+            list.add(new JacksonJsonBodySerializer());
+          }
         }
-        return list;
-    }
-
-    private static boolean isAvailable(SupportedBodySerializers serializer) {
-        LOGGER.debug("Looking up serializer with class {}", serializer.className);
-        try {
-            Class.forName(serializer.className);
-            LOGGER.debug("Class {} found", serializer.className);
-            return true;
-        } catch (ClassNotFoundException ex) {
-            return false;
+        case GSON_JSON_SERIALIZER -> {
+          if (isAvailable(ser)) {
+            list.add(new GsonBodySerializer());
+          }
         }
+      }
     }
+    return list;
+  }
+
+  private static boolean isAvailable(SupportedBodySerializers serializer) {
+    LOGGER.debug("Looking up serializer with class {}", serializer.className);
+    try {
+      Class.forName(serializer.className);
+      LOGGER.debug("Class {} found", serializer.className);
+      return true;
+    } catch (ClassNotFoundException ex) {
+      return false;
+    }
+  }
 }

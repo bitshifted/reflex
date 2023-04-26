@@ -11,7 +11,7 @@
 package co.bitshifted.reflex.core.config;
 
 public enum RFXRedirectPolicy {
-    NEVER,
-    ALWAYS,
-    NORMAL;
+  NEVER,
+  ALWAYS,
+  NORMAL;
 }

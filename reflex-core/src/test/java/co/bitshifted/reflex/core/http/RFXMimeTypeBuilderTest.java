@@ -15,15 +15,17 @@ import org.junit.jupiter.api.Test;
 
 public class RFXMimeTypeBuilderTest {
 
-    @Test
-    public void completeBuilderSuccessTest() {
-        var type = RFXMimeTypeBuilder.newBuilder().withType("application")
-                .withSubtype("json")
-                .withTree("vnd")
-                .withSuffix("ld")
-                .withParameter("param=value")
-                .build();
-        var expect = "application/vnd.json+ld;param=value";
-        Assertions.assertEquals(expect, type.toMimeTypeString());
-    }
+  @Test
+  public void completeBuilderSuccessTest() {
+    var type =
+        RFXMimeTypeBuilder.newBuilder()
+            .withType("application")
+            .withSubtype("json")
+            .withTree("vnd")
+            .withSuffix("ld")
+            .withParameter("param=value")
+            .build();
+    var expect = "application/vnd.json+ld;param=value";
+    Assertions.assertEquals(expect, type.toMimeTypeString());
+  }
 }

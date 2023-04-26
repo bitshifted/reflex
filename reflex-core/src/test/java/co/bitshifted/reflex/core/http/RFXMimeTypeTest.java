@@ -10,29 +10,34 @@
 
 package co.bitshifted.reflex.core.http;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class RFXMimeTypeTest {
 
-    @Test
-    void completeMimeTypeTestReturnsCorrectValue() {
-        var mime = new RFXMimeType("image", "sub-type", "vnd", "extra", "charset=UTF-8");
-        var result = mime.toMimeTypeString();
-        var expected = "image/vnd.sub-type+extra;charset=UTF-8";
-        assertEquals(expected, result);
-    }
+  @Test
+  void completeMimeTypeTestReturnsCorrectValue() {
+    var mime = new RFXMimeType("image", "sub-type", "vnd", "extra", "charset=UTF-8");
+    var result = mime.toMimeTypeString();
+    var expected = "image/vnd.sub-type+extra;charset=UTF-8";
+    assertEquals(expected, result);
+  }
 
-    @Test
-    void partialMimeTypeValueReturnsCorrectValue() {
-        var mime = new RFXMimeType("image", "png", null, "", " ");
-        var result = mime.toMimeTypeString();
-        assertEquals("image/png", result);
-    }
+  @Test
+  void partialMimeTypeValueReturnsCorrectValue() {
+    var mime = new RFXMimeType("image", "png", null, "", " ");
+    var result = mime.toMimeTypeString();
+    assertEquals("image/png", result);
+  }
 
-    @Test
-    void missingMimeTypePartsReturnError() {
-        var th = assertThrows(NullPointerException.class, () -> {new RFXMimeType(null, "subtype", null, null, null);});
-    }
+  @Test
+  void missingMimeTypePartsReturnError() {
+    var th =
+        assertThrows(
+            NullPointerException.class,
+            () -> {
+              new RFXMimeType(null, "subtype", null, null, null);
+            });
+  }
 }

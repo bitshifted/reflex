@@ -12,18 +12,18 @@ package co.bitshifted.reflex.integration;
 
 public record TestResult(String name, int result) {
 
-    public String displayResult(int len) {
-        var resultString = (result == Constants.TEST_RESULT_SUCCESS) ? "SUCCESS" : "FAILURE";
-        String formatString = "%-" + len + "s\t%s";
+  public String displayResult(int len) {
+    var resultString = (result == Constants.TEST_RESULT_SUCCESS) ? "SUCCESS" : "FAILURE";
+    String formatString = "%-" + len + "s\t%s";
 
-        var nameSb = new StringBuilder(Constants.ANSI_YELLOW).append(name);
-        var resultSb = new StringBuilder();
-        if (result == Constants.TEST_RESULT_SUCCESS) {
-            resultSb.append(Constants.ANSI_GREEN).append(resultString);
-        } else {
-            resultSb.append(Constants.ANSI_RED).append(resultString);
-        }
-        resultSb.append(Constants.ANSI_RESET);
-        return String.format(formatString, nameSb.toString(), resultSb.toString());
+    var nameSb = new StringBuilder(Constants.ANSI_YELLOW).append(name);
+    var resultSb = new StringBuilder();
+    if (result == Constants.TEST_RESULT_SUCCESS) {
+      resultSb.append(Constants.ANSI_GREEN).append(resultString);
+    } else {
+      resultSb.append(Constants.ANSI_RED).append(resultString);
     }
+    resultSb.append(Constants.ANSI_RESET);
+    return String.format(formatString, nameSb.toString(), resultSb.toString());
+  }
 }

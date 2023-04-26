@@ -10,22 +10,20 @@
 
 package co.bitshifted.reflex.integration.tests;
 
-import java.util.stream.Stream;
-
 public class Verifier {
 
-    public static boolean verifyAll(boolean... checks) {
-        boolean result = true;
-        for(boolean ch : checks) {
-            result &= ch;
-        }
-        return result;
+  public static boolean verifyAll(boolean... checks) {
+    boolean result = true;
+    for (boolean ch : checks) {
+      result &= ch;
     }
+    return result;
+  }
 
-    public static boolean verify(String message, boolean check) {
-        if(!check) {
-            System.err.println("Verification error: " + message);
-        }
-        return check;
+  public static boolean verify(String message, boolean check) {
+    if (!check) {
+      System.err.println("Verification error: " + message);
     }
+    return check;
+  }
 }

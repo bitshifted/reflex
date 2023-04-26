@@ -10,32 +10,28 @@
 
 package co.bitshifted.reflex.core.impl;
 
-import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
+import static org.junit.jupiter.api.Assertions.*;
+
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.impl.jdk11.JdkReflexClient;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class HttpClientLoaderTest {
 
-    @Test
-    void loadDefaultHttpClientSuccess() {
-       var result = HttpClientLoader.loadDefaultClient();
-        assertTrue(result.isPresent());
-        var client = result.get();
-        assertTrue(client instanceof JdkReflexClient);
-    }
+  @Test
+  void loadDefaultHttpClientSuccess() {
+    var result = HttpClientLoader.loadDefaultClient();
+    assertTrue(result.isPresent());
+    var client = result.get();
+    assertTrue(client instanceof JdkReflexClient);
+  }
 
-    @Test
-    void loadDefaultClientWithConfigSuccess() {
-        var config =new  ReflexClientConfiguration();
-        var result = HttpClientLoader.loadDefaultClient(config);
-        assertTrue(result.isPresent());
-        var client = result.get();
-        assertTrue(client instanceof JdkReflexClient);
-    }
+  @Test
+  void loadDefaultClientWithConfigSuccess() {
+    var config = new ReflexClientConfiguration();
+    var result = HttpClientLoader.loadDefaultClient(config);
+    assertTrue(result.isPresent());
+    var client = result.get();
+    assertTrue(client instanceof JdkReflexClient);
+  }
 }

@@ -13,5 +13,4 @@ package co.bitshifted.reflex.core.impl.jdk11;
 import java.net.http.HttpClient;
 import java.time.Duration;
 
-public record Jdk11ClientConfig(Duration connectTimeout, HttpClient.Redirect redirectPolicy) {
-}
+public record Jdk11ClientConfig(Duration connectTimeout, HttpClient.Redirect redirectPolicy) {}

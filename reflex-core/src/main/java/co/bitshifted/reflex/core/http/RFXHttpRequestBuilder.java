@@ -16,53 +16,54 @@ import java.util.stream.Stream;
 
 public final class RFXHttpRequestBuilder<T> {
 
-    private RFXHttpMethod method;
-    private URI requestUri;
-    private T body;
-    private RFXHttpHeaders headers;
+  private RFXHttpMethod method;
+  private URI requestUri;
+  private T body;
+  private RFXHttpHeaders headers;
 
-    private String path;
+  private String path;
 
-    private RFXHttpRequestBuilder() {
-        this.headers = new RFXHttpHeaders();
+  private RFXHttpRequestBuilder() {
+    this.headers = new RFXHttpHeaders();
+  }
+
+  public static <T> RFXHttpRequestBuilder<T> newBuilder() {
+    return new RFXHttpRequestBuilder<>();
+  }
+
+  public static <T> RFXHttpRequestBuilder<T> newBuilder(T body) {
+    var builder = new RFXHttpRequestBuilder<T>();
+    builder.body = body;
+    return builder;
+  }
+
+  public RFXHttpRequestBuilder<T> method(RFXHttpMethod method) {
+    this.method = method;
+    return this;
+  }
+
+  public RFXHttpRequestBuilder<T> requestUri(URI uri) {
+    this.requestUri = uri;
+    return this;
+  }
+
+  public RFXHttpRequestBuilder<T> header(String name, String... values) {
+    Stream.of(values).forEach(v -> this.headers.setHeader(name, v));
+    return this;
+  }
+
+  public RFXHttpRequestBuilder<T> path(String value) {
+    this.path = value;
+    return this;
+  }
+
+  public RFXHttpRequest<T> build() {
+    if (method == null || (requestUri == null && path == null)) {
+      throw new IllegalArgumentException("Method and URI are required");
     }
-
-    public static <T> RFXHttpRequestBuilder<T> newBuilder() {
-        return new RFXHttpRequestBuilder<>();
-    }
-
-    public static <T> RFXHttpRequestBuilder<T> newBuilder(T body) {
-        var builder = new RFXHttpRequestBuilder<T>();
-        builder.body = body;
-        return builder;
-    }
-
-    public RFXHttpRequestBuilder<T> method(RFXHttpMethod method) {
-        this.method = method;
-        return this;
-    }
-
-    public RFXHttpRequestBuilder<T> requestUri(URI uri) {
-        this.requestUri = uri;
-        return this;
-    }
-
-    public RFXHttpRequestBuilder<T> header(String name, String... values) {
-        Stream.of(values).forEach(v -> this.headers.setHeader(name, v));
-        return this;
-    }
-
-    public RFXHttpRequestBuilder<T> path(String value) {
-        this.path = value;
-        return this;
-    }
-
-    public RFXHttpRequest<T> build() {
-        if(method == null || (requestUri == null && path == null)) {
-            throw new IllegalArgumentException("Method and URI are required");
-        }
-        var bodyOpt = (body != null) ? Optional.of(body) : Optional.empty();
-        var optHeaders = (headers.isEmpty()) ? Optional.empty() : Optional.of(headers);
-        return new RFXHttpRequest(method, Optional.ofNullable(requestUri), bodyOpt, optHeaders, Optional.ofNullable(path));
-    }
+    var bodyOpt = (body != null) ? Optional.of(body) : Optional.empty();
+    var optHeaders = (headers.isEmpty()) ? Optional.empty() : Optional.of(headers);
+    return new RFXHttpRequest(
+        method, Optional.ofNullable(requestUri), bodyOpt, optHeaders, Optional.ofNullable(path));
+  }
 }

@@ -11,10 +11,10 @@
 package co.bitshifted.reflex.core.http;
 
 public enum RFXHttpMethod {
-    GET,
-    PUT,
-    POST,
-    DELETE,
-    HEAD,
-    OPTIONS
+  GET,
+  PUT,
+  POST,
+  DELETE,
+  HEAD,
+  OPTIONS
 }

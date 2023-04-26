@@ -14,23 +14,23 @@ import co.bitshifted.reflex.core.config.ReflexContext;
 
 public class Reflex {
 
-    private static final Reflex INSTANCE;
+  private static final Reflex INSTANCE;
 
-    static {
-        INSTANCE = new Reflex();
-    }
+  static {
+    INSTANCE = new Reflex();
+  }
 
-    private final ReflexContext context;
+  private final ReflexContext context;
 
-    private Reflex() {
-        this.context = new ReflexContext();
-    }
+  private Reflex() {
+    this.context = new ReflexContext();
+  }
 
-    public static ReflexContext context() {
-        return INSTANCE.context;
-    }
+  public static ReflexContext context() {
+    return INSTANCE.context;
+  }
 
-    public static ReflexClient client() {
-        return INSTANCE.context.defaultClient();
-    }
+  public static ReflexClient client() {
+    return INSTANCE.context.defaultClient();
+  }
 }

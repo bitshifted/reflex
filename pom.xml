@@ -59,6 +59,7 @@
         <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
         <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
+        <spotless.version>2.36.0</spotless.version>
     </properties>
 
     <dependencyManagement>
@@ -254,6 +255,23 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless.version}</version>
+                    <configuration>
+                        <java>
+                            <includes>
+                                <include>src/main/java/**/*.java</include>
+                                <include>src/test/java/**/*.java</include>
+                            </includes>
+                            <googleJavaFormat>
+                                <version>1.15.0</version>
+                                <style>GOOGLE</style>
+                            </googleJavaFormat>
+                        </java>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
