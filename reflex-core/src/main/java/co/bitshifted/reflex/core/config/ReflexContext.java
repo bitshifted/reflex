@@ -72,7 +72,7 @@ public class ReflexContext {
                     var wanted = RFXMimeTypes.fromString(mimeType);
                     var current = RFXMimeTypes.fromString(type);
                     return wanted.type().equals(current.type())
-                            && wanted.subtype().equals(current.subtype());
+                        && wanted.subtype().equals(current.subtype());
                   })
               .findFirst();
       if (candidate.isPresent()) {
