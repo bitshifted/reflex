@@ -50,7 +50,7 @@ public class ReflexClientConfiguration {
     }
 
     public ReflexClientConfiguration redirectPolicy(RFXRedirectPolicy value) {
-        this.redirectPolicy = redirectPolicy;
+        this.redirectPolicy = value;
         return this;
     }
 

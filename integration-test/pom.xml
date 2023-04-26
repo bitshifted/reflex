@@ -87,6 +87,16 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+            <id>gson-serializer</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
 </project>

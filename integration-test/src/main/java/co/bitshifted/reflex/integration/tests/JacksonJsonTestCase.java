@@ -16,19 +16,23 @@ import co.bitshifted.reflex.integration.Constants;
 import co.bitshifted.reflex.integration.TestResult;
 import co.bitshifted.reflex.integration.model.Address;
 import co.bitshifted.reflex.integration.model.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static co.bitshifted.reflex.integration.tests.Verifier.*;
 
-public class jacksonJsonTestCase implements TestCasePackage {
+public class JacksonJsonTestCase implements TestCasePackage {
 
-    private static final String JSON_GET_WITH_RESPONSE_BODY = "jdk11_jackson_get_json_with_response_body";
-    private static final String JSON_POST_WITH_RESPONSE_BODY = "jdk11_post_json_with_response_body";
+    private static final Logger LOGGER = LoggerFactory.getLogger(JacksonJsonTestCase.class);
+
+    private static final String JSON_GET_WITH_RESPONSE_BODY = "jackson_get_json_with_response_body";
+    private static final String JSON_POST_WITH_RESPONSE_BODY = "jackson_post_json_with_response_body";
 
 
-    public jacksonJsonTestCase() {
+    public JacksonJsonTestCase() {
         Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
     }
 
@@ -58,8 +62,7 @@ public class jacksonJsonTestCase implements TestCasePackage {
 
             }
         } catch(Exception ex) {
-            System.err.println("Failed to execute request: " + ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.error("Failed to execute request", ex);
         }
         return new TestResult(JSON_GET_WITH_RESPONSE_BODY, testResult);
     }
@@ -97,8 +100,7 @@ public class jacksonJsonTestCase implements TestCasePackage {
 
             }
         } catch(Exception ex) {
-            System.err.println("Failed to execute request: " + ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.error("Failed to execute request", ex);
         }
         return new TestResult(JSON_POST_WITH_RESPONSE_BODY, testResult);
     }

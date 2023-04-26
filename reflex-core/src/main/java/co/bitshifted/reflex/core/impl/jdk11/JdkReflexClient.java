@@ -74,15 +74,20 @@ public class JdkReflexClient implements ReflexClient {
             }
 
             return new RFXHttpResponse(RFXHttpStatus.findByCode(response.statusCode()), Optional.of(response.body()), bodySerializer, Optional.of(new RFXHttpHeaders()));
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException ex) {
+            LOGGER.error("Failed to send HTTP request", ex);
             throw  new HttpClientException(ex);
+        } catch (InterruptedException ex) {
+            LOGGER.error("Failed to send HTTP request", ex);
+            Thread.currentThread().interrupt();
+            throw new HttpClientException(ex);
         }
 
     }
 
     private <T> HttpRequest.BodyPublisher getRequestBodyPublisher(RFXHttpRequest<T> request) throws HttpClientException {
         var publisher = HttpRequest.BodyPublishers.noBody();
-        if (request.body() != null && request.body().isPresent()) {
+        if (request.body().isPresent()) {
             var contentType = request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).orElseThrow(() -> new HttpClientException("Request content type not specified"));
             var bodySerializer = context().getSerializerFor(contentType.get(0)).orElseThrow(() -> new HttpClientException("No body serializer found for content type " + contentType.get(0)));
             publisher = HttpRequest.BodyPublishers.ofInputStream(() -> bodySerializer.objectToStream(request.body().get()));
