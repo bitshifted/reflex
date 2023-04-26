@@ -11,7 +11,9 @@
 package co.bitshifted.reflex.core.http;
 
 import java.net.URI;
-import java.util.Optional;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Stream;
 
 public final class RFXHttpRequestBuilder<T> {
@@ -57,6 +59,11 @@ public final class RFXHttpRequestBuilder<T> {
     return this;
   }
 
+  public RFXHttpRequestBuilder<T> urlTemplate(UrlTemplateBuilder builder) {
+    this.path = builder.url();
+    return this;
+  }
+
   public RFXHttpRequest<T> build() {
     if (method == null || (requestUri == null && path == null)) {
       throw new IllegalArgumentException("Method and URI are required");
@@ -65,5 +72,49 @@ public final class RFXHttpRequestBuilder<T> {
     var optHeaders = (headers.isEmpty()) ? Optional.empty() : Optional.of(headers);
     return new RFXHttpRequest(
         method, Optional.ofNullable(requestUri), bodyOpt, optHeaders, Optional.ofNullable(path));
+  }
+
+  public static class UrlTemplateBuilder {
+
+    private final String template;
+    private final Map<String, String> pathParams;
+    private final Map<String, String> queryParams;
+
+    private UrlTemplateBuilder(String template) {
+      this.template = template;
+      this.pathParams = new HashMap<>();
+      this.queryParams = new HashMap<>();
+    }
+
+    public static UrlTemplateBuilder urlTemplate(String template) {
+      return new UrlTemplateBuilder(template);
+    }
+
+    public UrlTemplateBuilder pathParam(String paramName, String value) {
+      pathParams.put(paramName, value);
+      return this;
+    }
+
+    public UrlTemplateBuilder queryParam(String paramName, String value) {
+      queryParams.put(paramName, value);
+      return this;
+    }
+
+    public String url() {
+      String path = template;
+      for (Map.Entry<String, String> entry : pathParams.entrySet()) {
+        path = path.replace("{" + entry.getKey() + "}", entry.getValue());
+      }
+      var sb = new StringBuilder(path);
+      if (!queryParams.isEmpty()) {
+        sb.append("?");
+      }
+      for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+        sb.append(entry.getKey())
+            .append("=")
+            .append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
+      }
+      return sb.toString();
+    }
   }
 }
