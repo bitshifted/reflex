@@ -10,6 +10,9 @@
 
 package co.bitshifted.reflex.integration.tests;
 
+import co.bitshifted.reflex.integration.tests.json.GsonJsonTestCase;
+import co.bitshifted.reflex.integration.tests.json.JacksonJsonTestCase;
+
 public enum TestSuite {
     PLAIN_TEXT(PlainTextTestCase.class.getName()),
     JSON_JACKSON(JacksonJsonTestCase.class.getName()),
