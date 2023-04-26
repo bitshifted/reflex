@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2023-2023  Bitshift D.O.O (http://bitshifted.co)
+ *  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
  *  *
  *  * This Source Code Form is subject to the terms of the Mozilla Public
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  *
  */
 
-package co.bitshifted.reflex.integration.tests;
+package co.bitshifted.reflex.integration.tests.json;
 
 import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.http.*;
@@ -16,31 +16,26 @@ import co.bitshifted.reflex.integration.Constants;
 import co.bitshifted.reflex.integration.TestResult;
 import co.bitshifted.reflex.integration.model.Address;
 import co.bitshifted.reflex.integration.model.Person;
+import co.bitshifted.reflex.integration.tests.TestCasePackage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static co.bitshifted.reflex.integration.tests.Verifier.*;
+import static co.bitshifted.reflex.integration.tests.Verifier.verify;
+import static co.bitshifted.reflex.integration.tests.Verifier.verifyAll;
 
-public class jacksonJsonTestCase implements TestCasePackage {
+public abstract class BaseJsonTestCase implements TestCasePackage {
 
-    private static final String JSON_GET_WITH_RESPONSE_BODY = "jdk11_jackson_get_json_with_response_body";
-    private static final String JSON_POST_WITH_RESPONSE_BODY = "jdk11_post_json_with_response_body";
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseJsonTestCase.class);
 
-
-    public jacksonJsonTestCase() {
+    public BaseJsonTestCase() {
         Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
     }
 
-    @Override
-    public List<TestResult> runTests() {
-        var results = new ArrayList<TestResult>();
-        results.add(getRequestReturnsResponseWithJsonBody());
-        results.add(postRequestWithBodyReturnsResponseWithJsonBody());
-        return results;
-    }
 
-    private TestResult getRequestReturnsResponseWithJsonBody() {
+    protected TestResult getRequestReturnsResponseWithJsonBody(String testName) {
         var testResult = Constants.TEST_RESULT_FAIL;
         try {
             var request = RFXHttpRequestBuilder.newBuilder()
@@ -51,20 +46,19 @@ public class jacksonJsonTestCase implements TestCasePackage {
             if(response.status() == RFXHttpStatus.OK) {
                 var person = response.bodyToValue(Person.class);
                 boolean result = verifyAll(person != null, "John Smith".equals(person.getName()), person.getAge() == 20
-                    ,person.getAddress() != null,  "main street 21".equals(person.getAddress().getStreetAddress()));
+                        ,person.getAddress() != null,  "main street 21".equals(person.getAddress().getStreetAddress()));
                 if(result) {
                     testResult = Constants.TEST_RESULT_SUCCESS;
                 }
 
             }
         } catch(Exception ex) {
-            System.err.println("Failed to execute request: " + ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.error("Failed to execute request", ex);
         }
-        return new TestResult(JSON_GET_WITH_RESPONSE_BODY, testResult);
+        return new TestResult(testName, testResult);
     }
 
-    private TestResult postRequestWithBodyReturnsResponseWithJsonBody() {
+    protected TestResult postRequestWithBodyReturnsResponseWithJsonBody(String testName) {
         var testResult = Constants.TEST_RESULT_FAIL;
         var personIn = new Person();
         personIn.setName("Jane Doe");
@@ -97,9 +91,8 @@ public class jacksonJsonTestCase implements TestCasePackage {
 
             }
         } catch(Exception ex) {
-            System.err.println("Failed to execute request: " + ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.error("Failed to execute request", ex);
         }
-        return new TestResult(JSON_POST_WITH_RESPONSE_BODY, testResult);
+        return new TestResult(testName, testResult);
     }
 }
