@@ -71,11 +71,8 @@ public class ReflexContext {
                   type -> {
                     var wanted = RFXMimeTypes.fromString(mimeType);
                     var current = RFXMimeTypes.fromString(type);
-                    if (wanted.type().equals(current.type())
-                        && wanted.subtype().equals(current.subtype())) {
-                      return true;
-                    }
-                    return false;
+                    return wanted.type().equals(current.type())
+                            && wanted.subtype().equals(current.subtype());
                   })
               .findFirst();
       if (candidate.isPresent()) {

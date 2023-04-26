@@ -27,6 +27,8 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BaseJsonTestCase.class);
 
+  private static final String MAIN_STREET = "main street 21";
+
   public BaseJsonTestCase() {
     Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
   }
@@ -48,7 +50,7 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
                 "John Smith".equals(person.getName()),
                 person.getAge() == 20,
                 person.getAddress() != null,
-                "main street 21".equals(person.getAddress().getStreetAddress()));
+                MAIN_STREET.equals(person.getAddress().getStreetAddress()));
         if (result) {
           testResult = Constants.TEST_RESULT_SUCCESS;
         }
@@ -65,7 +67,7 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
     personIn.setName("Jane Doe");
     personIn.setAge(25);
     var address = new Address();
-    address.setStreetAddress("main street 21");
+    address.setStreetAddress(MAIN_STREET);
     address.setZipCode("SD123");
     address.setCity("London");
     personIn.setAddress(address);
@@ -88,7 +90,7 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
                 verify("Address is null", personResponse.getAddress() != null),
                 verify(
                     "Invalid street address",
-                    "main street 21".equals(personResponse.getAddress().getStreetAddress())),
+                    MAIN_STREET.equals(personResponse.getAddress().getStreetAddress())),
                 verify(
                     "Invalid city name", "London".equals(personResponse.getAddress().getCity())));
         if (result) {
