@@ -10,46 +10,43 @@
 
 package co.bitshifted.reflex.core.config;
 
-import co.bitshifted.reflex.core.http.RFXMimeType;
+import static org.junit.jupiter.api.Assertions.*;
+
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ReflexContextTest {
 
-    @Test
-    void getBodySerializerForExactMatchSuccess() {
-        var ctx = new ReflexContext();
-        var serializer = new JacksonJsonBodySerializer();
-        ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
-        var result = ctx.getSerializerFor(RFXMimeTypes.APPLICATION_JSON.toMimeTypeString());
-        assertNotNull(result);
-        assertTrue(result.isPresent());
-        assertEquals(serializer, result.get());
-    }
+  @Test
+  void getBodySerializerForExactMatchSuccess() {
+    var ctx = new ReflexContext();
+    var serializer = new JacksonJsonBodySerializer();
+    ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
+    var result = ctx.getSerializerFor(RFXMimeTypes.APPLICATION_JSON.toMimeTypeString());
+    assertNotNull(result);
+    assertTrue(result.isPresent());
+    assertEquals(serializer, result.get());
+  }
 
-    @Test
-    void getBodySerializerPartialMatchSuccess() {
-        var ctx = new ReflexContext();
-        var serializer = new JacksonJsonBodySerializer();
-        ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
-        var result = ctx.getSerializerFor("application/json+ld");
-        assertNotNull(result);
-        assertTrue(result.isPresent());
-        assertEquals(serializer, result.get());
-    }
+  @Test
+  void getBodySerializerPartialMatchSuccess() {
+    var ctx = new ReflexContext();
+    var serializer = new JacksonJsonBodySerializer();
+    ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
+    var result = ctx.getSerializerFor("application/json+ld");
+    assertNotNull(result);
+    assertTrue(result.isPresent());
+    assertEquals(serializer, result.get());
+  }
 
-    @Test
-    void getBodySerializerForUnknownReturnEmpty() {
-        var ctx = new ReflexContext();
-        var serializer = new JacksonJsonBodySerializer();
-        ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
-        var result = ctx.getSerializerFor("image/png");
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-    }
-
+  @Test
+  void getBodySerializerForUnknownReturnEmpty() {
+    var ctx = new ReflexContext();
+    var serializer = new JacksonJsonBodySerializer();
+    ctx.registerBodySerializer(RFXMimeTypes.APPLICATION_JSON, serializer);
+    var result = ctx.getSerializerFor("image/png");
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
 }

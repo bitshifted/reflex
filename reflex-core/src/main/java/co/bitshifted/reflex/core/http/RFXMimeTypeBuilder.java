@@ -12,41 +12,42 @@ package co.bitshifted.reflex.core.http;
 
 public class RFXMimeTypeBuilder {
 
-    private String type;
-    private String subtype;
-    private String tree;
-    private String suffix;
-    private String parameter;
+  private String type;
+  private String subtype;
+  private String tree;
+  private String suffix;
+  private String parameter;
 
-    public RFXMimeTypeBuilder withType(String type) {
-        this.type = type;
-        return this;
-    }
+  public RFXMimeTypeBuilder withType(String type) {
+    this.type = type;
+    return this;
+  }
 
-    public RFXMimeTypeBuilder withSubtype(String subtype) {
-        this.subtype = subtype;
-        return this;
-    }
+  public RFXMimeTypeBuilder withSubtype(String subtype) {
+    this.subtype = subtype;
+    return this;
+  }
 
-    public RFXMimeTypeBuilder withTree(String tree) {
-        this.tree = tree;
-        return this;
-    }
+  public RFXMimeTypeBuilder withTree(String tree) {
+    this.tree = tree;
+    return this;
+  }
 
-    public RFXMimeTypeBuilder withSuffix(String suffix) {
-        this.suffix = suffix;
-        return this;
-    }
+  public RFXMimeTypeBuilder withSuffix(String suffix) {
+    this.suffix = suffix;
+    return this;
+  }
 
-    public RFXMimeTypeBuilder withParameter(String parameter) {
-        this.parameter = parameter;
-        return this;
-    }
+  public RFXMimeTypeBuilder withParameter(String parameter) {
+    this.parameter = parameter;
+    return this;
+  }
 
-    public RFXMimeType build() {
-        return new RFXMimeType(type, subtype, tree, suffix, parameter);
-    }
-    public static RFXMimeTypeBuilder newBuilder() {
-        return new RFXMimeTypeBuilder();
-    }
+  public RFXMimeType build() {
+    return new RFXMimeType(type, subtype, tree, suffix, parameter);
+  }
+
+  public static RFXMimeTypeBuilder newBuilder() {
+    return new RFXMimeTypeBuilder();
+  }
 }

@@ -14,41 +14,41 @@ import java.util.*;
 
 public class RFXHttpHeaders {
 
-    public static final String ACCEPT = "Accept";
-    public static final String ACCEPT_LANGUAGE = "Accept-Language";
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String CONTENT_LENGTH = "Content-Length";
+  public static final String ACCEPT = "Accept";
+  public static final String ACCEPT_LANGUAGE = "Accept-Language";
+  public static final String CONTENT_TYPE = "Content-Type";
+  public static final String CONTENT_LENGTH = "Content-Length";
 
-    public static final String LOCATION = "Location";
+  public static final String LOCATION = "Location";
 
-    private final Map<String, List<String>> headersMap;
+  private final Map<String, List<String>> headersMap;
 
-    public RFXHttpHeaders() {
-        this.headersMap = new HashMap<>();
+  public RFXHttpHeaders() {
+    this.headersMap = new HashMap<>();
+  }
+
+  public void setHeader(String name, String value) {
+    if (headersMap.containsKey(name)) {
+      headersMap.get(name).add(value);
+    } else {
+      var list = new ArrayList<String>();
+      list.add(value);
+      headersMap.put(name, list);
     }
+  }
 
-    public void setHeader(String name, String value) {
-        if (headersMap.containsKey(name)) {
-            headersMap.get(name).add(value);
-        } else {
-            var list = new ArrayList<String>();
-            list.add(value);
-            headersMap.put(name, list);
-        }
+  public Optional<List<String>> getHeaderValue(String name) {
+    if (headersMap.containsKey(name)) {
+      return Optional.of(headersMap.get(name));
     }
+    return Optional.empty();
+  }
 
-    public Optional<List<String>> getHeaderValue(String name) {
-        if(headersMap.containsKey(name)) {
-            return Optional.of(headersMap.get(name));
-        }
-        return Optional.empty();
-    }
+  public Map<String, List<String>> getAllHeaders() {
+    return headersMap;
+  }
 
-    public Map<String, List<String>> getAllHeaders() {
-        return headersMap;
-    }
-
-    public boolean isEmpty() {
-        return headersMap.isEmpty();
-    }
+  public boolean isEmpty() {
+    return headersMap.isEmpty();
+  }
 }

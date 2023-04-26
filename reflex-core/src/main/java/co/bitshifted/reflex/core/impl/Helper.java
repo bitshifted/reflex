@@ -13,30 +13,26 @@ package co.bitshifted.reflex.core.impl;
 import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.exception.HttpClientException;
 import co.bitshifted.reflex.core.http.RFXHttpRequest;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public final class Helper {
 
-    private Helper() {
+  private Helper() {}
 
+  public static <T> URI calculateUri(RFXHttpRequest<T> request) throws HttpClientException {
+    if (request.uri().isPresent()) {
+      return request.uri().get();
+    } else {
+      URI baseUri = Reflex.context().configuration().baseUri();
+      if (baseUri == null) {
+        throw new HttpClientException("Base URL is not set");
+      }
+      try {
+        return new URI(baseUri.toString() + request.path().get());
+      } catch (URISyntaxException ex) {
+        throw new HttpClientException("Invalid request path: " + request.path().get());
+      }
     }
-
-    public static <T> URI calculateUri(RFXHttpRequest<T> request) throws HttpClientException {
-        if(request.uri().isPresent()) {
-            return request.uri().get();
-        } else {
-            URI baseUri = Reflex.context().configuration().baseUri();
-            if(baseUri == null) {
-                throw new HttpClientException("Base URL is not set");
-            }
-            try {
-                return new URI(baseUri.toString() + request.path().get());
-            } catch(URISyntaxException ex) {
-                throw new HttpClientException("Invalid request path: " + request.path().get());
-            }
-
-        }
-    }
+  }
 }

@@ -11,10 +11,9 @@
 package co.bitshifted.reflex.integration.tests;
 
 import co.bitshifted.reflex.integration.TestResult;
-
 import java.util.List;
 
 public interface TestCasePackage {
 
-    List<TestResult> runTests();
+  List<TestResult> runTests();
 }

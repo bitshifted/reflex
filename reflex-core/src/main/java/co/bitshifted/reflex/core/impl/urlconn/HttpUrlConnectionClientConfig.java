@@ -10,9 +10,5 @@
 
 package co.bitshifted.reflex.core.impl.urlconn;
 
-import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
-
-import java.time.Duration;
-
-public record HttpUrlConnectionClientConfig(long connectTimeout, long readTimeout, boolean redirect) {
-}
+public record HttpUrlConnectionClientConfig(
+    long connectTimeout, long readTimeout, boolean redirect) {}

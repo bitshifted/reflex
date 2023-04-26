@@ -12,11 +12,11 @@ package co.bitshifted.reflex.core.exception;
 
 public class BodySerializationException extends RuntimeException {
 
-    public BodySerializationException(Throwable cause) {
-        super(cause);
-    }
+  public BodySerializationException(Throwable cause) {
+    super(cause);
+  }
 
-    public BodySerializationException(String message) {
-        super(message);
-    }
+  public BodySerializationException(String message) {
+    super(message);
+  }
 }

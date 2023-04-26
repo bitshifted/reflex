@@ -12,31 +12,31 @@ package co.bitshifted.reflex.core.model;
 
 public class Address {
 
-    private String streetAddress;
-    private String zipCode;
-    private String city;
+  private String streetAddress;
+  private String zipCode;
+  private String city;
 
-    public String getStreetAddress() {
-        return streetAddress;
-    }
+  public String getStreetAddress() {
+    return streetAddress;
+  }
 
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
-    }
+  public void setStreetAddress(String streetAddress) {
+    this.streetAddress = streetAddress;
+  }
 
-    public String getZipCode() {
-        return zipCode;
-    }
+  public String getZipCode() {
+    return zipCode;
+  }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+  public void setZipCode(String zipCode) {
+    this.zipCode = zipCode;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 }

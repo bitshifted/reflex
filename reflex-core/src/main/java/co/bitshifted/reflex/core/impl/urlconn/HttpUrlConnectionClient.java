@@ -21,7 +21,6 @@ import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
 import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -29,80 +28,90 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
-public class HttpUrlConnectionClient implements ReflexClient  {
+public class HttpUrlConnectionClient implements ReflexClient {
 
-    private HttpUrlConnectionClientConfig config;
-    public HttpUrlConnectionClient() {
-        var defaultConfig = Reflex.context().configuration();
-        this.config = HttpUrlConnectionConfigConverter.fromConfig(defaultConfig);
-    }
+  private HttpUrlConnectionClientConfig config;
 
-    public HttpUrlConnectionClient(ReflexClientConfiguration configuration) {
-        this.config = HttpUrlConnectionConfigConverter.fromConfig(configuration);
-    }
-    @Override
-    public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request) throws HttpClientException, HttpStatusException {
-        try {
-            var url = Helper.calculateUri(request).toURL();
-            var urlConn = (HttpURLConnection)url.openConnection();
-            urlConn.setRequestMethod(request.method().name());
-            urlConn.setConnectTimeout((int)config.connectTimeout());
-            urlConn.setReadTimeout((int)config.readTimeout());
-            urlConn.setInstanceFollowRedirects(config.redirect());
-            if(request.headers().isPresent()) {
-                var allHeaders = request.headers().get().getAllHeaders();
-                allHeaders.keySet().stream().forEach(headerName -> {
-                    var values = allHeaders.get(headerName);
-                    urlConn.setRequestProperty(headerName, concatenate(values));
+  public HttpUrlConnectionClient() {
+    var defaultConfig = Reflex.context().configuration();
+    this.config = HttpUrlConnectionConfigConverter.fromConfig(defaultConfig);
+  }
+
+  public HttpUrlConnectionClient(ReflexClientConfiguration configuration) {
+    this.config = HttpUrlConnectionConfigConverter.fromConfig(configuration);
+  }
+
+  @Override
+  public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request)
+      throws HttpClientException, HttpStatusException {
+    try {
+      var url = Helper.calculateUri(request).toURL();
+      var urlConn = (HttpURLConnection) url.openConnection();
+      urlConn.setRequestMethod(request.method().name());
+      urlConn.setConnectTimeout((int) config.connectTimeout());
+      urlConn.setReadTimeout((int) config.readTimeout());
+      urlConn.setInstanceFollowRedirects(config.redirect());
+      if (request.headers().isPresent()) {
+        var allHeaders = request.headers().get().getAllHeaders();
+        allHeaders.keySet().stream()
+            .forEach(
+                headerName -> {
+                  var values = allHeaders.get(headerName);
+                  urlConn.setRequestProperty(headerName, concatenate(values));
                 });
-            }
-            urlConn.setDoInput(true);
-            if(request.body().isPresent()) {
-                var requestBodySerializer = getBodySerializer(request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).get().get(0));
-                urlConn.setDoOutput(true);
-                urlConn.getOutputStream().write(requestBodySerializer.get().objectToStream(request.body().get()).readAllBytes());
-            }
+      }
+      urlConn.setDoInput(true);
+      if (request.body().isPresent()) {
+        var requestBodySerializer =
+            getBodySerializer(
+                request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).get().get(0));
+        urlConn.setDoOutput(true);
+        urlConn
+            .getOutputStream()
+            .write(requestBodySerializer.get().objectToStream(request.body().get()).readAllBytes());
+      }
 
-            urlConn.connect();
-            var statusCode = urlConn.getResponseCode();
-            if(statusCode >= RFXHttpStatus.BAD_REQUEST.code()) {
-                throw new HttpStatusException("HTTP error status: " + statusCode);
-            }
-            Optional<BodySerializer> bodySerializer = Optional.empty();
-            if(urlConn.getContentType() != null && !urlConn.getContentType().isEmpty()) {
-                bodySerializer = getBodySerializer(urlConn.getContentType());
-            }
-            return new RFXHttpResponse(RFXHttpStatus.findByCode(statusCode),
-                    getResponseBody(urlConn),
-                    bodySerializer, Optional.empty());
-        } catch (MalformedURLException ex) {
-            throw new HttpClientException("Malformed URL: " + request.uri().toString());
-        } catch(IOException ex) {
-            throw new HttpClientException(ex);
-        }
+      urlConn.connect();
+      var statusCode = urlConn.getResponseCode();
+      if (statusCode >= RFXHttpStatus.BAD_REQUEST.code()) {
+        throw new HttpStatusException("HTTP error status: " + statusCode);
+      }
+      Optional<BodySerializer> bodySerializer = Optional.empty();
+      if (urlConn.getContentType() != null && !urlConn.getContentType().isEmpty()) {
+        bodySerializer = getBodySerializer(urlConn.getContentType());
+      }
+      return new RFXHttpResponse(
+          RFXHttpStatus.findByCode(statusCode),
+          getResponseBody(urlConn),
+          bodySerializer,
+          Optional.empty());
+    } catch (MalformedURLException ex) {
+      throw new HttpClientException("Malformed URL: " + request.uri().toString());
+    } catch (IOException ex) {
+      throw new HttpClientException(ex);
     }
+  }
 
-    private String concatenate(List<String> list) {
-        if(list.isEmpty()) {
-            return "";
-        }
-        var sb = new StringBuilder(list.get(0));
-        for(int i = 1;i < list.size();i++) {
-            sb.append(",").append(list.get(i));
-        }
-        return sb.toString();
+  private String concatenate(List<String> list) {
+    if (list.isEmpty()) {
+      return "";
     }
-
-    private Optional<BodySerializer> getBodySerializer(String mimeType) {
-        return Reflex.context().getSerializerFor(mimeType);
+    var sb = new StringBuilder(list.get(0));
+    for (int i = 1; i < list.size(); i++) {
+      sb.append(",").append(list.get(i));
     }
+    return sb.toString();
+  }
 
-    private Optional<InputStream> getResponseBody(HttpURLConnection conn) throws IOException {
-        var in = conn.getInputStream();
-        if(in.available() > 0) {
-            return Optional.of(in);
-        }
-        return Optional.empty();
+  private Optional<BodySerializer> getBodySerializer(String mimeType) {
+    return Reflex.context().getSerializerFor(mimeType);
+  }
+
+  private Optional<InputStream> getResponseBody(HttpURLConnection conn) throws IOException {
+    var in = conn.getInputStream();
+    if (in.available() > 0) {
+      return Optional.of(in);
     }
-
+    return Optional.empty();
+  }
 }

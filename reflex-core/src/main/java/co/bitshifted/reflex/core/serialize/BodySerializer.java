@@ -11,15 +11,14 @@
 package co.bitshifted.reflex.core.serialize;
 
 import co.bitshifted.reflex.core.http.RFXMimeType;
-
 import java.io.InputStream;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public interface BodySerializer {
 
-    Set<RFXMimeType> supportedMimeTypes();
-    <T> InputStream objectToStream(T object);
-    <T> T streamToObject(InputStream input, Class<T> type);
+  Set<RFXMimeType> supportedMimeTypes();
+
+  <T> InputStream objectToStream(T object);
+
+  <T> T streamToObject(InputStream input, Class<T> type);
 }

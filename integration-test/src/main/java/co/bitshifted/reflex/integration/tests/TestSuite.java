@@ -14,19 +14,18 @@ import co.bitshifted.reflex.integration.tests.json.GsonJsonTestCase;
 import co.bitshifted.reflex.integration.tests.json.JacksonJsonTestCase;
 
 public enum TestSuite {
-    PLAIN_TEXT(PlainTextTestCase.class.getName()),
-    JSON_JACKSON(JacksonJsonTestCase.class.getName()),
-    JSON_GSON(GsonJsonTestCase.class.getName());
+  PLAIN_TEXT(PlainTextTestCase.class.getName()),
+  JSON_JACKSON(JacksonJsonTestCase.class.getName()),
+  JSON_GSON(GsonJsonTestCase.class.getName());
 
-    private String className;
+  private String className;
 
-    TestSuite(String className) {
-        this.className = className;
-    }
+  TestSuite(String className) {
+    this.className = className;
+  }
 
-
-    public TestCasePackage getTestCasePackage() throws Exception {
-        var clazz = Class.forName(className);
-        return (TestCasePackage)clazz.getDeclaredConstructor().newInstance();
-    }
+  public TestCasePackage getTestCasePackage() throws Exception {
+    var clazz = Class.forName(className);
+    return (TestCasePackage) clazz.getDeclaredConstructor().newInstance();
+  }
 }

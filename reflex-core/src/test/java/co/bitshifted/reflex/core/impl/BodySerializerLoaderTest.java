@@ -10,18 +10,26 @@
 
 package co.bitshifted.reflex.core.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class BodySerializerLoaderTest {
 
-    @Test
-    void defaultSerializerLoadedSuccess() {
-        var list = BodySerializerLoader.loadBodySerializers();
-        assertTrue(list.stream().filter(s -> s.getClass() == PlainTextBodySerializer.class).findFirst().isPresent());
-        assertTrue(list.stream().filter(s -> s.getClass() == JacksonJsonBodySerializer.class).findFirst().isPresent());
-    }
+  @Test
+  void defaultSerializerLoadedSuccess() {
+    var list = BodySerializerLoader.loadBodySerializers();
+    assertTrue(
+        list.stream()
+            .filter(s -> s.getClass() == PlainTextBodySerializer.class)
+            .findFirst()
+            .isPresent());
+    assertTrue(
+        list.stream()
+            .filter(s -> s.getClass() == JacksonJsonBodySerializer.class)
+            .findFirst()
+            .isPresent());
+  }
 }

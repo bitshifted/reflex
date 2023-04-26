@@ -14,6 +14,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
+      - name: Check code style
+        run: |
+          mvn spotless:check
       - name: Build and test
         run: |
           mvn clean install
