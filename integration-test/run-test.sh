@@ -21,10 +21,10 @@ WIREMOCK_DIR=/tmp/wiremock-server
 
 
 echo "Installing and starting WireMock..."
-mkdir -p WIREMOCK_DIR
-rm -rvf $WIREMOCK_DIR/wiremock &&  cp -rv wiremock $WIREMOCK_DIR
+mkdir -p $WIREMOCK_DIR/wiremock
+rm -rvf $WIREMOCK_DIR/wiremock/* &&  cp -rv ${PWD}/wiremock/* $WIREMOCK_DIR/wiremock
 curl -C -  $WIREMOCK_DOWNLOAD_URL --output $WIREMOCK_DIR/wiremock.jar
-if [ $? -ne 0];then
+if [ $? -ne 0 ];then
   echo "Failed to download Wiremock"
   exit $FAILURE_EXIT_CODE
 fi
