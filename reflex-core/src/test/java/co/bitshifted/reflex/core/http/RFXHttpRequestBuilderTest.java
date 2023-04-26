@@ -10,6 +10,8 @@
 
 package co.bitshifted.reflex.core.http;
 
+import static co.bitshifted.reflex.core.http.RFXHttpRequestBuilder.*;
+import static co.bitshifted.reflex.core.http.RFXHttpRequestBuilder.UrlTemplateBuilder.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.bitshifted.reflex.core.model.Person;
@@ -24,7 +26,7 @@ public class RFXHttpRequestBuilderTest {
     person.setFirstName("john");
     person.setLastName("Smith");
     var request =
-        RFXHttpRequestBuilder.newBuilder(person)
+        newBuilder(person)
             .method(RFXHttpMethod.GET)
             .requestUri(new URI("http://localhost:8080"))
             .header(RFXHttpHeaders.ACCEPT, "application/json", "application/xml")
@@ -46,10 +48,7 @@ public class RFXHttpRequestBuilderTest {
   @Test
   void createValidHttpRequestWithNoBodyAndNoHeaders() throws Exception {
     var request =
-        RFXHttpRequestBuilder.newBuilder()
-            .method(RFXHttpMethod.GET)
-            .requestUri(new URI("http://localhost:9000"))
-            .build();
+        newBuilder().method(RFXHttpMethod.GET).requestUri(new URI("http://localhost:9000")).build();
     assertTrue(request.body().isEmpty());
     var headers = request.headers();
     assertTrue(headers.isEmpty());
@@ -57,6 +56,33 @@ public class RFXHttpRequestBuilderTest {
 
   @Test
   void createRequestWithInvalidArgumentsThrowsException() {
-    assertThrows(IllegalArgumentException.class, () -> RFXHttpRequestBuilder.newBuilder().build());
+    assertThrows(IllegalArgumentException.class, () -> newBuilder().build());
+  }
+
+  @Test
+  void createRequestWithUrlTemplateAndQueryParams() {
+    var request =
+        newBuilder()
+            .method(RFXHttpMethod.GET)
+            .urlTemplate(
+                urlTemplate("/{foo}/{bar}")
+                    .pathParam("foo", "foo-value")
+                    .pathParam("bar", "bar-value")
+                    .queryParam("param1", "param1 value"))
+            .build();
+    assertEquals("/foo-value/bar-value?param1=param1+value", request.path().get());
+  }
+
+  @Test
+  void createRequestWithUrlTemplateAndNoQueryParams() {
+    var request =
+        newBuilder()
+            .method(RFXHttpMethod.GET)
+            .urlTemplate(
+                urlTemplate("/{foo}/{bar}")
+                    .pathParam("foo", "foo-value")
+                    .pathParam("bar", "bar-value"))
+            .build();
+    assertEquals("/foo-value/bar-value", request.path().get());
   }
 }
