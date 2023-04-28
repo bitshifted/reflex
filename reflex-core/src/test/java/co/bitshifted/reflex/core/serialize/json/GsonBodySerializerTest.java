@@ -16,11 +16,9 @@ import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.model.Person;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-
-import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
 import org.junit.jupiter.api.Test;
 
-public class GsonBodySerializerTest {
+class GsonBodySerializerTest {
 
   private static final String PERSON_JSON = "/json/person.json";
   private static final String INVALID_JSON = """

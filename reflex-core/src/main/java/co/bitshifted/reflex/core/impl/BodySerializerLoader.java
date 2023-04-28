@@ -11,9 +11,9 @@
 package co.bitshifted.reflex.core.impl;
 
 import co.bitshifted.reflex.core.serialize.BodySerializer;
+import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
-import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;

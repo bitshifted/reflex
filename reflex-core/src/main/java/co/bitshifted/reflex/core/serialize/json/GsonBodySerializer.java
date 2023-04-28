@@ -11,16 +11,12 @@
 package co.bitshifted.reflex.core.serialize.json;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
-import co.bitshifted.reflex.core.http.RFXMimeType;
-import co.bitshifted.reflex.core.http.RFXMimeTypes;
-import co.bitshifted.reflex.core.serialize.BodySerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
 import java.util.function.Function;
 
 public class GsonBodySerializer implements JsonBodySerializer {

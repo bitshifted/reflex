@@ -14,41 +14,40 @@ import co.bitshifted.reflex.core.exception.BodySerializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
 public class JacksonXmlBodySerializer implements XmlBodySerializer {
 
-    private final XmlMapper xmlMapper;
+  private final XmlMapper xmlMapper;
 
-    public JacksonXmlBodySerializer() {
-        this.xmlMapper = new XmlMapper();
-        xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+  public JacksonXmlBodySerializer() {
+    this.xmlMapper = new XmlMapper();
+    xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
-    public JacksonXmlBodySerializer(Supplier<XmlMapper> supplier) {
-        this.xmlMapper = supplier.get();
-    }
+  public JacksonXmlBodySerializer(Supplier<XmlMapper> supplier) {
+    this.xmlMapper = supplier.get();
+  }
 
-    @Override
-    public <T> InputStream objectToStream(T object) {
-        try {
-            byte[] dataBytes = xmlMapper.writeValueAsBytes(object);
-            return new ByteArrayInputStream(dataBytes);
-        } catch (Exception ex) {
-            throw new BodySerializationException(ex);
-        }
+  @Override
+  public <T> InputStream objectToStream(T object) {
+    try {
+      byte[] dataBytes = xmlMapper.writeValueAsBytes(object);
+      return new ByteArrayInputStream(dataBytes);
+    } catch (Exception ex) {
+      throw new BodySerializationException(ex);
     }
+  }
 
-    @Override
-    public <T> T streamToObject(InputStream input, Class<T> type) {
-        try {
-            return xmlMapper.readValue(input, type);
-        } catch (Exception ex) {
-            throw new BodySerializationException(ex);
-        }
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type) {
+    try {
+      return xmlMapper.readValue(input, type);
+    } catch (Exception ex) {
+      throw new BodySerializationException(ex);
     }
+  }
 }

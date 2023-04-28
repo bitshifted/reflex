@@ -13,13 +13,12 @@ package co.bitshifted.reflex.core.serialize.xml;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-
 import java.util.Set;
 
 public interface XmlBodySerializer extends BodySerializer {
 
-    @Override
-    default Set<RFXMimeType> supportedMimeTypes(){
-        return Set.of(RFXMimeTypes.APPLICATION_XML);
-    }
+  @Override
+  default Set<RFXMimeType> supportedMimeTypes() {
+    return Set.of(RFXMimeTypes.APPLICATION_XML);
+  }
 }
