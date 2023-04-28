@@ -10,6 +10,9 @@
 
 package co.bitshifted.reflex.core.model;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "person")
 public class Person {
 
   private String firstName;

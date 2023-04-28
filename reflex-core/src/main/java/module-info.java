@@ -3,6 +3,7 @@ module co.bitshifted.libs.httpjfx {
   requires static com.fasterxml.jackson.databind;
   requires static com.fasterxml.jackson.dataformat.xml;
   requires static com.google.gson;
+  requires static jakarta.xml.bind;
   requires org.slf4j;
 
   exports co.bitshifted.reflex.core.http;
