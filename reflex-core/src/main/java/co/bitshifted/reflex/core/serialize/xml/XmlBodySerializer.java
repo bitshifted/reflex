@@ -8,16 +8,17 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.xml;
 
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
+import co.bitshifted.reflex.core.serialize.BodySerializer;
 import java.util.Set;
 
-public interface JsonBodySerializer extends BodySerializer {
+public interface XmlBodySerializer extends BodySerializer {
 
   @Override
   default Set<RFXMimeType> supportedMimeTypes() {
-    return Set.of(RFXMimeTypes.APPLICATION_JSON);
+    return Set.of(RFXMimeTypes.APPLICATION_XML);
   }
 }

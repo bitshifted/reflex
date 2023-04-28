@@ -11,9 +11,11 @@
 package co.bitshifted.reflex.core.impl;
 
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-import co.bitshifted.reflex.core.serialize.GsonBodySerializer;
-import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.xml.JacksonXmlBodySerializer;
+import co.bitshifted.reflex.core.serialize.xml.JaxbXmlBodySerializer;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -25,7 +27,9 @@ public class BodySerializerLoader {
 
   public static enum SupportedBodySerializers {
     JACKSON_JSON_SERIALIZER("com.fasterxml.jackson.databind.ObjectMapper"),
-    GSON_JSON_SERIALIZER("com.google.gson.Gson");
+    GSON_JSON_SERIALIZER("com.google.gson.Gson"),
+    JACKSON_XML_SERIALIZER("com.fasterxml.jackson.dataformat.xml.XmlMapper"),
+    JAXB_XML_SERIALIZER("jakarta.xml.bind.JAXBContext");
 
     private String className;
 
@@ -53,6 +57,16 @@ public class BodySerializerLoader {
         case GSON_JSON_SERIALIZER -> {
           if (isAvailable(ser)) {
             list.add(new GsonBodySerializer());
+          }
+        }
+        case JACKSON_XML_SERIALIZER -> {
+          if (isAvailable(ser)) {
+            list.add(new JacksonXmlBodySerializer());
+          }
+        }
+        case JAXB_XML_SERIALIZER -> {
+          if (isAvailable(ser)) {
+            list.add(new JaxbXmlBodySerializer());
           }
         }
       }

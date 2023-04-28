@@ -13,7 +13,7 @@ package co.bitshifted.reflex.core.config;
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
-import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
 import org.junit.jupiter.api.Test;
 
 public class ReflexContextTest {

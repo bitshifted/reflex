@@ -8,46 +8,49 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.xml;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.model.Person;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
-public class JacksonJsonBodySerializerTest {
+class JacksonXmlSerializerTest {
 
-  private static final String PERSON_JSON = "/json/person.json";
-  private static final String INVALID_JSON = """
-            { "firstName" : "John}
+  private static final String PERSON_XML = "/xml/person.xml";
+  private static final String INVALID_XML =
+      """
+            <person>
+                <firstName>John</firstName>
             """;
 
   @Test
   void streamToObjectReturnsCorrectValue() {
-    var serializer = new JacksonJsonBodySerializer();
-    var in = getClass().getResourceAsStream(PERSON_JSON);
+    var serializer = new JacksonXmlBodySerializer();
+    var in = getClass().getResourceAsStream(PERSON_XML);
     var result = serializer.streamToObject(in, Person.class);
     assertNotNull(result);
     assertEquals("John", result.getFirstName());
     assertEquals("Smith", result.getLastName());
-    assertEquals("New York", result.getAddress().getCity());
+    assertEquals("Oslo", result.getAddress().getCity());
   }
 
   @Test
-  void invalidBodyToJsonThrowsException() {
-    var serializer = new JacksonJsonBodySerializer();
-    var in = new ByteArrayInputStream(INVALID_JSON.getBytes(StandardCharsets.UTF_8));
+  void invalidBodyToXmlThrowsException() {
+    var serializer = new JacksonXmlBodySerializer();
+    var in = new ByteArrayInputStream(INVALID_XML.getBytes(StandardCharsets.UTF_8));
     assertThrows(
         BodySerializationException.class, () -> serializer.streamToObject(in, Person.class));
   }
 
   @Test
   void objectToBodySuccess() {
-    var serializer = new JacksonJsonBodySerializer();
+    var serializer = new JacksonXmlBodySerializer();
     var person = new Person();
     person.setFirstName("John");
     person.setLastName("Doe");
@@ -58,11 +61,14 @@ public class JacksonJsonBodySerializerTest {
   @Test
   void customSerializerSuccess() {
     var serializer =
-        new JacksonJsonBodySerializer(
-            (mapper) -> {
+        new JacksonXmlBodySerializer(
+            () -> {
+              var mapper = new XmlMapper();
               mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+              return mapper;
             });
-    var in = getClass().getResourceAsStream(PERSON_JSON);
+
+    var in = getClass().getResourceAsStream(PERSON_XML);
     assertThrows(
         BodySerializationException.class, () -> serializer.streamToObject(in, Person.class));
   }

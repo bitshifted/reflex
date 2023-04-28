@@ -8,39 +8,34 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.xml;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class JacksonJsonBodySerializer implements JsonBodySerializer {
+public class JacksonXmlBodySerializer implements XmlBodySerializer {
 
-  private final ObjectMapper mapper;
+  private final XmlMapper xmlMapper;
 
-  public JacksonJsonBodySerializer() {
-    this.mapper = new ObjectMapper();
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    // Ignore null values when writing json.
-    mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+  public JacksonXmlBodySerializer() {
+    this.xmlMapper = new XmlMapper();
+    xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-  public JacksonJsonBodySerializer(Consumer<ObjectMapper> customizer) {
-    this.mapper = new ObjectMapper();
-    customizer.accept(this.mapper);
+  public JacksonXmlBodySerializer(Supplier<XmlMapper> supplier) {
+    this.xmlMapper = supplier.get();
   }
 
   @Override
   public <T> InputStream objectToStream(T object) {
     try {
-      byte[] dataBytes = mapper.writeValueAsBytes(object);
+      byte[] dataBytes = xmlMapper.writeValueAsBytes(object);
       return new ByteArrayInputStream(dataBytes);
     } catch (Exception ex) {
       throw new BodySerializationException(ex);
@@ -50,7 +45,7 @@ public class JacksonJsonBodySerializer implements JsonBodySerializer {
   @Override
   public <T> T streamToObject(InputStream input, Class<T> type) {
     try {
-      return mapper.readValue(input, type);
+      return xmlMapper.readValue(input, type);
     } catch (Exception ex) {
       throw new BodySerializationException(ex);
     }

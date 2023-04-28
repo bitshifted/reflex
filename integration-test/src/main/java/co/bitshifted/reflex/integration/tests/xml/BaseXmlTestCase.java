@@ -8,7 +8,7 @@
  *
  */
 
-package co.bitshifted.reflex.integration.tests.json;
+package co.bitshifted.reflex.integration.tests.xml;
 
 import static co.bitshifted.reflex.integration.tests.Verifier.verify;
 import static co.bitshifted.reflex.integration.tests.Verifier.verifyAll;
@@ -23,24 +23,24 @@ import co.bitshifted.reflex.integration.tests.TestCasePackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BaseJsonTestCase implements TestCasePackage {
+public abstract class BaseXmlTestCase implements TestCasePackage {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(BaseJsonTestCase.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaseXmlTestCase.class);
 
   private static final String MAIN_STREET = "main street 21";
 
-  public BaseJsonTestCase() {
+  protected BaseXmlTestCase() {
     Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
   }
 
-  protected TestResult getRequestReturnsResponseWithJsonBody(String testName) {
+  protected TestResult getRequestReturnsResponseWithXmlBody(String testName) {
     var testResult = Constants.TEST_RESULT_FAIL;
     try {
       var request =
           RFXHttpRequestBuilder.newBuilder()
               .method(RFXHttpMethod.GET)
               .path("/v1/persons/1")
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
+              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
@@ -62,7 +62,7 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
     return new TestResult(testName, testResult);
   }
 
-  protected TestResult postRequestWithBodyReturnsResponseWithJsonBody(String testName) {
+  protected TestResult postRequestWithXMlBodyReturnsResponseWithXMlBody(String testName) {
     var testResult = Constants.TEST_RESULT_FAIL;
     var personIn = new Person();
     personIn.setName("Jane Doe");
@@ -77,8 +77,8 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
           RFXHttpRequestBuilder.newBuilder(personIn)
               .method(RFXHttpMethod.POST)
               .path("/v1/persons")
-              .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
+              .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
+              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {

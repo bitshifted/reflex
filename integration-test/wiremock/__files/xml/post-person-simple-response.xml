@@ -1,0 +1,11 @@
+
+<person>
+    <id>100</id>
+    <name>Jane Doe</name>
+    <age>25</age>
+    <address>
+        <streetAddress>main street 21</streetAddress>
+        <zipCode>SD123</zipCode>
+        <city>London</city>
+    </address>
+</person>
