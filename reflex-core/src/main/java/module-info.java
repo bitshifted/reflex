@@ -1,6 +1,7 @@
 module co.bitshifted.libs.httpjfx {
   requires static java.net.http;
   requires static com.fasterxml.jackson.databind;
+  requires static  com.fasterxml.jackson.dataformat.xml;
   requires static com.google.gson;
   requires org.slf4j;
 
@@ -8,4 +9,5 @@ module co.bitshifted.libs.httpjfx {
   exports co.bitshifted.reflex.core.config;
   exports co.bitshifted.reflex.core.serialize;
   exports co.bitshifted.reflex.core;
+    exports co.bitshifted.reflex.core.serialize.json;
 }

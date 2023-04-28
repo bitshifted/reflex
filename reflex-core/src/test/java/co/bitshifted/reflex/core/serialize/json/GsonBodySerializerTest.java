@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
+ *  * Copyright (c) 2023-2023  Bitshift D.O.O (http://bitshifted.co)
  *  *
  *  * This Source Code Form is subject to the terms of the Mozilla Public
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,18 +8,19 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.json;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.model.Person;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+
+import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
 import org.junit.jupiter.api.Test;
 
-public class JacksonJsonBodySerializerTest {
+public class GsonBodySerializerTest {
 
   private static final String PERSON_JSON = "/json/person.json";
   private static final String INVALID_JSON = """
@@ -28,7 +29,7 @@ public class JacksonJsonBodySerializerTest {
 
   @Test
   void streamToObjectReturnsCorrectValue() {
-    var serializer = new JacksonJsonBodySerializer();
+    var serializer = new GsonBodySerializer();
     var in = getClass().getResourceAsStream(PERSON_JSON);
     var result = serializer.streamToObject(in, Person.class);
     assertNotNull(result);
@@ -39,7 +40,7 @@ public class JacksonJsonBodySerializerTest {
 
   @Test
   void invalidBodyToJsonThrowsException() {
-    var serializer = new JacksonJsonBodySerializer();
+    var serializer = new GsonBodySerializer();
     var in = new ByteArrayInputStream(INVALID_JSON.getBytes(StandardCharsets.UTF_8));
     assertThrows(
         BodySerializationException.class, () -> serializer.streamToObject(in, Person.class));
@@ -47,7 +48,7 @@ public class JacksonJsonBodySerializerTest {
 
   @Test
   void objectToBodySuccess() {
-    var serializer = new JacksonJsonBodySerializer();
+    var serializer = new GsonBodySerializer();
     var person = new Person();
     person.setFirstName("John");
     person.setLastName("Doe");
@@ -58,12 +59,12 @@ public class JacksonJsonBodySerializerTest {
   @Test
   void customSerializerSuccess() {
     var serializer =
-        new JacksonJsonBodySerializer(
-            (mapper) -> {
-              mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-            });
+        new GsonBodySerializer(gsonBuilder -> gsonBuilder.setPrettyPrinting().create());
     var in = getClass().getResourceAsStream(PERSON_JSON);
-    assertThrows(
-        BodySerializationException.class, () -> serializer.streamToObject(in, Person.class));
+    var result = serializer.streamToObject(in, Person.class);
+    assertNotNull(result);
+    assertEquals("John", result.getFirstName());
+    assertEquals("Smith", result.getLastName());
+    assertEquals("New York", result.getAddress().getCity());
   }
 }

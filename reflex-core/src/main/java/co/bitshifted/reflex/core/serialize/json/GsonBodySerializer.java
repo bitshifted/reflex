@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
+ *  * Copyright (c) 2023-2023  Bitshift D.O.O (http://bitshifted.co)
  *  *
  *  * This Source Code Form is subject to the terms of the Mozilla Public
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,11 +8,12 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.json;
 
 import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
+import co.bitshifted.reflex.core.serialize.BodySerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.ByteArrayInputStream;
@@ -22,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.function.Function;
 
-public class GsonBodySerializer implements BodySerializer {
+public class GsonBodySerializer implements JsonBodySerializer {
 
   private final Gson gson;
 
@@ -32,11 +33,6 @@ public class GsonBodySerializer implements BodySerializer {
 
   public GsonBodySerializer(Function<GsonBuilder, Gson> customizer) {
     this.gson = customizer.apply(new GsonBuilder());
-  }
-
-  @Override
-  public Set<RFXMimeType> supportedMimeTypes() {
-    return Set.of(RFXMimeTypes.APPLICATION_JSON);
   }
 
   @Override

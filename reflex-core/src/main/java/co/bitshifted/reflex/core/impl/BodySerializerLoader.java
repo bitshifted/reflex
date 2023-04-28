@@ -11,8 +11,8 @@
 package co.bitshifted.reflex.core.impl;
 
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-import co.bitshifted.reflex.core.serialize.GsonBodySerializer;
-import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import java.util.ArrayList;
 import java.util.List;

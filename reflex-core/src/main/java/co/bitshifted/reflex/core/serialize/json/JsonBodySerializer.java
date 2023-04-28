@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
+ *  * Copyright (c) 2023-2023  Bitshift D.O.O (http://bitshifted.co)
  *  *
  *  * This Source Code Form is subject to the terms of the Mozilla Public
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,12 @@
  *
  */
 
-package co.bitshifted.reflex.core.serialize;
+package co.bitshifted.reflex.core.serialize.json;
 
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
+import co.bitshifted.reflex.core.serialize.BodySerializer;
+
 import java.util.Set;
 
 public interface JsonBodySerializer extends BodySerializer {

@@ -12,7 +12,7 @@ package co.bitshifted.reflex.core.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import co.bitshifted.reflex.core.serialize.JacksonJsonBodySerializer;
+import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import org.junit.jupiter.api.Test;
 
