@@ -29,7 +29,7 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
 
   private static final String MAIN_STREET = "main street 21";
 
-  public BaseXmlTestCase() {
+  protected BaseXmlTestCase() {
     Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
   }
 
