@@ -12,11 +12,13 @@ package co.bitshifted.reflex.integration.tests;
 
 import co.bitshifted.reflex.integration.tests.json.GsonJsonTestCase;
 import co.bitshifted.reflex.integration.tests.json.JacksonJsonTestCase;
+import co.bitshifted.reflex.integration.tests.xml.JacksonXmlTestCase;
 
 public enum TestSuite {
   PLAIN_TEXT(PlainTextTestCase.class.getName()),
   JSON_JACKSON(JacksonJsonTestCase.class.getName()),
-  JSON_GSON(GsonJsonTestCase.class.getName());
+  JSON_GSON(GsonJsonTestCase.class.getName()),
+  XML_JACKSON(JacksonXmlTestCase.class.getName());
 
   private String className;
 

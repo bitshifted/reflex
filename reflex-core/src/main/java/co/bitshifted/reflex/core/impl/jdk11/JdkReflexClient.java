@@ -54,10 +54,19 @@ public class JdkReflexClient implements ReflexClient {
   public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request)
       throws HttpClientException, HttpStatusException {
     var publisher = getRequestBodyPublisher(request);
-    var jdkHttpRequest =
+    var reqBuilder =
         HttpRequest.newBuilder(Helper.calculateUri(request))
-            .method(request.method().name(), publisher)
-            .build();
+            .method(request.method().name(), publisher);
+    if (request.headers().isPresent()) {
+      var allHeaders = request.headers().get().getAllHeaders();
+      allHeaders
+          .keySet()
+          .forEach(
+              k -> {
+                allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
+              });
+    }
+    var jdkHttpRequest = reqBuilder.build();
     try {
       var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofInputStream());
       if (response.statusCode() >= RFXHttpStatus.BAD_REQUEST.code()) {

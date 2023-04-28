@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
-public class JaxbXmlBodySerializerTest {
+class JaxbXmlBodySerializerTest {
 
   private static final String PERSON_XML = "/xml/person.xml";
 

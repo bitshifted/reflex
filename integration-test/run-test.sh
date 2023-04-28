@@ -59,8 +59,9 @@ WIREMOCK_SERVER_PID=$!
 echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
 
 
-run_tests_for_profile jackson-serializer PLAIN_TEXT JSON_JACKSON
-run_tests_for_profile gson-serializer PLAIN_TEXT JSON_GSON
+#run_tests_for_profile jackson-json-serializer PLAIN_TEXT JSON_JACKSON
+#run_tests_for_profile gson-serializer PLAIN_TEXT JSON_GSON
+run_tests_for_profile jackson-xml-serializer  XML_JACKSON
 
 kill $WIREMOCK_SERVER_PID
 

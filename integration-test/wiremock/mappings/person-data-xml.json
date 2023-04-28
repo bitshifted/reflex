@@ -6,15 +6,15 @@
         "url": "/v1/persons/1",
         "headers": {
           "Accept": {
-            "equalTo": "application/json"
+            "equalTo": "application/xml"
           }
         }
       },
       "response": {
         "status": 200,
-        "bodyFileName": "json/get-person-simple.json",
+        "bodyFileName": "xml/get-person-simple.xml",
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/xml"
         }
       }
     },
@@ -24,28 +24,23 @@
         "url": "/v1/persons",
         "headers": {
           "Accept": {
-            "equalTo": "application/json"
+            "equalTo": "application/xml"
+          },
+          "Content-Type": {
+            "equalTo": "application/xml"
           }
         },
         "bodyPatterns": [
           {
-            "equalToJson": {
-              "name": "Jane Doe",
-              "age": 25,
-              "address": {
-                "streetAddress": "main street 21",
-                "zipCode" : "SD123",
-                "city": "London"
-              }
-            }
+            "equalToXml": "<Person><name>Jane Doe</name><age>25</age><address><streetAddress>main street 21</streetAddress><zipCode>SD123</zipCode><city>London</city></address></Person>"
           }
         ]
       },
       "response": {
         "status": 200,
-        "bodyFileName": "json/post-person-simple-response.json",
+        "bodyFileName": "xml/post-person-simple-response.xml",
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/xml"
         }
       }
     }

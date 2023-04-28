@@ -53,7 +53,7 @@ public class JaxbXmlBodySerializer implements XmlBodySerializer {
       return new ByteArrayInputStream(os.toByteArray());
     } catch (JAXBException | IOException ex) {
       LOGGER.error("Failed to write object", ex);
-      throw new BodySerializationException(ex);
+      throw new BodySerializationException("Failed to write object", ex);
     }
   }
 
@@ -66,7 +66,7 @@ public class JaxbXmlBodySerializer implements XmlBodySerializer {
       return (T) unmarshaller.unmarshal(input);
     } catch (JAXBException ex) {
       LOGGER.error("Failed to read object", ex);
-      throw new BodySerializationException(ex);
+      throw new BodySerializationException("Failed to write object", ex);
     }
   }
 }

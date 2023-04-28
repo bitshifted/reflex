@@ -19,4 +19,8 @@ public class BodySerializationException extends RuntimeException {
   public BodySerializationException(String message) {
     super(message);
   }
+
+  public BodySerializationException(String message, Throwable th) {
+    super(message, th);
+  }
 }
