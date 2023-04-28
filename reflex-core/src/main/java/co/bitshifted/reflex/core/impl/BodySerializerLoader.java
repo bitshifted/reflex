@@ -16,6 +16,8 @@ import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
 import java.util.ArrayList;
 import java.util.List;
+
+import co.bitshifted.reflex.core.serialize.xml.JacksonXmlBodySerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,8 @@ public class BodySerializerLoader {
 
   public static enum SupportedBodySerializers {
     JACKSON_JSON_SERIALIZER("com.fasterxml.jackson.databind.ObjectMapper"),
-    GSON_JSON_SERIALIZER("com.google.gson.Gson");
+    GSON_JSON_SERIALIZER("com.google.gson.Gson"),
+    JACKSON_XML_SERIALIZER("com.fasterxml.jackson.dataformat.xml.XmlMapper");
 
     private String className;
 
@@ -53,6 +56,11 @@ public class BodySerializerLoader {
         case GSON_JSON_SERIALIZER -> {
           if (isAvailable(ser)) {
             list.add(new GsonBodySerializer());
+          }
+        }
+        case JACKSON_XML_SERIALIZER -> {
+          if (isAvailable(ser)) {
+            list.add(new JacksonXmlBodySerializer());
           }
         }
       }
