@@ -27,6 +27,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class HttpUrlConnectionClient implements ReflexClient {
 
@@ -90,6 +92,18 @@ public class HttpUrlConnectionClient implements ReflexClient {
     } catch (IOException ex) {
       throw new HttpClientException(ex);
     }
+  }
+
+  @Override
+  public <T> CompletableFuture<RFXHttpResponse> sendHttpRequestAsync(RFXHttpRequest<T> request) {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          try {
+            return sendHttpRequest(request);
+          } catch (Exception ex) {
+            throw new CompletionException(ex);
+          }
+        });
   }
 
   private String concatenate(List<String> list) {

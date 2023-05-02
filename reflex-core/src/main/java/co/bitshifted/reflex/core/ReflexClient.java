@@ -14,9 +14,12 @@ import co.bitshifted.reflex.core.exception.HttpClientException;
 import co.bitshifted.reflex.core.exception.HttpStatusException;
 import co.bitshifted.reflex.core.http.RFXHttpRequest;
 import co.bitshifted.reflex.core.http.RFXHttpResponse;
+import java.util.concurrent.CompletableFuture;
 
 public interface ReflexClient {
 
   <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request)
       throws HttpClientException, HttpStatusException;
+
+  <T> CompletableFuture<RFXHttpResponse> sendHttpRequestAsync(RFXHttpRequest<T> request);
 }

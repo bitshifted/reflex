@@ -21,6 +21,7 @@ import co.bitshifted.reflex.core.http.*;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -79,5 +80,34 @@ public class JdkHttpClientImplTest {
             .requestUri(new URI("http://localhost:9010/test/wrong-status"))
             .build();
     assertThrows(HttpStatusException.class, () -> client().sendHttpRequest(request));
+  }
+
+  @Test
+  void asyncGetRequestReturnsSuccess() throws Exception {
+    stubFor(
+        get("/test/endpoint")
+            .willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
+    context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
+    var client = new JdkReflexClient();
+    var request =
+        RFXHttpRequestBuilder.newBuilder()
+            .method(GET)
+            .requestUri(new URI("http://localhost:9010/test/endpoint"))
+            .build();
+    var response = client.sendHttpRequestAsync(request).get();
+    assertNotNull(response);
+    assertNotNull(response.body());
+    var responseBody = response.bodyToValue(String.class);
+    assertEquals("test body", responseBody);
+  }
+
+  @Test
+  void asyncGetRequestThrowsException() {
+    stubFor(get("/test/fail-async").willReturn(status(500)));
+    context().configuration().baseUri("http://localhost:9010");
+    var client = new JdkReflexClient();
+    var request = RFXHttpRequestBuilder.newBuilder().method(GET).path("/test/fail-async").build();
+    var result = client.sendHttpRequestAsync(request);
+    assertThrows(ExecutionException.class, () -> result.get());
   }
 }

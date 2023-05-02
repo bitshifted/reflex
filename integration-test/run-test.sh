@@ -1,3 +1,4 @@
+#! /bin/bash
 #
 # /*
 #  * Copyright (c) 2023  Bitshift D.O.O (http://bitshifted.co)
@@ -8,7 +9,7 @@
 #  */
 #
 
-#! /bin/bash
+
 
 WIREMOCK_VERSION=2.35.0
 WIREMOCK_DOWNLOAD_URL="https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-jre8-standalone/${WIREMOCK_VERSION}/wiremock-jre8-standalone-${WIREMOCK_VERSION}.jar"
@@ -23,7 +24,12 @@ function run_tests_for_profile() {
   cd $ROOT_DIR
   MAVEN_PROFILE=$1
   echo "Building integration tests with profile $MAVEN_PROFILE"
-  mvn clean install -P $MAVEN_PROFILE
+  if [ "$MAVEN_PROFILE" == "default" ];then
+    mvn clean install
+  else
+    mvn clean install -P $MAVEN_PROFILE
+  fi
+
   MAVEN_BUILD_RESULT=$?
   if [ $MAVEN_BUILD_RESULT -ne 0 ]; then
     echo "Maven build failed"
@@ -44,23 +50,26 @@ function run_tests_for_profile() {
   fi
 }
 
+function setup_wiremock() {
+  echo "Installing and starting WireMock..."
+  mkdir -p $WIREMOCK_DIR/wiremock
+  rm -rvf $WIREMOCK_DIR/wiremock/* &&  cp -rv ${PWD}/wiremock/* $WIREMOCK_DIR/wiremock
+  curl -C -  $WIREMOCK_DOWNLOAD_URL --output $WIREMOCK_DIR/wiremock.jar
+  if [ $? -ne 0 ];then
+    echo "Failed to download Wiremock"
+    exit $FAILURE_EXIT_CODE
+  fi
+  cd $WIREMOCK_DIR
+  java -jar wiremock.jar --root-dir wiremock --port $WIREMOCK_PORT &
+  WIREMOCK_SERVER_PID=$!
+  echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
+}
 
-echo "Installing and starting WireMock..."
-mkdir -p $WIREMOCK_DIR/wiremock
-rm -rvf $WIREMOCK_DIR/wiremock/* &&  cp -rv ${PWD}/wiremock/* $WIREMOCK_DIR/wiremock
-curl -C -  $WIREMOCK_DOWNLOAD_URL --output $WIREMOCK_DIR/wiremock.jar
-if [ $? -ne 0 ];then
-  echo "Failed to download Wiremock"
-  exit $FAILURE_EXIT_CODE
-fi
-cd $WIREMOCK_DIR
-java -jar wiremock.jar --root-dir wiremock --port $WIREMOCK_PORT &
-WIREMOCK_SERVER_PID=$!
-echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
+setup_wiremock
 
-
-run_tests_for_profile jackson-json-serializer PLAIN_TEXT JSON_JACKSON
-run_tests_for_profile gson-serializer PLAIN_TEXT JSON_GSON
+run_tests_for_profile default PLAIN_TEXT
+run_tests_for_profile jackson-json-serializer  JSON_JACKSON
+run_tests_for_profile gson-serializer JSON_GSON
 run_tests_for_profile jackson-xml-serializer  XML_JACKSON
 #run_tests_for_profile jaxb-xml-serializer  XML_JAXB
 
