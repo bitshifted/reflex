@@ -39,7 +39,9 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
       var request =
           RFXHttpRequestBuilder.newBuilder()
               .method(RFXHttpMethod.GET)
-              .path("/v1/persons/1")
+              .urlTemplate(
+                  RFXHttpRequestBuilder.UrlTemplateBuilder.urlTemplate("/v1/persons/{id}")
+                      .pathParam("id", "1"))
               .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);

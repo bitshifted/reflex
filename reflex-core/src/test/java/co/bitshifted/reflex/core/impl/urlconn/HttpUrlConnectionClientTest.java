@@ -76,4 +76,26 @@ public class HttpUrlConnectionClientTest {
             .build();
     assertThrows(HttpStatusException.class, () -> client.sendHttpRequest(request));
   }
+
+  @Test
+  void getAsyncReturnSuccess() throws Exception {
+    stubFor(
+        get("/test/endpoint")
+            .willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
+    context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
+    var client = new HttpUrlConnectionClient();
+    var headers = new RFXHttpHeaders();
+    headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString());
+    headers.setHeader(RFXHttpHeaders.ACCEPT_LANGUAGE, "rn-US");
+    var request =
+        RFXHttpRequestBuilder.newBuilder()
+            .method(GET)
+            .requestUri(new URI("http://localhost:9020/test/endpoint"))
+            .build();
+    var response = client.sendHttpRequestAsync(request).get();
+    assertNotNull(response);
+    assertNotNull(response.body());
+    var responseBody = response.bodyToValue(String.class);
+    assertEquals("test body", responseBody);
+  }
 }

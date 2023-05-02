@@ -27,6 +27,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,20 +55,8 @@ public class JdkReflexClient implements ReflexClient {
   @Override
   public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request)
       throws HttpClientException, HttpStatusException {
-    var publisher = getRequestBodyPublisher(request);
-    var reqBuilder =
-        HttpRequest.newBuilder(Helper.calculateUri(request))
-            .method(request.method().name(), publisher);
-    if (request.headers().isPresent()) {
-      var allHeaders = request.headers().get().getAllHeaders();
-      allHeaders
-          .keySet()
-          .forEach(
-              k -> {
-                allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
-              });
-    }
-    var jdkHttpRequest = reqBuilder.build();
+    var jdkHttpRequest = createHttpRequest(request);
+    LOGGER.debug("Request URL: {}", jdkHttpRequest.uri().toString());
     try {
       var response = httpClient.send(jdkHttpRequest, HttpResponse.BodyHandlers.ofInputStream());
       if (response.statusCode() >= RFXHttpStatus.BAD_REQUEST.code()) {
@@ -98,6 +88,35 @@ public class JdkReflexClient implements ReflexClient {
       Thread.currentThread().interrupt();
       throw new HttpClientException(ex);
     }
+  }
+
+  @Override
+  public <T> CompletableFuture<RFXHttpResponse> sendHttpRequestAsync(RFXHttpRequest<T> request) {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          try {
+            return sendHttpRequest(request);
+          } catch (Exception ex) {
+            throw new CompletionException(ex);
+          }
+        });
+  }
+
+  private <T> HttpRequest createHttpRequest(RFXHttpRequest<T> request) throws HttpClientException {
+    var publisher = getRequestBodyPublisher(request);
+    var reqBuilder =
+        HttpRequest.newBuilder(Helper.calculateUri(request))
+            .method(request.method().name(), publisher);
+    if (request.headers().isPresent()) {
+      var allHeaders = request.headers().get().getAllHeaders();
+      allHeaders
+          .keySet()
+          .forEach(
+              k -> {
+                allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
+              });
+    }
+    return reqBuilder.build();
   }
 
   private <T> HttpRequest.BodyPublisher getRequestBodyPublisher(RFXHttpRequest<T> request)
