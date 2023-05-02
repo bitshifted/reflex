@@ -20,6 +20,8 @@ public class Person {
 
   private Address address;
 
+  private int age;
+
   public String getFirstName() {
     return firstName;
   }
@@ -42,5 +44,13 @@ public class Person {
 
   public Address getAddress() {
     return address;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
   }
 }

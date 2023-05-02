@@ -11,4 +11,6 @@ module co.bitshifted.libs.httpjfx {
   exports co.bitshifted.reflex.core.serialize;
   exports co.bitshifted.reflex.core;
   exports co.bitshifted.reflex.core.serialize.json;
+  exports co.bitshifted.reflex.core.serialize.xml;
+  exports co.bitshifted.reflex.core.serialize.form;
 }
