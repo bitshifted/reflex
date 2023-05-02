@@ -10,45 +10,47 @@
 
 package co.bitshifted.reflex.integration.tests;
 
-import co.bitshifted.reflex.core.http.*;
-import co.bitshifted.reflex.integration.Constants;
-import co.bitshifted.reflex.integration.TestResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static co.bitshifted.reflex.core.Reflex.client;
 import static co.bitshifted.reflex.core.Reflex.context;
 
-public class FormUrlEncodedTestCase implements TestCasePackage{
+import co.bitshifted.reflex.core.http.*;
+import co.bitshifted.reflex.integration.Constants;
+import co.bitshifted.reflex.integration.TestResult;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FormUrlEncodedTestCase.class);
+public class FormUrlEncodedTestCase implements TestCasePackage {
 
-    private static final String FORM_URLENCODED_POST = "post_form_www_urlencoded";
+  private static final Logger LOGGER = LoggerFactory.getLogger(FormUrlEncodedTestCase.class);
 
-    @Override
-    public List<TestResult> runTests() {
-        var results = new ArrayList<TestResult>();
-        results.add(submitFormUrlEncoded());
-        return results;
+  private static final String FORM_URLENCODED_POST = "post_form_www_urlencoded";
+
+  @Override
+  public List<TestResult> runTests() {
+    var results = new ArrayList<TestResult>();
+    results.add(submitFormUrlEncoded());
+    return results;
+  }
+
+  private TestResult submitFormUrlEncoded() {
+    var testResult = Constants.TEST_RESULT_FAIL;
+    context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    try {
+      var request =
+          RFXHttpRequestBuilder.newBuilder()
+              .method(RFXHttpMethod.POST)
+              .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.FORM_URLENCODED.toMimeTypeString())
+              .path("/v1/form-post")
+              .build();
+      var response = client().sendHttpRequest(request);
+      if (Verifier.verify("Invalid response status", response.status() == RFXHttpStatus.OK)) {
+        testResult = Constants.TEST_RESULT_SUCCESS;
+      }
+    } catch (Exception ex) {
+      LOGGER.error("Failed to execute request", ex);
     }
-
-    private TestResult submitFormUrlEncoded() {
-        var testResult = Constants.TEST_RESULT_FAIL;
-        context().configuration().baseUri(Constants.SERVER_BASE_URL);
-        try {
-            var request =
-                    RFXHttpRequestBuilder.newBuilder().method(RFXHttpMethod.POST).header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.FORM_URLENCODED.toMimeTypeString()).path("/v1/form-post").build();
-            var response = client().sendHttpRequest(request);
-            if(Verifier.verify("Invalid response status", response.status() == RFXHttpStatus.OK)) {
-                testResult = Constants.TEST_RESULT_SUCCESS;
-            }
-        } catch (Exception ex) {
-            System.err.println("Failed to execute request: " + ex.getMessage());
-        }
-        return new TestResult(FORM_URLENCODED_POST, testResult);
-    }
-
+    return new TestResult(FORM_URLENCODED_POST, testResult);
+  }
 }

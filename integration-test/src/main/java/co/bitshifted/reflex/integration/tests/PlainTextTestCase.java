@@ -51,7 +51,7 @@ public class PlainTextTestCase implements TestCasePackage {
         testResult = Constants.TEST_RESULT_SUCCESS;
       }
     } catch (Exception ex) {
-      System.err.println("Failed to execute request: " + ex.getMessage());
+      LOGGER.error("Failed to execute request", ex);
     }
     return new TestResult(PLAIN_TEXT_GET, testResult);
   }
