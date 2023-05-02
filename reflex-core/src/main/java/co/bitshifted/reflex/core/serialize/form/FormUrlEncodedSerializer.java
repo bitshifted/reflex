@@ -31,7 +31,7 @@ public class FormUrlEncodedSerializer implements BodySerializer {
   @Override
   public <T> InputStream objectToStream(T object) {
 
-    if (object instanceof Map<?,?> m) {
+    if (object instanceof Map<?, ?> m) {
       return mapToBody(m);
     }
     return reflectionToBody(object);

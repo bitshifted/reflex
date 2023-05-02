@@ -57,7 +57,6 @@ class FormUrlEncodedSerializerTest {
     var serializer = new FormUrlEncodedSerializer();
     var in = new ByteArrayInputStream(new byte[1]);
     assertThrows(
-        UnsupportedOperationException.class,
-        () -> serializer.streamToObject(in, String.class));
+        UnsupportedOperationException.class, () -> serializer.streamToObject(in, String.class));
   }
 }
