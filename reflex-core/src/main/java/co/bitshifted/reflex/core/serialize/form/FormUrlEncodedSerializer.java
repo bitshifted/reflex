@@ -33,6 +33,8 @@ public class FormUrlEncodedSerializer implements BodySerializer {
 
     if (object instanceof Map<?, ?> m) {
       return mapToBody(m);
+    } else if (object instanceof FormDataConverter conv) {
+      return mapToBody(conv.toFormData());
     }
     return reflectionToBody(object);
   }

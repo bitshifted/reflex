@@ -12,6 +12,8 @@ package co.bitshifted.reflex.core.serialize;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import co.bitshifted.reflex.core.model.Address;
+import co.bitshifted.reflex.core.model.Order;
 import co.bitshifted.reflex.core.model.Person;
 import co.bitshifted.reflex.core.serialize.form.FormUrlEncodedSerializer;
 import java.io.ByteArrayInputStream;
@@ -50,6 +52,23 @@ class FormUrlEncodedSerializerTest {
     assertNotNull(result);
     var content = new String(result.readAllBytes());
     assertEquals("firstName=John&lastName=Smith+Rowe&age=20", content);
+  }
+
+  @Test
+  void converterInterfaceSerializationSuccess() throws Exception {
+    var order = new Order();
+    order.setId(123);
+    order.setCode("order-code");
+    var addr = new Address();
+    addr.setCity("London");
+    addr.setStreetAddress("street 1");
+    order.setAddress(addr);
+
+    var serializer = new FormUrlEncodedSerializer();
+    var result = serializer.objectToStream(order);
+    assertNotNull(result);
+    var content = new String(result.readAllBytes());
+    assertEquals("id=123&address-street=street+1&address-city=London&Code=order-code", content);
   }
 
   @Test

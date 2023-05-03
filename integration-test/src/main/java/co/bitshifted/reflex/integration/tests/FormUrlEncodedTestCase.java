@@ -16,6 +16,9 @@ import static co.bitshifted.reflex.core.Reflex.context;
 import co.bitshifted.reflex.core.http.*;
 import co.bitshifted.reflex.integration.Constants;
 import co.bitshifted.reflex.integration.TestResult;
+import co.bitshifted.reflex.integration.model.Address;
+import co.bitshifted.reflex.integration.model.Order;
+import co.bitshifted.reflex.integration.model.Person;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -37,9 +40,18 @@ public class FormUrlEncodedTestCase implements TestCasePackage {
   private TestResult submitFormUrlEncoded() {
     var testResult = Constants.TEST_RESULT_FAIL;
     context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    var order = new Order();
+    order.setId(123);
+    var person = new Person();
+    person.setName("John Smith");
+    person.setAge(25);
+    var address = new Address();
+    address.setCity("Paris");
+    person.setAddress(address);
+    order.setPerson(person);
     try {
       var request =
-          RFXHttpRequestBuilder.newBuilder()
+          RFXHttpRequestBuilder.newBuilder(order)
               .method(RFXHttpMethod.POST)
               .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.FORM_URLENCODED.toMimeTypeString())
               .path("/v1/form-post")
