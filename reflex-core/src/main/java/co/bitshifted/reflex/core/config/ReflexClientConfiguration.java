@@ -14,17 +14,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReflexClientConfiguration {
   private Duration connectTimeout;
   private Duration readTimeout;
   private RFXRedirectPolicy redirectPolicy;
   private URI baseUri;
+  private Map<String, String> commonHeaders;
 
   public ReflexClientConfiguration() {
     this.connectTimeout = Duration.of(1, ChronoUnit.SECONDS);
     this.readTimeout = Duration.of(1, ChronoUnit.SECONDS);
     this.redirectPolicy = RFXRedirectPolicy.NORMAL;
+    this.commonHeaders = new HashMap<>();
   }
 
   public Duration connectTimeout() {
@@ -64,6 +68,20 @@ public class ReflexClientConfiguration {
     } catch (URISyntaxException ex) {
       throw new RuntimeException(ex);
     }
+    return this;
+  }
+
+  public Map<String, String> commonHeaders() {
+    return commonHeaders;
+  }
+
+  public ReflexClientConfiguration commonHeaders(Map<String, String> headers) {
+    this.commonHeaders.putAll(headers);
+    return this;
+  }
+
+  public ReflexClientConfiguration commonHeader(String name, String value) {
+    this.commonHeaders.put(name, value);
     return this;
   }
 }

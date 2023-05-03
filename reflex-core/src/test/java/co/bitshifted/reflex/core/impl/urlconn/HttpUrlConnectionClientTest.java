@@ -29,8 +29,10 @@ public class HttpUrlConnectionClientTest {
   void basicGetRequestPlaintextSuccess() throws Exception {
     stubFor(
         get("/test/endpoint")
+            .withHeader("custom-header", equalTo("custom-value"))
             .willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
     context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
+    context().configuration().commonHeader("custom-header", "custom-value");
     var client = new HttpUrlConnectionClient();
     var headers = new RFXHttpHeaders();
     headers.setHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.TEXT_PLAIN.toMimeTypeString());

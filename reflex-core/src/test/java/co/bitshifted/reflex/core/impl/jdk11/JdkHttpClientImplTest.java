@@ -32,8 +32,10 @@ public class JdkHttpClientImplTest {
   void basicGetRequestSuccess() throws Exception {
     stubFor(
         get("/test/endpoint")
+            .withHeader("custom-header", equalTo("custom-value"))
             .willReturn(ok("test body").withHeader(RFXHttpHeaders.CONTENT_TYPE, "text/plain")));
     context().registerBodySerializer(RFXMimeTypes.TEXT_PLAIN, new PlainTextBodySerializer());
+    context().configuration().commonHeader("custom-header", "custom-value");
     var client = new JdkReflexClient();
     var request =
         RFXHttpRequestBuilder.newBuilder()

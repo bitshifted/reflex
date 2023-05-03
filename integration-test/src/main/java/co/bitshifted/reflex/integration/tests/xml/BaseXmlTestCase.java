@@ -30,7 +30,10 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
   private static final String MAIN_STREET = "main street 21";
 
   protected BaseXmlTestCase() {
-    Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    Reflex.context()
+        .configuration()
+        .baseUri(Constants.SERVER_BASE_URL)
+        .commonHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString());
   }
 
   protected TestResult getRequestReturnsResponseWithXmlBody(String testName) {
@@ -40,7 +43,6 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
           RFXHttpRequestBuilder.newBuilder()
               .method(RFXHttpMethod.GET)
               .path("/v1/persons/1")
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
@@ -78,7 +80,6 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
               .method(RFXHttpMethod.POST)
               .path("/v1/persons")
               .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {

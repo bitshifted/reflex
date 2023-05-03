@@ -53,6 +53,10 @@ public class HttpUrlConnectionClient implements ReflexClient {
       urlConn.setConnectTimeout((int) config.connectTimeout());
       urlConn.setReadTimeout((int) config.readTimeout());
       urlConn.setInstanceFollowRedirects(config.redirect());
+      var commonHeaders = Reflex.context().configuration().commonHeaders();
+      commonHeaders
+          .entrySet()
+          .forEach(entry -> urlConn.setRequestProperty(entry.getKey(), entry.getValue()));
       if (request.headers().isPresent()) {
         var allHeaders = request.headers().get().getAllHeaders();
         allHeaders.keySet().stream()

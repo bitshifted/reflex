@@ -30,7 +30,10 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
   private static final String MAIN_STREET = "main street 21";
 
   public BaseJsonTestCase() {
-    Reflex.context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    Reflex.context()
+        .configuration()
+        .baseUri(Constants.SERVER_BASE_URL)
+        .commonHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString());
   }
 
   protected TestResult getRequestReturnsResponseWithJsonBody(String testName) {
@@ -42,7 +45,6 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
               .urlTemplate(
                   RFXHttpRequestBuilder.UrlTemplateBuilder.urlTemplate("/v1/persons/{id}")
                       .pathParam("id", "1"))
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
@@ -80,7 +82,6 @@ public abstract class BaseJsonTestCase implements TestCasePackage {
               .method(RFXHttpMethod.POST)
               .path("/v1/persons")
               .header(RFXHttpHeaders.CONTENT_TYPE, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
-              .header(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_JSON.toMimeTypeString())
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
