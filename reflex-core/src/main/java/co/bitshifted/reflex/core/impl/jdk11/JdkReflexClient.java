@@ -12,6 +12,7 @@ package co.bitshifted.reflex.core.impl.jdk11;
 
 import static co.bitshifted.reflex.core.Reflex.context;
 
+import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.exception.HttpClientException;
@@ -107,6 +108,10 @@ public class JdkReflexClient implements ReflexClient {
     var reqBuilder =
         HttpRequest.newBuilder(Helper.calculateUri(request))
             .method(request.method().name(), publisher);
+    var commonHeaders = Reflex.context().configuration().commonHeaders();
+    commonHeaders
+        .entrySet()
+        .forEach(entry -> reqBuilder.setHeader(entry.getKey(), entry.getValue()));
     if (request.headers().isPresent()) {
       var allHeaders = request.headers().get().getAllHeaders();
       allHeaders
