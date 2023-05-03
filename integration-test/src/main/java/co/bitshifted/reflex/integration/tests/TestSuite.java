@@ -20,7 +20,8 @@ public enum TestSuite {
   JSON_JACKSON(JacksonJsonTestCase.class.getName()),
   JSON_GSON(GsonJsonTestCase.class.getName()),
   XML_JACKSON(JacksonXmlTestCase.class.getName()),
-  XML_JAXB(JaxbXmlTestCase.class.getName());
+  XML_JAXB(JaxbXmlTestCase.class.getName()),
+  FORM_URLENCODED(FormUrlEncodedTestCase.class.getName());
 
   private String className;
 

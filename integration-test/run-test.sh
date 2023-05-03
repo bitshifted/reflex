@@ -67,7 +67,7 @@ function setup_wiremock() {
 
 setup_wiremock
 
-run_tests_for_profile default PLAIN_TEXT
+run_tests_for_profile default PLAIN_TEXT FORM_URLENCODED
 run_tests_for_profile jackson-json-serializer  JSON_JACKSON
 run_tests_for_profile gson-serializer JSON_GSON
 run_tests_for_profile jackson-xml-serializer  XML_JACKSON

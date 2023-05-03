@@ -1,0 +1,23 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/v1/form-post",
+        "headers": {
+          "Content-Type": {
+            "equalTo": "application/x-www-form-urlencoded"
+          }
+        },
+        "bodyPatterns": [
+          {"contains":  "id=123"},
+          {"contains": "person_name=John+Smith"},
+          {"contains":  "person_address_city=Paris"}
+        ]
+      },
+      "response": {
+        "status": "200"
+      }
+    }
+  ]
+}

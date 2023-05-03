@@ -12,6 +12,7 @@ package co.bitshifted.reflex.core.impl;
 
 import co.bitshifted.reflex.core.serialize.BodySerializer;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
+import co.bitshifted.reflex.core.serialize.form.FormUrlEncodedSerializer;
 import co.bitshifted.reflex.core.serialize.json.GsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.json.JacksonJsonBodySerializer;
 import co.bitshifted.reflex.core.serialize.xml.JacksonXmlBodySerializer;
@@ -47,6 +48,7 @@ public class BodySerializerLoader {
   public static List<BodySerializer> loadBodySerializers() {
     var list = new ArrayList<BodySerializer>();
     list.add(new PlainTextBodySerializer());
+    list.add(new FormUrlEncodedSerializer());
     for (SupportedBodySerializers ser : SupportedBodySerializers.values()) {
       switch (ser) {
         case JACKSON_JSON_SERIALIZER -> {

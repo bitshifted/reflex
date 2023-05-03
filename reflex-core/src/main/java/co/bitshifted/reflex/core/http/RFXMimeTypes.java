@@ -14,9 +14,13 @@ public final class RFXMimeTypes {
 
   private RFXMimeTypes() {}
 
-  public static final RFXMimeType APPLICATION_JSON = new RFXMimeType("application", "json");
-  public static final RFXMimeType APPLICATION_XML = new RFXMimeType("application", "xml");
+  public static final String TYPE_APPLICATION = "application";
+
+  public static final RFXMimeType APPLICATION_JSON = new RFXMimeType(TYPE_APPLICATION, "json");
+  public static final RFXMimeType APPLICATION_XML = new RFXMimeType(TYPE_APPLICATION, "xml");
   public static final RFXMimeType TEXT_PLAIN = new RFXMimeType("text", "plain");
+  public static final RFXMimeType FORM_URLENCODED =
+      new RFXMimeType(TYPE_APPLICATION, "x-www-form-urlencoded");
 
   public static RFXMimeType fromString(String mimeType) {
     var paramParts = mimeType.split(";");
