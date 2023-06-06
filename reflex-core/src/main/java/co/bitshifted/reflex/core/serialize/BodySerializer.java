@@ -21,4 +21,6 @@ public interface BodySerializer {
   <T> InputStream objectToStream(T object);
 
   <T> T streamToObject(InputStream input, Class<T> type);
+
+  <T> T streamToObject(InputStream input, Class<T> type, long contentLength);
 }

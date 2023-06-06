@@ -21,6 +21,9 @@ import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
 import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,6 +34,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class HttpUrlConnectionClient implements ReflexClient {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(HttpUrlConnectionClient.class);
 
   private HttpUrlConnectionClientConfig config;
 
@@ -48,6 +53,7 @@ public class HttpUrlConnectionClient implements ReflexClient {
       throws HttpClientException, HttpStatusException {
     try {
       var url = Helper.calculateUri(request).toURL();
+      LOGGER.debug("Target URL: {}", url);
       var urlConn = (HttpURLConnection) url.openConnection();
       urlConn.setRequestMethod(request.method().name());
       urlConn.setConnectTimeout((int) config.connectTimeout());

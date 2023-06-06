@@ -29,7 +29,7 @@ public final class Helper {
         throw new HttpClientException("Base URL is not set");
       }
       try {
-        return new URI(baseUri.toString() + request.path().get());
+        return new URI(baseUri + request.path().get());
       } catch (URISyntaxException ex) {
         throw new HttpClientException("Invalid request path: " + request.path().get());
       }

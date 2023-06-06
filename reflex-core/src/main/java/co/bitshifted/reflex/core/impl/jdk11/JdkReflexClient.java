@@ -75,12 +75,13 @@ public class JdkReflexClient implements ReflexClient {
       if (bodySerializer.isPresent()) {
         LOGGER.debug("Found response body serializer {}", bodySerializer.get());
       }
-
+      var responseHeaders = new RFXHttpHeaders();
+      response.headers().map().forEach((key, values) -> values.forEach(v -> responseHeaders.setHeader(key, v)));
       return new RFXHttpResponse(
           RFXHttpStatus.findByCode(response.statusCode()),
           Optional.of(response.body()),
           bodySerializer,
-          Optional.of(new RFXHttpHeaders()));
+          Optional.of(responseHeaders));
     } catch (IOException ex) {
       LOGGER.error("Failed to send HTTP request", ex);
       throw new HttpClientException(ex);
