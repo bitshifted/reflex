@@ -25,7 +25,7 @@ public class FileUploadDetails {
     this.fileSize = path.toFile().length();
   }
 
-  public ProgressMonitorInputStream getMonitoringInputStream() throws FileNotFoundException {
+  public ProgressMonitorInputStream getMonitoringInputStream() {
     return inputStream;
   }
 

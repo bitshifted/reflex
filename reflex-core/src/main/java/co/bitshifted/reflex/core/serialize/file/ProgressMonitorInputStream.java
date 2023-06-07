@@ -17,7 +17,7 @@ import java.nio.file.Path;
 
 public class ProgressMonitorInputStream extends FileInputStream {
 
-  private volatile long readCount = 0;
+  private long readCount = 0;
 
   public ProgressMonitorInputStream(Path path) throws FileNotFoundException {
     super(path.toFile());

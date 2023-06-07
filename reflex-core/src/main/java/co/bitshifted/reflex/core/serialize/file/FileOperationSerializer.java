@@ -14,7 +14,6 @@ import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -31,11 +30,7 @@ public class FileOperationSerializer implements BodySerializer {
   @Override
   public <T> InputStream objectToStream(T object) {
     if (object instanceof FileUploadDetails fd) {
-      try {
-        return fd.getMonitoringInputStream();
-      } catch (FileNotFoundException ex) {
-        throw new BodySerializationException(ex);
-      }
+      return fd.getMonitoringInputStream();
     }
     throw new BodySerializationException("Invalid object type. Expecting FileUploadDetails");
   }

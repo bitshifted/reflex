@@ -62,20 +62,24 @@ public class HttpUrlConnectionClient implements ReflexClient {
       commonHeaders
           .entrySet()
           .forEach(entry -> urlConn.setRequestProperty(entry.getKey(), entry.getValue()));
-      if (request.headers().isPresent()) {
-        var allHeaders = request.headers().get().getAllHeaders();
-        allHeaders.keySet().stream()
-            .forEach(
-                headerName -> {
-                  var values = allHeaders.get(headerName);
-                  urlConn.setRequestProperty(headerName, concatenate(values));
-                });
-      }
+
+      var requestHeaders = request.headers().orElse(new RFXHttpHeaders());
+      var allHeaders = request.headers().orElse(new RFXHttpHeaders()).getAllHeaders();
+      allHeaders.keySet().stream()
+          .forEach(
+              headerName -> {
+                var values = allHeaders.get(headerName);
+                urlConn.setRequestProperty(headerName, concatenate(values));
+              });
+
       urlConn.setDoInput(true);
       if (request.body().isPresent()) {
         var requestBodySerializer =
             getBodySerializer(
-                request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).get().get(0));
+                requestHeaders
+                    .getHeaderValue(RFXHttpHeaders.CONTENT_TYPE)
+                    .orElseThrow(() -> new HttpClientException("Missing Content-Type header"))
+                    .get(0));
         urlConn.setDoOutput(true);
         urlConn
             .getOutputStream()

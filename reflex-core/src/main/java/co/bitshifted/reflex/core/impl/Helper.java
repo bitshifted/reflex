@@ -21,17 +21,20 @@ public final class Helper {
   private Helper() {}
 
   public static <T> URI calculateUri(RFXHttpRequest<T> request) throws HttpClientException {
-    if (request.uri().isPresent()) {
-      return request.uri().get();
+    var optionalUri = request.uri();
+    if (optionalUri.isPresent()) {
+      return optionalUri.get();
     } else {
       URI baseUri = Reflex.context().configuration().baseUri();
       if (baseUri == null) {
         throw new HttpClientException("Base URL is not set");
       }
+      var path =
+          request.path().orElseThrow(() -> new HttpClientException("Request path is missing"));
       try {
-        return new URI(baseUri + request.path().get());
+        return new URI(baseUri + path);
       } catch (URISyntaxException ex) {
-        throw new HttpClientException("Invalid request path: " + request.path().get());
+        throw new HttpClientException("Invalid request path: " + path);
       }
     }
   }

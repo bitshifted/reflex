@@ -117,15 +117,14 @@ public class JdkReflexClient implements ReflexClient {
     commonHeaders
         .entrySet()
         .forEach(entry -> reqBuilder.setHeader(entry.getKey(), entry.getValue()));
-    if (request.headers().isPresent()) {
-      var allHeaders = request.headers().get().getAllHeaders();
-      allHeaders
-          .keySet()
-          .forEach(
-              k -> {
-                allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
-              });
-    }
+    var requestHeaders = request.headers().orElse(new RFXHttpHeaders());
+    var allHeaders = requestHeaders.getAllHeaders();
+    allHeaders
+        .keySet()
+        .forEach(
+            k -> {
+              allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
+            });
     return reqBuilder.build();
   }
 
