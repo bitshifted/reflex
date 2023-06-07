@@ -10,6 +10,7 @@
 
 package co.bitshifted.reflex.core.impl.jdk11;
 
+import co.bitshifted.reflex.core.config.HttpVersion;
 import co.bitshifted.reflex.core.config.RFXRedirectPolicy;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import java.net.http.HttpClient;
@@ -20,7 +21,9 @@ public class Jdk11ConfigConverter {
 
   public static Jdk11ClientConfig fromConfig(ReflexClientConfiguration config) {
     return new Jdk11ClientConfig(
-        config.connectTimeout(), getRedirectPolicy(config.redirectPolicy()));
+        config.connectTimeout(),
+        getRedirectPolicy(config.redirectPolicy()),
+        getHttpVersion(config.httpVersion()));
   }
 
   private static HttpClient.Redirect getRedirectPolicy(RFXRedirectPolicy input) {
@@ -28,6 +31,13 @@ public class Jdk11ConfigConverter {
       case NEVER -> HttpClient.Redirect.NEVER;
       case ALWAYS -> HttpClient.Redirect.ALWAYS;
       case NORMAL -> HttpClient.Redirect.NORMAL;
+    };
+  }
+
+  private static HttpClient.Version getHttpVersion(HttpVersion source) {
+    return switch (source) {
+      case HTTP_1_1 -> HttpClient.Version.HTTP_1_1;
+      case HTTP_2_0 -> HttpClient.Version.HTTP_2;
     };
   }
 }

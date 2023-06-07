@@ -21,9 +21,6 @@ import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
 import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -32,6 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpUrlConnectionClient implements ReflexClient {
 
@@ -92,11 +91,15 @@ public class HttpUrlConnectionClient implements ReflexClient {
       if (urlConn.getContentType() != null && !urlConn.getContentType().isEmpty()) {
         bodySerializer = getBodySerializer(urlConn.getContentType());
       }
+      var responseHeaders = new RFXHttpHeaders();
+      urlConn
+          .getHeaderFields()
+          .forEach((key, values) -> values.forEach(val -> responseHeaders.setHeader(key, val)));
       return new RFXHttpResponse(
           RFXHttpStatus.findByCode(statusCode),
           getResponseBody(urlConn),
           bodySerializer,
-          Optional.empty());
+          Optional.of(responseHeaders));
     } catch (MalformedURLException ex) {
       throw new HttpClientException("Malformed URL: " + request.uri().toString());
     } catch (IOException ex) {

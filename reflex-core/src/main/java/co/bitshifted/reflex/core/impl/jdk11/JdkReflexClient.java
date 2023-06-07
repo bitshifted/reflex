@@ -41,7 +41,7 @@ public class JdkReflexClient implements ReflexClient {
   private BodySerializer dataSerializer;
 
   public JdkReflexClient() {
-    this.httpClient = HttpClient.newHttpClient();
+    this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
   }
 
   public JdkReflexClient(ReflexClientConfiguration config) {
@@ -50,6 +50,7 @@ public class JdkReflexClient implements ReflexClient {
         HttpClient.newBuilder()
             .connectTimeout(jdk11Config.connectTimeout())
             .followRedirects(jdk11Config.redirectPolicy())
+            .version(jdk11Config.httpVersion())
             .build();
   }
 
@@ -76,7 +77,10 @@ public class JdkReflexClient implements ReflexClient {
         LOGGER.debug("Found response body serializer {}", bodySerializer.get());
       }
       var responseHeaders = new RFXHttpHeaders();
-      response.headers().map().forEach((key, values) -> values.forEach(v -> responseHeaders.setHeader(key, v)));
+      response
+          .headers()
+          .map()
+          .forEach((key, values) -> values.forEach(v -> responseHeaders.setHeader(key, v)));
       return new RFXHttpResponse(
           RFXHttpStatus.findByCode(response.statusCode()),
           Optional.of(response.body()),

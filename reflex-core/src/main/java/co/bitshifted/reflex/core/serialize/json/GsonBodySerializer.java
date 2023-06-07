@@ -45,5 +45,4 @@ public class GsonBodySerializer implements JsonBodySerializer {
       throw new BodySerializationException(ex);
     }
   }
-
 }

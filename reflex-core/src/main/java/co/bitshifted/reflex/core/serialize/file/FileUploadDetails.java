@@ -15,25 +15,25 @@ import java.nio.file.Path;
 
 public class FileUploadDetails {
 
-    private final ProgressMonitorInputStream inputStream;
-    private final long fileSize;
-    private final Path path;
+  private final ProgressMonitorInputStream inputStream;
+  private final long fileSize;
+  private final Path path;
 
-    public FileUploadDetails(Path path) throws FileNotFoundException {
-        this.path = path;
-        this.inputStream = new ProgressMonitorInputStream(path);
-        this.fileSize = path.toFile().length();
-    }
+  public FileUploadDetails(Path path) throws FileNotFoundException {
+    this.path = path;
+    this.inputStream = new ProgressMonitorInputStream(path);
+    this.fileSize = path.toFile().length();
+  }
 
-    public ProgressMonitorInputStream getMonitoringInputStream() throws FileNotFoundException{
-        return inputStream;
-    }
+  public ProgressMonitorInputStream getMonitoringInputStream() throws FileNotFoundException {
+    return inputStream;
+  }
 
-    public long getReadBytesCount() {
-        return inputStream.getReadCount();
-    }
+  public long getReadBytesCount() {
+    return inputStream.getReadCount();
+  }
 
-    public long getFileSize() {
-        return fileSize;
-    }
+  public long getFileSize() {
+    return fileSize;
+  }
 }

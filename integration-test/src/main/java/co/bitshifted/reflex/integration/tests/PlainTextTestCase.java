@@ -46,7 +46,7 @@ public class PlainTextTestCase implements TestCasePackage {
       var request =
           RFXHttpRequestBuilder.newBuilder().method(RFXHttpMethod.GET).path("/v1/text").build();
       var response = client().sendHttpRequest(request);
-      var responseBody = response.bodyToValue(String.class);
+      var responseBody = response.bodyTo(String.class);
       if ("Example plain text body".equals(responseBody)) {
         testResult = Constants.TEST_RESULT_SUCCESS;
       }
@@ -66,10 +66,10 @@ public class PlainTextTestCase implements TestCasePackage {
       CompletableFuture.allOf(
               client()
                   .sendHttpRequestAsync(request)
-                  .thenAccept(r -> sb.append(r.bodyToValue(String.class)).append("\n")),
+                  .thenAccept(r -> sb.append(r.bodyTo(String.class)).append("\n")),
               client()
                   .sendHttpRequestAsync(request)
-                  .thenAccept(r -> sb.append(r.bodyToValue(String.class)).append("\n")))
+                  .thenAccept(r -> sb.append(r.bodyTo(String.class)).append("\n")))
           .join();
       var output = sb.toString();
       var parts = output.split("\n");

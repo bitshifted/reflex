@@ -21,10 +21,16 @@ public record RFXHttpResponse(
     Optional<BodySerializer> bodySerializer,
     Optional<RFXHttpHeaders> headers) {
 
-  public <T> T bodyToValue(Class<T> dataType) {
+  public <T> T bodyTo(Class<T> dataType) {
     if (body.isEmpty()) {
       throw new BodySerializationException("Response body not present");
     }
-    return bodySerializer.get().streamToObject(body.get(), dataType);
+    var allHeaders = headers.orElse(new RFXHttpHeaders());
+    long contentLength = allHeaders.getContentLength();
+    if (contentLength > 0) {
+      return bodySerializer.get().streamToObject(body.get(), dataType, contentLength);
+    } else {
+      return bodySerializer.get().streamToObject(body.get(), dataType);
+    }
   }
 }

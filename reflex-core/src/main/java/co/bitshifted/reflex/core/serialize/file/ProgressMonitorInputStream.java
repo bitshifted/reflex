@@ -17,41 +17,40 @@ import java.nio.file.Path;
 
 public class ProgressMonitorInputStream extends FileInputStream {
 
-    private volatile long readCount = 0;
+  private volatile long readCount = 0;
 
-    public ProgressMonitorInputStream(Path path) throws FileNotFoundException {
-        super(path.toFile());
+  public ProgressMonitorInputStream(Path path) throws FileNotFoundException {
+    super(path.toFile());
+  }
+
+  @Override
+  public int read() throws IOException {
+    int count = super.read();
+    if (count > -1) {
+      readCount += count;
     }
+    return count;
+  }
 
-    @Override
-    public int read() throws IOException {
-        int count = super.read();
-        if(count > -1) {
-            readCount += count;
-        }
-        return count;
+  @Override
+  public int read(byte[] b) throws IOException {
+    int count = super.read(b);
+    if (count > -1) {
+      readCount += count;
     }
+    return count;
+  }
 
-    @Override
-    public int read(byte[] b) throws IOException {
-        int count =  super.read(b);
-        if(count > -1) {
-            readCount += count;
-        }
-        return count;
+  @Override
+  public int read(byte[] b, int off, int len) throws IOException {
+    int count = super.read(b, off, len);
+    if (count > -1) {
+      readCount += count;
     }
+    return count;
+  }
 
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        int count =  super.read(b, off, len);
-        if(count > -1) {
-            readCount += count;
-        }
-        return count;
-    }
-
-
-    public long getReadCount() {
-        return readCount;
-    }
+  public long getReadCount() {
+    return readCount;
+  }
 }

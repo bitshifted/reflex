@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import co.bitshifted.reflex.core.exception.HttpStatusException;
 import co.bitshifted.reflex.core.http.*;
 import co.bitshifted.reflex.core.serialize.PlainTextBodySerializer;
+import co.bitshifted.reflex.core.serialize.file.FileDownloadDetails;
 import co.bitshifted.reflex.core.serialize.file.FileOperationSerializer;
 import co.bitshifted.reflex.core.serialize.file.FileUploadDetails;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -26,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-
 import org.junit.jupiter.api.Test;
 
 @WireMockTest(httpPort = 9020)
@@ -52,7 +52,7 @@ public class HttpUrlConnectionClientTest {
     var response = client.sendHttpRequest(request);
     assertNotNull(response);
     assertNotNull(response.body());
-    var responseBody = response.bodyToValue(String.class);
+    var responseBody = response.bodyTo(String.class);
     assertEquals("test body", responseBody);
   }
 
@@ -104,39 +104,91 @@ public class HttpUrlConnectionClientTest {
     var response = client.sendHttpRequestAsync(request).get();
     assertNotNull(response);
     assertNotNull(response.body());
-    var responseBody = response.bodyToValue(String.class);
+    var responseBody = response.bodyTo(String.class);
     assertEquals("test body", responseBody);
   }
 
   @Test
   void fileUploadWithProgressSuccess() throws Exception {
-    stubFor(post("/file-upload").withHeader("Content-Type", equalTo("application/octet-stream")).willReturn(noContent()));
+    stubFor(
+        post("/file-upload")
+            .withHeader("Content-Type", equalTo("application/octet-stream"))
+            .willReturn(noContent()));
     var uploadFile = Files.createTempFile("test", "upload");
     System.out.println("upload file: " + uploadFile.toAbsolutePath());
     System.out.println("Creating random content");
     var random = new Random();
     var data = new byte[8192];
-    for(int i = 0;i < 1000;i++) {
+    for (int i = 0; i < 1000; i++) {
       random.nextBytes(data);
       Files.write(uploadFile, data, StandardOpenOption.APPEND);
     }
     var fileDetails = new FileUploadDetails(uploadFile);
     context().configuration().baseUri("http://localhost:9020");
-    context().registerBodySerializer(RFXMimeTypes.fromString("application/octet-stream"), new FileOperationSerializer());
-    var request = RFXHttpRequestBuilder.newBuilder(fileDetails)
+    context()
+        .registerBodySerializer(
+            RFXMimeTypes.fromString("application/octet-stream"), new FileOperationSerializer());
+    var request =
+        RFXHttpRequestBuilder.newBuilder(fileDetails)
             .method(POST)
             .header(RFXHttpHeaders.CONTENT_TYPE, "application/octet-stream")
-            .urlTemplate(RFXHttpRequestBuilder.UrlTemplateBuilder.urlTemplate("/file-upload")).build();
+            .urlTemplate(RFXHttpRequestBuilder.UrlTemplateBuilder.urlTemplate("/file-upload"))
+            .build();
     var client = new HttpUrlConnectionClient();
     var response = client.sendHttpRequestAsync(request);
-    CompletableFuture.runAsync(() -> {
-      System.out.println("total bytes: " + fileDetails.getFileSize());
-      while (fileDetails.getReadBytesCount() < fileDetails.getFileSize()) {
-        System.out.println("read bytes count: " + fileDetails.getReadBytesCount());
-      }
-    });
+    CompletableFuture.runAsync(
+        () -> {
+          System.out.println("total bytes: " + fileDetails.getFileSize());
+          while (fileDetails.getReadBytesCount() < fileDetails.getFileSize()) {
+            System.out.println("read bytes count: " + fileDetails.getReadBytesCount());
+          }
+        });
     var result = response.get();
     assertEquals(RFXHttpStatus.NO_CONTENT, result.status());
     assertEquals(fileDetails.getFileSize(), fileDetails.getReadBytesCount());
+  }
+
+  @Test
+  void fileDownloadWithProgressSuccess() throws Exception {
+    var sourceFile = Files.createTempFile("test", "upload");
+    System.out.println("Creating random content");
+    var random = new Random();
+    var data = new byte[8192];
+    for (int i = 0; i < 1000; i++) {
+      random.nextBytes(data);
+      Files.write(sourceFile, data, StandardOpenOption.APPEND);
+    }
+    // setup wiremock
+    stubFor(
+        get("/file-download")
+            .willReturn(
+                aResponse()
+                    .withHeader("Content-type", "application/octet-stream")
+                    .withHeader("Content-Length", Long.toString(sourceFile.toFile().length()))
+                    .withBody(Files.readAllBytes(sourceFile))));
+    context().configuration().baseUri("http://localhost:9020");
+    context()
+        .registerBodySerializer(
+            RFXMimeTypes.fromString("application/octet-stream"), new FileOperationSerializer());
+    var request =
+        RFXHttpRequestBuilder.newBuilder()
+            .method(GET)
+            .urlTemplate(RFXHttpRequestBuilder.UrlTemplateBuilder.urlTemplate("/file-download"))
+            .build();
+    var client = new HttpUrlConnectionClient();
+    var response = client.sendHttpRequest(request);
+    var fileDetails = response.bodyTo(FileDownloadDetails.class);
+    var downloadFile = Files.createTempFile("test", "download");
+    fileDetails.setFilePath(downloadFile);
+    var downloadResult = fileDetails.download();
+    CompletableFuture.runAsync(
+        () -> {
+          while (fileDetails.getWrittenBytesCount() < fileDetails.getContentLength()) {
+            System.out.println("written bytes count: " + fileDetails.getWrittenBytesCount());
+          }
+        });
+    long bytes = downloadResult.get();
+    assertEquals(sourceFile.toFile().length(), downloadFile.toFile().length());
+    assertEquals(sourceFile.toFile().length(), bytes);
   }
 }

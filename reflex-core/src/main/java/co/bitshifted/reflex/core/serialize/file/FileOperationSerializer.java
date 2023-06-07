@@ -14,47 +14,51 @@ import co.bitshifted.reflex.core.exception.BodySerializationException;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 public class FileOperationSerializer implements BodySerializer {
-    @Override
-    public Set<RFXMimeType> supportedMimeTypes() {
-        return Set.of(RFXMimeTypes.fromString("application/*"), RFXMimeTypes.fromString("image/*"), RFXMimeTypes.fromString("video/*"));
-    }
+  @Override
+  public Set<RFXMimeType> supportedMimeTypes() {
+    return Set.of(
+        RFXMimeTypes.fromString("application/*"),
+        RFXMimeTypes.fromString("image/*"),
+        RFXMimeTypes.fromString("video/*"));
+  }
 
-    @Override
-    public <T> InputStream objectToStream(T object) {
-        if (object instanceof FileUploadDetails fd) {
-            try {
-                return fd.getMonitoringInputStream();
-            } catch(FileNotFoundException ex) {
-                throw new BodySerializationException(ex);
-            }
-
-        }
-        throw new BodySerializationException("Invalid object type. Expecting FileUploadDetails");
+  @Override
+  public <T> InputStream objectToStream(T object) {
+    if (object instanceof FileUploadDetails fd) {
+      try {
+        return fd.getMonitoringInputStream();
+      } catch (FileNotFoundException ex) {
+        throw new BodySerializationException(ex);
+      }
     }
+    throw new BodySerializationException("Invalid object type. Expecting FileUploadDetails");
+  }
 
-    @Override
-    public <T> T streamToObject(InputStream input, Class<T> type) {
-        return this.streamToObject(input, type, -1);
-    }
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type) {
+    return this.streamToObject(input, type, -1);
+  }
 
-    @Override
-    public <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
-        if(type == FileDownloadDetails.class) {
-            try {
-                var constructor = type.getConstructor(InputStream.class, Long.class);
-                return constructor.newInstance(input, contentLength);
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException |
-                     InvocationTargetException ex) {
-                throw new BodySerializationException(ex);
-            }
-        }
-        throw new BodySerializationException("Invalid object type. Expecting FileDownloadDetails");
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
+    if (type == FileDownloadDetails.class) {
+      try {
+        var constructor = type.getConstructor(InputStream.class, Long.class);
+        return constructor.newInstance(input, contentLength);
+      } catch (NoSuchMethodException
+          | InstantiationException
+          | IllegalAccessException
+          | IllegalArgumentException
+          | InvocationTargetException ex) {
+        throw new BodySerializationException(ex);
+      }
     }
+    throw new BodySerializationException("Invalid object type. Expecting FileDownloadDetails");
+  }
 }

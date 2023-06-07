@@ -17,31 +17,31 @@ import java.nio.file.Path;
 
 public class ProgressMonitorOutputStream extends FileOutputStream {
 
-    private long writeCount = 0;
+  private long writeCount = 0;
 
-    public ProgressMonitorOutputStream(Path path) throws FileNotFoundException {
-        super(path.toFile());
-    }
+  public ProgressMonitorOutputStream(Path path) throws FileNotFoundException {
+    super(path.toFile());
+  }
 
-    @Override
-    public void write(int b) throws IOException {
-        super.write(b);
-        writeCount++;
-    }
+  @Override
+  public void write(int b) throws IOException {
+    super.write(b);
+    writeCount++;
+  }
 
-    @Override
-    public void write(byte[] b) throws IOException {
-        super.write(b);
-        writeCount += b.length;
-    }
+  @Override
+  public void write(byte[] b) throws IOException {
+    super.write(b);
+    writeCount += b.length;
+  }
 
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        super.write(b, off, len);
-        writeCount += len;
-    }
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    super.write(b, off, len);
+    writeCount += len;
+  }
 
-    public long getWriteCount() {
-        return writeCount;
-    }
+  public long getWriteCount() {
+    return writeCount;
+  }
 }

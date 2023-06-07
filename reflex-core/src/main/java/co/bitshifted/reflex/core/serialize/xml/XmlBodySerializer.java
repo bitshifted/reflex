@@ -13,7 +13,6 @@ package co.bitshifted.reflex.core.serialize.xml;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
-
 import java.io.InputStream;
 import java.util.Set;
 
@@ -25,7 +24,7 @@ public interface XmlBodySerializer extends BodySerializer {
   }
 
   @Override
-  default  <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
+  default <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
     return streamToObject(input, type);
   }
 }

@@ -15,46 +15,47 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class FileDownloadDetails {
 
-    private final InputStream source;
-    private final long contentLength;
-    private  Path filePath;
-    private  ProgressMonitorOutputStream outputStream;
+  private final InputStream source;
+  private final long contentLength;
+  private Path filePath;
+  private ProgressMonitorOutputStream outputStream;
 
-    public FileDownloadDetails(InputStream source,  long contentLength){
-        this.source = source;
-        this.contentLength = contentLength;
+  public FileDownloadDetails(InputStream source, Long contentLength) {
+    this.source = source;
+    this.contentLength = contentLength;
+  }
+
+  public void setFilePath(Path filePath) throws IOException {
+    this.filePath = filePath;
+    if (Files.notExists(filePath)) {
+      Files.createFile(filePath);
     }
+    this.outputStream = new ProgressMonitorOutputStream(this.filePath);
+  }
 
+  public long getWrittenBytesCount() {
+    return outputStream.getWriteCount();
+  }
 
-    public void setFilePath(Path filePath) throws IOException{
-        this.filePath = filePath;
-        if(Files.notExists(filePath)) {
-            Files.createFile(filePath);
-        }
-        this.outputStream = new ProgressMonitorOutputStream(this.filePath);
-    }
+  public long getContentLength() {
+    return contentLength;
+  }
 
-    public long getWrittenBytesCount() {
-        return outputStream.getWriteCount();
-    }
-
-    public long getContentLength() {
-        return contentLength;
-    }
-
-    public void download() {
-        CompletableFuture.runAsync(() -> {
-            try {
-                long result = source.transferTo(outputStream);
-                source.close();
-                outputStream.close();
-            } catch (IOException ex) {
-
-            }
-
+  public CompletableFuture<Long> download() {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          try {
+            long result = source.transferTo(outputStream);
+            source.close();
+            outputStream.close();
+            return result;
+          } catch (IOException ex) {
+            throw new CompletionException(ex);
+          }
         });
-    }
+  }
 }
