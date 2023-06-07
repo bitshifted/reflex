@@ -135,7 +135,7 @@ public class JdkReflexClient implements ReflexClient {
       var contentType =
           request
               .headers()
-              .get()
+              .orElseThrow(() -> new HttpClientException("Content-Type header is not present"))
               .getHeaderValue(RFXHttpHeaders.CONTENT_TYPE)
               .orElseThrow(() -> new HttpClientException("Request content type not specified"));
       var bodySerializer =

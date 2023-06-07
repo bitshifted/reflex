@@ -83,7 +83,14 @@ public class HttpUrlConnectionClient implements ReflexClient {
         urlConn.setDoOutput(true);
         urlConn
             .getOutputStream()
-            .write(requestBodySerializer.get().objectToStream(request.body().get()).readAllBytes());
+            .write(
+                requestBodySerializer
+                    .orElseThrow(() -> new HttpClientException("Body serializer not found"))
+                    .objectToStream(
+                        request
+                            .body()
+                            .orElseThrow(() -> new HttpClientException("Request body not present")))
+                    .readAllBytes());
       }
 
       urlConn.connect();
