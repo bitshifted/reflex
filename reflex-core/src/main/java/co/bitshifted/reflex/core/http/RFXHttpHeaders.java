@@ -51,4 +51,13 @@ public class RFXHttpHeaders {
   public boolean isEmpty() {
     return headersMap.isEmpty();
   }
+
+  public long getContentLength() {
+    var values = headersMap.get(CONTENT_LENGTH);
+    if (values == null || values.isEmpty()) {
+      return -1;
+    }
+    var firstVal = values.get(0);
+    return Long.parseLong(firstVal);
+  }
 }

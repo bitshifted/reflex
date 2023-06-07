@@ -29,8 +29,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpUrlConnectionClient implements ReflexClient {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(HttpUrlConnectionClient.class);
 
   private HttpUrlConnectionClientConfig config;
 
@@ -48,6 +52,7 @@ public class HttpUrlConnectionClient implements ReflexClient {
       throws HttpClientException, HttpStatusException {
     try {
       var url = Helper.calculateUri(request).toURL();
+      LOGGER.debug("Target URL: {}", url);
       var urlConn = (HttpURLConnection) url.openConnection();
       urlConn.setRequestMethod(request.method().name());
       urlConn.setConnectTimeout((int) config.connectTimeout());
@@ -57,24 +62,35 @@ public class HttpUrlConnectionClient implements ReflexClient {
       commonHeaders
           .entrySet()
           .forEach(entry -> urlConn.setRequestProperty(entry.getKey(), entry.getValue()));
-      if (request.headers().isPresent()) {
-        var allHeaders = request.headers().get().getAllHeaders();
-        allHeaders.keySet().stream()
-            .forEach(
-                headerName -> {
-                  var values = allHeaders.get(headerName);
-                  urlConn.setRequestProperty(headerName, concatenate(values));
-                });
-      }
+
+      var requestHeaders = request.headers().orElse(new RFXHttpHeaders());
+      var allHeaders = request.headers().orElse(new RFXHttpHeaders()).getAllHeaders();
+      allHeaders.keySet().stream()
+          .forEach(
+              headerName -> {
+                var values = allHeaders.get(headerName);
+                urlConn.setRequestProperty(headerName, concatenate(values));
+              });
+
       urlConn.setDoInput(true);
       if (request.body().isPresent()) {
         var requestBodySerializer =
             getBodySerializer(
-                request.headers().get().getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).get().get(0));
+                requestHeaders
+                    .getHeaderValue(RFXHttpHeaders.CONTENT_TYPE)
+                    .orElseThrow(() -> new HttpClientException("Missing Content-Type header"))
+                    .get(0));
         urlConn.setDoOutput(true);
         urlConn
             .getOutputStream()
-            .write(requestBodySerializer.get().objectToStream(request.body().get()).readAllBytes());
+            .write(
+                requestBodySerializer
+                    .orElseThrow(() -> new HttpClientException("Body serializer not found"))
+                    .objectToStream(
+                        request
+                            .body()
+                            .orElseThrow(() -> new HttpClientException("Request body not present")))
+                    .readAllBytes());
       }
 
       urlConn.connect();
@@ -86,11 +102,15 @@ public class HttpUrlConnectionClient implements ReflexClient {
       if (urlConn.getContentType() != null && !urlConn.getContentType().isEmpty()) {
         bodySerializer = getBodySerializer(urlConn.getContentType());
       }
+      var responseHeaders = new RFXHttpHeaders();
+      urlConn
+          .getHeaderFields()
+          .forEach((key, values) -> values.forEach(val -> responseHeaders.setHeader(key, val)));
       return new RFXHttpResponse(
           RFXHttpStatus.findByCode(statusCode),
           getResponseBody(urlConn),
           bodySerializer,
-          Optional.empty());
+          Optional.of(responseHeaders));
     } catch (MalformedURLException ex) {
       throw new HttpClientException("Malformed URL: " + request.uri().toString());
     } catch (IOException ex) {
@@ -127,9 +147,6 @@ public class HttpUrlConnectionClient implements ReflexClient {
 
   private Optional<InputStream> getResponseBody(HttpURLConnection conn) throws IOException {
     var in = conn.getInputStream();
-    if (in.available() > 0) {
-      return Optional.of(in);
-    }
-    return Optional.empty();
+    return Optional.ofNullable(in);
   }
 }

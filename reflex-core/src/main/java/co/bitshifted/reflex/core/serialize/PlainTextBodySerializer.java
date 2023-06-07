@@ -41,4 +41,9 @@ public class PlainTextBodySerializer<Void> implements BodySerializer {
     }
     throw new UnsupportedOperationException("Only String type is supported");
   }
+
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
+    return streamToObject(input, type);
+  }
 }

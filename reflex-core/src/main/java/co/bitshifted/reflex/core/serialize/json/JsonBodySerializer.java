@@ -13,6 +13,7 @@ package co.bitshifted.reflex.core.serialize.json;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
+import java.io.InputStream;
 import java.util.Set;
 
 public interface JsonBodySerializer extends BodySerializer {
@@ -20,5 +21,10 @@ public interface JsonBodySerializer extends BodySerializer {
   @Override
   default Set<RFXMimeType> supportedMimeTypes() {
     return Set.of(RFXMimeTypes.APPLICATION_JSON);
+  }
+
+  @Override
+  default <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
+    return streamToObject(input, type);
   }
 }

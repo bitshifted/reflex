@@ -23,12 +23,14 @@ public class ReflexClientConfiguration {
   private RFXRedirectPolicy redirectPolicy;
   private URI baseUri;
   private Map<String, String> commonHeaders;
+  private HttpVersion httpVersion;
 
   public ReflexClientConfiguration() {
     this.connectTimeout = Duration.of(1, ChronoUnit.SECONDS);
     this.readTimeout = Duration.of(1, ChronoUnit.SECONDS);
     this.redirectPolicy = RFXRedirectPolicy.NORMAL;
     this.commonHeaders = new HashMap<>();
+    this.httpVersion = HttpVersion.HTTP_1_1;
   }
 
   public Duration connectTimeout() {
@@ -83,5 +85,14 @@ public class ReflexClientConfiguration {
   public ReflexClientConfiguration commonHeader(String name, String value) {
     this.commonHeaders.put(name, value);
     return this;
+  }
+
+  public ReflexClientConfiguration httpVersion(HttpVersion version) {
+    this.httpVersion = version;
+    return this;
+  }
+
+  public HttpVersion httpVersion() {
+    return httpVersion;
   }
 }

@@ -41,6 +41,11 @@ public class FormUrlEncodedSerializer implements BodySerializer {
 
   @Override
   public <T> T streamToObject(InputStream input, Class<T> type) {
+    return streamToObject(input, type, -1);
+  }
+
+  @Override
+  public <T> T streamToObject(InputStream input, Class<T> type, long contentLength) {
     throw new UnsupportedOperationException("Not supported");
   }
 

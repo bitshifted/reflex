@@ -46,7 +46,7 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
-        var person = response.bodyToValue(Person.class);
+        var person = response.bodyTo(Person.class);
         boolean result =
             verifyAll(
                 person != null,
@@ -83,7 +83,7 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
               .build();
       var response = Reflex.client().sendHttpRequest(request);
       if (response.status() == RFXHttpStatus.OK) {
-        var personResponse = response.bodyToValue(Person.class);
+        var personResponse = response.bodyTo(Person.class);
         boolean result =
             verifyAll(
                 verify("Person response is null", personResponse != null),

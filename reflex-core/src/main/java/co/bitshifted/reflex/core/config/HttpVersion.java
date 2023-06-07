@@ -8,10 +8,9 @@
  *
  */
 
-package co.bitshifted.reflex.core.impl.jdk11;
+package co.bitshifted.reflex.core.config;
 
-import java.net.http.HttpClient;
-import java.time.Duration;
-
-public record Jdk11ClientConfig(
-    Duration connectTimeout, HttpClient.Redirect redirectPolicy, HttpClient.Version httpVersion) {}
+public enum HttpVersion {
+  HTTP_1_1,
+  HTTP_2_0;
+}

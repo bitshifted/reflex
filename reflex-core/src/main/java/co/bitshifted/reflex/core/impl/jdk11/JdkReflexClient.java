@@ -41,7 +41,7 @@ public class JdkReflexClient implements ReflexClient {
   private BodySerializer dataSerializer;
 
   public JdkReflexClient() {
-    this.httpClient = HttpClient.newHttpClient();
+    this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
   }
 
   public JdkReflexClient(ReflexClientConfiguration config) {
@@ -50,6 +50,7 @@ public class JdkReflexClient implements ReflexClient {
         HttpClient.newBuilder()
             .connectTimeout(jdk11Config.connectTimeout())
             .followRedirects(jdk11Config.redirectPolicy())
+            .version(jdk11Config.httpVersion())
             .build();
   }
 
@@ -75,12 +76,16 @@ public class JdkReflexClient implements ReflexClient {
       if (bodySerializer.isPresent()) {
         LOGGER.debug("Found response body serializer {}", bodySerializer.get());
       }
-
+      var responseHeaders = new RFXHttpHeaders();
+      response
+          .headers()
+          .map()
+          .forEach((key, values) -> values.forEach(v -> responseHeaders.setHeader(key, v)));
       return new RFXHttpResponse(
           RFXHttpStatus.findByCode(response.statusCode()),
           Optional.of(response.body()),
           bodySerializer,
-          Optional.of(new RFXHttpHeaders()));
+          Optional.of(responseHeaders));
     } catch (IOException ex) {
       LOGGER.error("Failed to send HTTP request", ex);
       throw new HttpClientException(ex);
@@ -112,15 +117,14 @@ public class JdkReflexClient implements ReflexClient {
     commonHeaders
         .entrySet()
         .forEach(entry -> reqBuilder.setHeader(entry.getKey(), entry.getValue()));
-    if (request.headers().isPresent()) {
-      var allHeaders = request.headers().get().getAllHeaders();
-      allHeaders
-          .keySet()
-          .forEach(
-              k -> {
-                allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
-              });
-    }
+    var requestHeaders = request.headers().orElse(new RFXHttpHeaders());
+    var allHeaders = requestHeaders.getAllHeaders();
+    allHeaders
+        .keySet()
+        .forEach(
+            k -> {
+              allHeaders.get(k).forEach(v -> reqBuilder.setHeader(k, v));
+            });
     return reqBuilder.build();
   }
 
@@ -131,7 +135,7 @@ public class JdkReflexClient implements ReflexClient {
       var contentType =
           request
               .headers()
-              .get()
+              .orElseThrow(() -> new HttpClientException("Content-Type header is not present"))
               .getHeaderValue(RFXHttpHeaders.CONTENT_TYPE)
               .orElseThrow(() -> new HttpClientException("Request content type not specified"));
       var bodySerializer =
