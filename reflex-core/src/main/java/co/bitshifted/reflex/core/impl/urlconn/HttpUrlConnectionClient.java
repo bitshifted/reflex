@@ -147,9 +147,6 @@ public class HttpUrlConnectionClient implements ReflexClient {
 
   private Optional<InputStream> getResponseBody(HttpURLConnection conn) throws IOException {
     var in = conn.getInputStream();
-    if (in.available() > 0) {
-      return Optional.of(in);
-    }
-    return Optional.empty();
+    return Optional.ofNullable(in);
   }
 }
