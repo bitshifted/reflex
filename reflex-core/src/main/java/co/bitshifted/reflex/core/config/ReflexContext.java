@@ -38,7 +38,9 @@ public class ReflexContext {
 
   public ReflexClient defaultClient() {
     if (defaultClient == null) {
-      defaultClient = HttpClientLoader.loadDefaultClient().get();
+      defaultClient =
+          HttpClientLoader.loadDefaultClient()
+              .orElseThrow(() -> new IllegalStateException("Default HTTP client not found"));
     }
     if (!serializersLoaded) {
       BodySerializerLoader.loadBodySerializers().stream()

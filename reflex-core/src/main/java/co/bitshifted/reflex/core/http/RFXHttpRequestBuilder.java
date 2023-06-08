@@ -68,6 +68,10 @@ public final class RFXHttpRequestBuilder<T> {
     if (method == null || (requestUri == null && path == null)) {
       throw new IllegalArgumentException("Method and URI are required");
     }
+    if (body != null && headers.getHeaderValue(RFXHttpHeaders.CONTENT_TYPE).isEmpty()) {
+      throw new IllegalArgumentException(
+          "Header Content-Type must be specified when request body is present");
+    }
     var bodyOpt = (body != null) ? Optional.of(body) : Optional.empty();
     var optHeaders = (headers.isEmpty()) ? Optional.empty() : Optional.of(headers);
     return new RFXHttpRequest(
