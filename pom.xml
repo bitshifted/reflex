@@ -21,6 +21,21 @@
     <description>Simple and flexible Java REST client</description>
     <url>https://github.com/bitshifted/reflex</url>
 
+    <licenses>
+        <license>
+            <name>Mozilla Public License 2.0</name>
+            <url>http://mozilla.org/MPL/2.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Vladimir Djurovic</name>
+            <organization>Bitshift</organization>
+            <organizationUrl>https://bitshifted.co</organizationUrl>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:git@github.com:bitshifted/reflex.git</connection>
