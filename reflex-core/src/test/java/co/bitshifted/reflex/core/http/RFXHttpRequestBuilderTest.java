@@ -27,9 +27,10 @@ public class RFXHttpRequestBuilderTest {
     person.setLastName("Smith");
     var request =
         newBuilder(person)
-            .method(RFXHttpMethod.GET)
+            .method(RFXHttpMethod.POST)
             .requestUri(new URI("http://localhost:8080"))
             .header(RFXHttpHeaders.ACCEPT, "application/json", "application/xml")
+            .header(RFXHttpHeaders.CONTENT_TYPE, "application/json")
             .build();
     assertTrue(request.body().isPresent());
     var body = request.body().get();
@@ -84,5 +85,12 @@ public class RFXHttpRequestBuilderTest {
                     .pathParam("bar", "bar-value"))
             .build();
     assertEquals("/foo-value/bar-value", request.path().get());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenBodyPresentAndNoContentType() throws Exception {
+    var request =
+        newBuilder("body").method(RFXHttpMethod.POST).requestUri(new URI("http://localhost"));
+    assertThrows(IllegalArgumentException.class, () -> request.build());
   }
 }

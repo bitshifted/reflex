@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 
 public class ReflexTester {
 
+  private static final int DEFAULT_MAX_LEN = 80;
+
   public static void main(String... args) throws Exception {
     if (args.length == 0) {
       System.out.println("At least one test suite name is required");
@@ -28,12 +30,13 @@ public class ReflexTester {
     for (TestSuite ts : testCases) {
       testResults.addAll(ts.getTestCasePackage().runTests());
     }
-    var maxLen =
-        testResults.stream()
-            .max(Comparator.comparingInt(tr -> tr.name().length()))
-            .get()
-            .name()
-            .length();
+    var maxLenResult = testResults.stream().max(Comparator.comparingInt(tr -> tr.name().length()));
+    int maxLen;
+    if (maxLenResult.isPresent()) {
+      maxLen = maxLenResult.get().name().length();
+    } else {
+      maxLen = DEFAULT_MAX_LEN;
+    }
 
     testResults.forEach(
         tr -> System.out.println(tr.displayResult(maxLen + Constants.OUTPUT_PADDING)));
