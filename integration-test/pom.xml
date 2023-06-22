@@ -15,7 +15,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>co.bitshfited</groupId>
+        <groupId>co.bitshifted</groupId>
         <artifactId>reflex</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -31,7 +31,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>co.bitshfited</groupId>
+            <groupId>co.bitshifted</groupId>
             <artifactId>reflex-core</artifactId>
             <version>${project.version}</version>
         </dependency>
