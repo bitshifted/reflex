@@ -77,6 +77,7 @@
         <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
         <spotless.version>2.36.0</spotless.version>
+        <central-publishing.version>0.7.0</central-publishing.version>
     </properties>
 
     <dependencyManagement>
@@ -307,6 +308,17 @@
                         </java>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>maven-central-release</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>published</waitUntil>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -317,6 +329,10 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -335,15 +351,5 @@
         </profile>
     </profiles>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>maven-central-snapshots</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>maven-central-release</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
 
 </project>
