@@ -319,7 +319,8 @@
                     <configuration>
                         <publishingServerId>maven-central-release</publishingServerId>
                         <autoPublish>true</autoPublish>
-                        <waitUntil>published</waitUntil>
+                        <waitUntil>validated</waitUntil>
+                        <excludeArtifacts>reflex-integration-test</excludeArtifacts>
                     </configuration>
                 </plugin>
             </plugins>
