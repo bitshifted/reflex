@@ -77,7 +77,7 @@
         <maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
-        <jacoco.plugin.version>0.8.8</jacoco.plugin.version>
+        <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
         <spotless.version>2.36.0</spotless.version>
         <central-publishing.version>0.7.0</central-publishing.version>
