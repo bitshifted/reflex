@@ -55,9 +55,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- dependency versions -->
-        <jackson.version>2.19.0</jackson.version>
+        <jackson.version>2.19.1</jackson.version>
         <javafx.version>17.0.1</javafx.version>
-        <junit.version>5.12.2</junit.version>
+        <junit.version>5.13.1</junit.version>
         <wiremock.version>2.35.2</wiremock.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
@@ -65,7 +65,7 @@
         <jaxb.api.version>4.0.2</jaxb.api.version>
         <jaxb.impl.version>4.0.5</jaxb.impl.version>
         <!-- Maven plugin versions -->
-        <maven-clean-plugin.version>3.4.1</maven-clean-plugin.version>
+        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
@@ -78,9 +78,9 @@
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
-        <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
-        <spotless.version>2.44.4</spotless.version>
-        <central-publishing.version>0.7.0</central-publishing.version>
+        <flatten-maven-plugin.version>1.7.1</flatten-maven-plugin.version>
+        <spotless.version>2.44.5</spotless.version>
+        <central-publishing.version>0.8.0</central-publishing.version>
     </properties>
 
     <dependencyManagement>
