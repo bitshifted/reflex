@@ -23,13 +23,19 @@ import co.bitshifted.reflex.core.http.RFXHttpResponse;
 import co.bitshifted.reflex.core.http.RFXHttpStatus;
 import co.bitshifted.reflex.core.impl.Helper;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
+import co.bitshifted.reflex.core.ssl.TrustAllTrustManager;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +52,13 @@ public class JdkReflexClient implements ReflexClient {
 
   public JdkReflexClient(ReflexClientConfiguration config) {
     var jdk11Config = Jdk11ConfigConverter.fromConfig(config);
+
     this.httpClient =
         HttpClient.newBuilder()
             .connectTimeout(jdk11Config.connectTimeout())
             .followRedirects(jdk11Config.redirectPolicy())
             .version(jdk11Config.httpVersion())
+            .sslContext(getSslContext(config.disableSslCertVerification()))
             .build();
   }
 
@@ -150,5 +158,20 @@ public class JdkReflexClient implements ReflexClient {
               () -> bodySerializer.objectToStream(request.body().get()));
     }
     return publisher;
+  }
+
+  private SSLContext getSslContext(boolean disableSslCertValidation) {
+    try {
+      if (disableSslCertValidation) {
+        var tm = new TrustManager[] {new TrustAllTrustManager()};
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        ctx.init(null, tm, new SecureRandom());
+        return ctx;
+      } else {
+        return SSLContext.getDefault();
+      }
+    } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 }
