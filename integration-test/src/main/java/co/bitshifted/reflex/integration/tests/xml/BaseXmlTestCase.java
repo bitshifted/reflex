@@ -33,6 +33,7 @@ public abstract class BaseXmlTestCase implements TestCasePackage {
     Reflex.context()
         .configuration()
         .baseUri(Constants.SERVER_BASE_URL)
+        .disableSslCertVerification(true)
         .commonHeader(RFXHttpHeaders.ACCEPT, RFXMimeTypes.APPLICATION_XML.toMimeTypeString());
   }
 

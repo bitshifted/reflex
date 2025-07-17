@@ -305,7 +305,7 @@
                                 <include>src/test/java/**/*.java</include>
                             </includes>
                             <googleJavaFormat>
-                                <version>1.15.0</version>
+                                <version>1.17.0</version>
                                 <style>GOOGLE</style>
                             </googleJavaFormat>
                         </java>

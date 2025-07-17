@@ -15,7 +15,7 @@ public final class Constants {
   public static final int TEST_RESULT_SUCCESS = 0;
   public static final int TEST_RESULT_FAIL = 10;
 
-  public static final String SERVER_BASE_URL = "http://localhost:9000";
+  public static final String SERVER_BASE_URL = "https://localhost:9000";
 
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_RED = "\u001B[31m";

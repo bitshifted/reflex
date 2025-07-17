@@ -39,7 +39,7 @@ public class FormUrlEncodedTestCase implements TestCasePackage {
 
   private TestResult submitFormUrlEncoded() {
     var testResult = Constants.TEST_RESULT_FAIL;
-    context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    context().configuration().baseUri(Constants.SERVER_BASE_URL).disableSslCertVerification(true);
     var order = new Order();
     order.setId(123);
     var person = new Person();

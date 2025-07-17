@@ -24,6 +24,7 @@ public class ReflexClientConfiguration {
   private URI baseUri;
   private Map<String, String> commonHeaders;
   private HttpVersion httpVersion;
+  private boolean disableSllCertVerification;
 
   public ReflexClientConfiguration() {
     this.connectTimeout = Duration.of(1, ChronoUnit.SECONDS);
@@ -31,6 +32,7 @@ public class ReflexClientConfiguration {
     this.redirectPolicy = RFXRedirectPolicy.NORMAL;
     this.commonHeaders = new HashMap<>();
     this.httpVersion = HttpVersion.HTTP_1_1;
+    this.disableSllCertVerification = false;
   }
 
   public Duration connectTimeout() {
@@ -94,5 +96,14 @@ public class ReflexClientConfiguration {
 
   public HttpVersion httpVersion() {
     return httpVersion;
+  }
+
+  public ReflexClientConfiguration disableSslCertVerification(boolean disable) {
+    this.disableSllCertVerification = disable;
+    return this;
+  }
+
+  public boolean disableSslCertVerification() {
+    return disableSllCertVerification;
   }
 }
