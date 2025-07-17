@@ -39,7 +39,7 @@ function run_tests_for_profile() {
   echo "Running integration tests..."
   cd $ROOT_DIR/$TARGET_DIR
   echo "Working directory: ${PWD}"
-  java -Djdk.internal.httpClient.disableHostnameVerification -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester "${@:2}" #PLAIN_TEXT JSON_JACKSON
+  java -Djdk.internal.httpclient.disableHostnameVerification=true -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester "${@:2}" #PLAIN_TEXT JSON_JACKSON
   TEST_RESULT=$?
   if [ $TEST_RESULT -ne 0 ];then
     echo "There are test failures."
