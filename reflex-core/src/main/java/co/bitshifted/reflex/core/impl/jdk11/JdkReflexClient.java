@@ -47,18 +47,21 @@ public class JdkReflexClient implements ReflexClient {
   private BodySerializer dataSerializer;
 
   public JdkReflexClient() {
-    this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+    this(Reflex.context().configuration());
   }
 
   public JdkReflexClient(ReflexClientConfiguration config) {
     var jdk11Config = Jdk11ConfigConverter.fromConfig(config);
 
+    var sslContext = getSslContext(config.disableSslCertVerification());
+    var sslParams = sslContext.getDefaultSSLParameters();
+    sslParams.setEndpointIdentificationAlgorithm(null);
     this.httpClient =
         HttpClient.newBuilder()
             .connectTimeout(jdk11Config.connectTimeout())
             .followRedirects(jdk11Config.redirectPolicy())
             .version(jdk11Config.httpVersion())
-            .sslContext(getSslContext(config.disableSslCertVerification()))
+            .sslContext(sslContext)
             .build();
   }
 
@@ -163,6 +166,8 @@ public class JdkReflexClient implements ReflexClient {
   private SSLContext getSslContext(boolean disableSslCertValidation) {
     try {
       if (disableSslCertValidation) {
+        LOGGER.warn(
+            "SSL certificate validation is disabled. This is insecure and should not be used in production.");
         var tm = new TrustManager[] {new TrustAllTrustManager()};
         SSLContext ctx = SSLContext.getInstance("TLS");
         ctx.init(null, tm, new SecureRandom());

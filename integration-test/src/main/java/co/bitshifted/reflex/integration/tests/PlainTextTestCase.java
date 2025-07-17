@@ -41,7 +41,7 @@ public class PlainTextTestCase implements TestCasePackage {
 
   private TestResult simpleGetPlainText() {
     var testResult = Constants.TEST_RESULT_FAIL;
-    context().configuration().baseUri(Constants.SERVER_BASE_URL);
+    context().configuration().baseUri(Constants.SERVER_BASE_URL).disableSslCertVerification(true);
     try {
       var request =
           RFXHttpRequestBuilder.newBuilder().method(RFXHttpMethod.GET).path("/v1/text").build();

@@ -39,7 +39,7 @@ function run_tests_for_profile() {
   echo "Running integration tests..."
   cd $ROOT_DIR/$TARGET_DIR
   echo "Working directory: ${PWD}"
-  java -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester "${@:2}" #PLAIN_TEXT JSON_JACKSON
+  java -Djdk.internal.httpClient.disableHostnameVerification -cp $TEST_JAR_NAME co.bitshifted.reflex.integration.ReflexTester "${@:2}" #PLAIN_TEXT JSON_JACKSON
   TEST_RESULT=$?
   if [ $TEST_RESULT -ne 0 ];then
     echo "There are test failures."
@@ -60,7 +60,7 @@ function setup_wiremock() {
     exit $FAILURE_EXIT_CODE
   fi
   cd $WIREMOCK_DIR
-  java -jar wiremock.jar --root-dir wiremock --port $WIREMOCK_PORT &
+  java -jar wiremock.jar --root-dir wiremock --https-port $WIREMOCK_PORT &
   WIREMOCK_SERVER_PID=$!
   echo "Wiremock server started with PID: $WIREMOCK_SERVER_PID"
 }
