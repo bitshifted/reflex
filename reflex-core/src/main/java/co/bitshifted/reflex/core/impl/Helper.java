@@ -10,7 +10,6 @@
 
 package co.bitshifted.reflex.core.impl;
 
-import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.exception.HttpClientException;
 import co.bitshifted.reflex.core.http.RFXHttpRequest;
 import java.net.URI;
@@ -20,12 +19,13 @@ public final class Helper {
 
   private Helper() {}
 
-  public static <T> URI calculateUri(RFXHttpRequest<T> request) throws HttpClientException {
+  public static <T> URI calculateUri(RFXHttpRequest<T> request, URI baseUri)
+      throws HttpClientException {
     var optionalUri = request.uri();
     if (optionalUri.isPresent()) {
       return optionalUri.get();
     } else {
-      URI baseUri = Reflex.context().configuration().baseUri();
+
       if (baseUri == null) {
         throw new HttpClientException("Base URL is not set");
       }

@@ -21,7 +21,8 @@ public enum TestSuite {
   JSON_GSON(GsonJsonTestCase.class.getName()),
   XML_JACKSON(JacksonXmlTestCase.class.getName()),
   XML_JAXB(JaxbXmlTestCase.class.getName()),
-  FORM_URLENCODED(FormUrlEncodedTestCase.class.getName());
+  FORM_URLENCODED(FormUrlEncodedTestCase.class.getName()),
+  MULTI_CTX(MultiContextTestCase.class.getName());
 
   private String className;
 

@@ -10,9 +10,9 @@
 
 package co.bitshifted.reflex.core.impl.jdk11;
 
+import static co.bitshifted.reflex.core.Reflex.*;
 import static co.bitshifted.reflex.core.Reflex.context;
 
-import co.bitshifted.reflex.core.Reflex;
 import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.exception.HttpClientException;
@@ -44,13 +44,15 @@ public class JdkReflexClient implements ReflexClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(JdkReflexClient.class);
 
   private final HttpClient httpClient;
+  private final ReflexClientConfiguration configuration;
   private BodySerializer dataSerializer;
 
   public JdkReflexClient() {
-    this(Reflex.context().configuration());
+    this(context().configuration());
   }
 
   public JdkReflexClient(ReflexClientConfiguration config) {
+    this.configuration = config;
     var jdk11Config = Jdk11ConfigConverter.fromConfig(config);
 
     var sslContext = getSslContext(config.disableSslCertVerification());
@@ -122,9 +124,9 @@ public class JdkReflexClient implements ReflexClient {
   private <T> HttpRequest createHttpRequest(RFXHttpRequest<T> request) throws HttpClientException {
     var publisher = getRequestBodyPublisher(request);
     var reqBuilder =
-        HttpRequest.newBuilder(Helper.calculateUri(request))
+        HttpRequest.newBuilder(Helper.calculateUri(request, configuration.baseUri()))
             .method(request.method().name(), publisher);
-    var commonHeaders = Reflex.context().configuration().commonHeaders();
+    var commonHeaders = context().configuration().commonHeaders();
     commonHeaders
         .entrySet()
         .forEach(entry -> reqBuilder.setHeader(entry.getKey(), entry.getValue()));

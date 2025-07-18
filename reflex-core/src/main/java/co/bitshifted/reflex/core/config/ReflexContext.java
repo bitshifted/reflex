@@ -27,19 +27,19 @@ public class ReflexContext {
   private static final Logger LOGGER = LoggerFactory.getLogger(ReflexContext.class);
 
   private ReflexClient defaultClient;
-  private final ReflexClientConfiguration defaultClientConfiguration;
+  private final ReflexClientConfiguration clientConfiguration;
   private final Map<String, BodySerializer> bodySerializers;
   private boolean serializersLoaded = false;
 
   public ReflexContext() {
     this.bodySerializers = new HashMap<>();
-    this.defaultClientConfiguration = new ReflexClientConfiguration();
+    this.clientConfiguration = new ReflexClientConfiguration();
   }
 
   public ReflexClient defaultClient() {
     if (defaultClient == null) {
       defaultClient =
-          HttpClientLoader.loadDefaultClient()
+          HttpClientLoader.loadClient(clientConfiguration)
               .orElseThrow(() -> new IllegalStateException("Default HTTP client not found"));
     }
     if (!serializersLoaded) {
@@ -55,7 +55,7 @@ public class ReflexContext {
 
   public ReflexClientConfiguration configuration() {
     synchronized (this) {
-      return defaultClientConfiguration;
+      return clientConfiguration;
     }
   }
 

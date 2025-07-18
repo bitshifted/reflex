@@ -11,8 +11,11 @@
 package co.bitshifted.reflex.core;
 
 import co.bitshifted.reflex.core.config.ReflexContext;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Reflex {
+  public static final String DEFAULT_CONTEXT = "default";
 
   private static final Reflex INSTANCE;
 
@@ -20,17 +23,31 @@ public class Reflex {
     INSTANCE = new Reflex();
   }
 
-  private final ReflexContext context;
+  private final Map<String, ReflexContext> contextMap;
 
   private Reflex() {
-    this.context = new ReflexContext();
+    this.contextMap = new HashMap<>();
+    this.contextMap.put(DEFAULT_CONTEXT, new ReflexContext());
   }
 
   public static ReflexContext context() {
-    return INSTANCE.context;
+    return INSTANCE.contextMap.get(DEFAULT_CONTEXT);
+  }
+
+  public static ReflexContext context(String contextName) {
+    return INSTANCE.contextMap.computeIfAbsent(contextName, k -> new ReflexContext());
   }
 
   public static ReflexClient client() {
-    return INSTANCE.context.defaultClient();
+    return INSTANCE.contextMap.get(DEFAULT_CONTEXT).defaultClient();
+  }
+
+  public static ReflexClient client(String contextName) {
+    ReflexContext context = INSTANCE.contextMap.get(contextName);
+    if (context == null) {
+      throw new IllegalArgumentException(
+          "Context '" + contextName + "' does not exist. Please configure it first.");
+    }
+    return context.defaultClient();
   }
 }

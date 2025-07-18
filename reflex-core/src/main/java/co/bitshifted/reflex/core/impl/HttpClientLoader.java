@@ -10,6 +10,8 @@
 
 package co.bitshifted.reflex.core.impl;
 
+import static co.bitshifted.reflex.core.Reflex.*;
+
 import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.config.ReflexClientConfiguration;
 import co.bitshifted.reflex.core.impl.jdk11.JdkReflexClient;
@@ -34,20 +36,7 @@ public class HttpClientLoader {
 
   private HttpClientLoader() {}
 
-  public static Optional<ReflexClient> loadDefaultClient() {
-    for (SupportedHttpClient client : SupportedHttpClient.values()) {
-      switch (client) {
-        case JDK11_HTTP_CLIENT -> {
-          if (isClientAvailable(client)) {
-            return Optional.of(new JdkReflexClient());
-          }
-        }
-      }
-    }
-    return Optional.empty();
-  }
-
-  public static Optional<ReflexClient> loadDefaultClient(ReflexClientConfiguration config) {
+  public static Optional<ReflexClient> loadClient(ReflexClientConfiguration config) {
     for (SupportedHttpClient client : SupportedHttpClient.values()) {
       switch (client) {
         case JDK11_HTTP_CLIENT -> {

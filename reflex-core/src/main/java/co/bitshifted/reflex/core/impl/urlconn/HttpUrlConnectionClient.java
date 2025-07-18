@@ -37,13 +37,15 @@ public class HttpUrlConnectionClient implements ReflexClient {
   private static final Logger LOGGER = LoggerFactory.getLogger(HttpUrlConnectionClient.class);
 
   private HttpUrlConnectionClientConfig config;
+  private final ReflexClientConfiguration configuration;
 
   public HttpUrlConnectionClient() {
-    var defaultConfig = Reflex.context().configuration();
-    this.config = HttpUrlConnectionConfigConverter.fromConfig(defaultConfig);
+    this.configuration = Reflex.context().configuration();
+    this.config = HttpUrlConnectionConfigConverter.fromConfig(configuration);
   }
 
   public HttpUrlConnectionClient(ReflexClientConfiguration configuration) {
+    this.configuration = configuration;
     this.config = HttpUrlConnectionConfigConverter.fromConfig(configuration);
   }
 
@@ -51,7 +53,7 @@ public class HttpUrlConnectionClient implements ReflexClient {
   public <T> RFXHttpResponse sendHttpRequest(RFXHttpRequest<T> request)
       throws HttpClientException, HttpStatusException {
     try {
-      var url = Helper.calculateUri(request).toURL();
+      var url = Helper.calculateUri(request, configuration.baseUri()).toURL();
       LOGGER.debug("Target URL: {}", url);
       var urlConn = (HttpURLConnection) url.openConnection();
       urlConn.setRequestMethod(request.method().name());
