@@ -19,17 +19,9 @@ import org.junit.jupiter.api.Test;
 public class HttpClientLoaderTest {
 
   @Test
-  void loadDefaultHttpClientSuccess() {
-    var result = HttpClientLoader.loadDefaultClient();
-    assertTrue(result.isPresent());
-    var client = result.get();
-    assertTrue(client instanceof JdkReflexClient);
-  }
-
-  @Test
   void loadDefaultClientWithConfigSuccess() {
     var config = new ReflexClientConfiguration();
-    var result = HttpClientLoader.loadDefaultClient(config);
+    var result = HttpClientLoader.loadClient(config);
     assertTrue(result.isPresent());
     var client = result.get();
     assertTrue(client instanceof JdkReflexClient);

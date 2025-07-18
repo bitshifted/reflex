@@ -71,6 +71,7 @@ run_tests_for_profile default PLAIN_TEXT FORM_URLENCODED
 run_tests_for_profile jackson-json-serializer  JSON_JACKSON
 run_tests_for_profile gson-serializer JSON_GSON
 run_tests_for_profile jackson-xml-serializer  XML_JACKSON
+run_tests_for_profile default MULTI_CTX
 #run_tests_for_profile jaxb-xml-serializer  XML_JAXB
 
 kill $WIREMOCK_SERVER_PID
