@@ -44,8 +44,8 @@ public final class RFXHttpRequestBuilder<T> {
     return this;
   }
 
-  public RFXHttpRequestBuilder<T> requestUri(URI uri) {
-    this.requestUri = uri;
+  public RFXHttpRequestBuilder<T> requestUri(String uri) {
+    this.requestUri = URI.create(uri);
     return this;
   }
 

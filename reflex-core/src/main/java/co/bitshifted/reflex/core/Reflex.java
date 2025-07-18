@@ -39,7 +39,7 @@ public class Reflex {
   }
 
   public static ReflexClient client() {
-    return INSTANCE.contextMap.get(DEFAULT_CONTEXT).defaultClient();
+    return INSTANCE.contextMap.get(DEFAULT_CONTEXT).client();
   }
 
   public static ReflexClient client(String contextName) {
@@ -48,6 +48,6 @@ public class Reflex {
       throw new IllegalArgumentException(
           "Context '" + contextName + "' does not exist. Please configure it first.");
     }
-    return context.defaultClient();
+    return context.client();
   }
 }

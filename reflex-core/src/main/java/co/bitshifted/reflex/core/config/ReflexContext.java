@@ -14,7 +14,7 @@ import co.bitshifted.reflex.core.ReflexClient;
 import co.bitshifted.reflex.core.http.RFXMimeType;
 import co.bitshifted.reflex.core.http.RFXMimeTypes;
 import co.bitshifted.reflex.core.impl.BodySerializerLoader;
-import co.bitshifted.reflex.core.impl.HttpClientLoader;
+import co.bitshifted.reflex.core.impl.jdk11.JdkReflexClient;
 import co.bitshifted.reflex.core.serialize.BodySerializer;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class ReflexContext {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ReflexContext.class);
 
-  private ReflexClient defaultClient;
+  private ReflexClient client;
   private final ReflexClientConfiguration clientConfiguration;
   private final Map<String, BodySerializer> bodySerializers;
   private boolean serializersLoaded = false;
@@ -36,11 +36,9 @@ public class ReflexContext {
     this.clientConfiguration = new ReflexClientConfiguration();
   }
 
-  public ReflexClient defaultClient() {
-    if (defaultClient == null) {
-      defaultClient =
-          HttpClientLoader.loadClient(clientConfiguration)
-              .orElseThrow(() -> new IllegalStateException("Default HTTP client not found"));
+  public ReflexClient client() {
+    if (client == null) {
+      client = new JdkReflexClient(configuration());
     }
     if (!serializersLoaded) {
       BodySerializerLoader.loadBodySerializers().stream()
@@ -50,7 +48,7 @@ public class ReflexContext {
                       .forEach(s -> bodySerializers.put(s.toMimeTypeString(), ser)));
       LOGGER.debug("Loaded serializers: {}", bodySerializers);
     }
-    return defaultClient;
+    return client;
   }
 
   public ReflexClientConfiguration configuration() {

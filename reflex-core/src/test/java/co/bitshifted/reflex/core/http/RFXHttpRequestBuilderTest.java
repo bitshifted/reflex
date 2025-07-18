@@ -15,7 +15,6 @@ import static co.bitshifted.reflex.core.http.RFXHttpRequestBuilder.UrlTemplateBu
 import static org.junit.jupiter.api.Assertions.*;
 
 import co.bitshifted.reflex.core.model.Person;
-import java.net.URI;
 import org.junit.jupiter.api.Test;
 
 public class RFXHttpRequestBuilderTest {
@@ -28,7 +27,7 @@ public class RFXHttpRequestBuilderTest {
     var request =
         newBuilder(person)
             .method(RFXHttpMethod.POST)
-            .requestUri(new URI("http://localhost:8080"))
+            .requestUri("http://localhost:8080")
             .header(RFXHttpHeaders.ACCEPT, "application/json", "application/xml")
             .header(RFXHttpHeaders.CONTENT_TYPE, "application/json")
             .build();
@@ -49,7 +48,7 @@ public class RFXHttpRequestBuilderTest {
   @Test
   void createValidHttpRequestWithNoBodyAndNoHeaders() throws Exception {
     var request =
-        newBuilder().method(RFXHttpMethod.GET).requestUri(new URI("http://localhost:9000")).build();
+        newBuilder().method(RFXHttpMethod.GET).requestUri("http://localhost:9000").build();
     assertTrue(request.body().isEmpty());
     var headers = request.headers();
     assertTrue(headers.isEmpty());
@@ -89,8 +88,7 @@ public class RFXHttpRequestBuilderTest {
 
   @Test
   void shouldThrowExceptionWhenBodyPresentAndNoContentType() throws Exception {
-    var request =
-        newBuilder("body").method(RFXHttpMethod.POST).requestUri(new URI("http://localhost"));
+    var request = newBuilder("body").method(RFXHttpMethod.POST).requestUri("http://localhost");
     assertThrows(IllegalArgumentException.class, () -> request.build());
   }
 }
