@@ -23,7 +23,6 @@ import co.bitshifted.reflex.core.serialize.file.FileDownloadDetails;
 import co.bitshifted.reflex.core.serialize.file.FileOperationSerializer;
 import co.bitshifted.reflex.core.serialize.file.FileUploadDetails;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Random;
@@ -47,7 +46,7 @@ public class JdkHttpClientImplTest {
     var request =
         RFXHttpRequestBuilder.newBuilder()
             .method(GET)
-            .requestUri(new URI("http://localhost:9010/test/endpoint"))
+            .requestUri("http://localhost:9010/test/endpoint")
             .build();
     var response = client.sendHttpRequest(request);
     assertNotNull(response);
@@ -72,7 +71,7 @@ public class JdkHttpClientImplTest {
     var request =
         RFXHttpRequestBuilder.newBuilder("content")
             .method(POST)
-            .requestUri(new URI("http://localhost:9010/test/post"))
+            .requestUri("http://localhost:9010/test/post")
             .build();
     var response = client.sendHttpRequest(request);
     assertNotNull(response);
@@ -86,7 +85,7 @@ public class JdkHttpClientImplTest {
     var request =
         RFXHttpRequestBuilder.newBuilder()
             .method(GET)
-            .requestUri(new URI("http://localhost:9010/test/wrong-status"))
+            .requestUri("http://localhost:9010/test/wrong-status")
             .build();
     assertThrows(HttpStatusException.class, () -> client().sendHttpRequest(request));
   }
@@ -101,7 +100,7 @@ public class JdkHttpClientImplTest {
     var request =
         RFXHttpRequestBuilder.newBuilder()
             .method(GET)
-            .requestUri(new URI("http://localhost:9010/test/endpoint"))
+            .requestUri("http://localhost:9010/test/endpoint")
             .build();
     var response = client.sendHttpRequestAsync(request).get();
     assertNotNull(response);
