@@ -26,7 +26,7 @@ Add the following dependency to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>co.bitshifted</groupId>
-    <artifactId>reflex</artifactId>
+    <artifactId>reflex-core</artifactId>
     <version>${reflex.version}</version>
 </dependency>
 ```
