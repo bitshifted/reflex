@@ -31,10 +31,11 @@ Add the following dependency to your `pom.xml`:
 </dependency>
 ```
 
-## Quick Start
+## Usage
+
+To make a simple GET request, you can use the following code snippet:
 
 ```java
-import java.net.URI;
 
 // make a GET request to get plain text
 var request = RFXHttpRequestBuilder.newBuilder().
@@ -43,7 +44,34 @@ var request = RFXHttpRequestBuilder.newBuilder().
     build();
 var response = Reflex.client().sendHttpRequest(request);
 var responseBody = response.bodyTo(String.class);
+
+// use async client call
+Reflex.client().sendHttpRequestAsync(request).thenAccept(r -> System.out.println(r.bodyTo(String.class)));
 ```
+
+## JSON and XML support
+
+Reflex client provides built-in support for JSON and XML serialization/deserialization. It uses what ever libraries are available on the classpath.
+Out of the box it supports Jackson and Gson for JSON, and Jackson XML and JAXB for XML.
+
+When successfull response is received, Reflex will inspect `Content-Type` header and use appropriate deserializer to convert response body to the requested type. See
+the following code snippet for example:
+
+```java
+record User(String name, int age) {}
+
+var request = RFXHttpRequestBuilder.newBuilder().
+    method(RFXHttpMethod.GET).
+    requesiUri(URI.create("http://example.com/user")).
+    build();
+var response = Reflex.client().sendHttpRequest(request);
+var user = response.bodyTo(User.class); // automatically deserializes JSON or XML response to User object
+```
+
+
+# Configuration 
+
+```java
 
 ## Configuration
 
