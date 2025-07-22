@@ -56,7 +56,6 @@
         <maven.compiler.target>17</maven.compiler.target>
         <!-- dependency versions -->
         <jackson.version>2.19.1</jackson.version>
-        <javafx.version>17.0.1</javafx.version>
         <junit.version>5.13.3</junit.version>
         <wiremock.version>2.35.2</wiremock.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -126,24 +125,6 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-base</artifactId>
-                <version>${javafx.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-graphics</artifactId>
-                <version>${javafx.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-controls</artifactId>
-                <version>${javafx.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
