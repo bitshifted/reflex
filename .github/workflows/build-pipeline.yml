@@ -16,6 +16,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
+      - name: Check license headers
+        run: |
+          mvn license:check
       - name: Check code style
         run: |
           mvn spotless:check

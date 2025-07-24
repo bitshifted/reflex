@@ -79,6 +79,7 @@
         <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.7.1</flatten-maven-plugin.version>
         <spotless.version>2.44.5</spotless.version>
+        <license-maven-plugin.version>5.0.0</license-maven-plugin.version>
         <central-publishing.version>0.8.0</central-publishing.version>
     </properties>
 
@@ -304,6 +305,34 @@
                         <excludeArtifacts>reflex-integration-test</excludeArtifacts>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${license-maven-plugin.version}</version>
+                    <configuration>
+                        <properties>
+                            <year>2024-2025</year>
+                            <owner>Bitshift D.O.O</owner>
+                            <email>https://bitshifted.co</email>
+                        </properties>
+                        <licenseSets>
+                            <licenseSet>
+                                <header>com/mycila/maven/plugin/license/templates/MPL-2.txt</header>
+                                <includes>
+                                    <include>src/main/java/**</include>
+                                    <include>src/test/java/**</include>
+                                </includes>
+                            </licenseSet>
+                        </licenseSets>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -326,6 +355,10 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
