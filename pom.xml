@@ -55,8 +55,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- dependency versions -->
-        <jackson.version>2.19.1</jackson.version>
-        <junit.version>5.13.3</junit.version>
+        <jackson.version>2.19.2</jackson.version>
+        <junit.version>5.13.4</junit.version>
         <wiremock.version>2.35.2</wiremock.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
@@ -78,7 +78,7 @@
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.7.1</flatten-maven-plugin.version>
-        <spotless.version>2.44.5</spotless.version>
+        <spotless.version>2.46.1</spotless.version>
         <license-maven-plugin.version>5.0.0</license-maven-plugin.version>
         <central-publishing.version>0.8.0</central-publishing.version>
     </properties>
