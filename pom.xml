@@ -78,7 +78,7 @@
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
         <flatten-maven-plugin.version>1.7.1</flatten-maven-plugin.version>
-        <spotless.version>2.44.5</spotless.version>
+        <spotless.version>3.0.0</spotless.version>
         <license-maven-plugin.version>5.0.0</license-maven-plugin.version>
         <central-publishing.version>0.8.0</central-publishing.version>
     </properties>
